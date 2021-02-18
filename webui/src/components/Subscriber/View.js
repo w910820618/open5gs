@@ -166,8 +166,8 @@ const View = ({ visible, disableOnClickOutside, subscriber, onEdit, onDelete, on
 
   return (
     <div>
-      <Modal 
-        visible={visible} 
+      <Modal
+        visible={visible}
         onOutside={onHide}
         disableOnClickOutside={disableOnClickOutside}>
         <Wrapper>
@@ -240,114 +240,109 @@ const View = ({ visible, disableOnClickOutside, subscriber, onEdit, onDelete, on
               </div>
             </Subscriber>
             <Pdn>
-
-      {s_nssai_list.map((s_nssai, index) =>
-          <div key={index}>
-
-              <div className="header">
-                S-NSSAI : {index}
-              </div>
-              <div className="body" style={{color:oc.gray[5]}}>
-                <div className="medium_data">APN</div>
-                <div className="medium_data">Type</div>
-                <div className="small_data">QCI</div>
-                <div className="small_data">ARP</div>
-                <div className="medium_data">Capability</div>
-                <div className="medium_data">Vulnerablility</div>
-                <div className="large_data">MBR DL/UL(Kbps)</div>
-                <div className="large_data">GBR DL/UL(Kbps)</div>
-              </div>
-              {s_nssai['pdn'] !== undefined &&
-                  s_nssai.pdn.map(pdn =>
-                <div key={pdn.apn}>
-                  <div className="body">
-                    <div className="medium_data">{pdn.apn}</div>
-                    <div className="medium_data">{pdn.type === 0 ? "IPv4" : (pdn.type === 1 ? "IPv6" : "IPv4v6")}</div>
-                    <div className="small_data">{pdn.qos.qci}</div>
-                    <div className="small_data">{pdn.qos.arp.priority_level}</div>
-                    <div className="medium_data">{pdn.qos.arp.pre_emption_capability === 1 ? "Disabled" : "Enabled"}</div>
-                    <div className="medium_data">{pdn.qos.arp.pre_emption_vulnerability === 1 ? "Disabled" : "Enabled"}</div>
-                    {pdn['ambr'] === undefined ? 
-                      <div className="large_data">
-                        unlimited/unlimited
-                        </div> :
-                      <div className="large_data">
-                        {pdn.ambr['downlink'] === undefined ? "unlimited" : pdn.ambr.downlink}
-                        /
-                        {pdn.ambr['uplink'] === undefined ? "unlimited" : pdn.ambr.uplink}
-                      </div>
-                    }
-                    <div className="large_data"></div>
+              {s_nssai_list.map((s_nssai, index) =>
+                <div key={index}>
+                  <div className="header">
+                    S-NSSAI : {index}
                   </div>
-                  {pdn['ue'] !== undefined &&
-                    <div className="body">
-                      <div className="medium_data"></div>
-                      <div className="medium_data" style={{color:oc.gray[5]}}>{"UE IPv4"} </div>
-                      <div className="large_data">{(pdn.ue || {}).addr}</div>
-                      <div className="medium_data" style={{color:oc.gray[5]}}>{"UE IPv6"} </div>
-                      <div className="large_data">{(pdn.ue || {}).addr6}</div>
-                    </div>
-                  }
-                  {pdn['pgw'] !== undefined &&
-                    <div className="body">
-                      <div className="medium_data"></div>
-                      <div className="medium_data" style={{color:oc.gray[5]}}>{"PGW IPv4"} </div>
-                      <div className="large_data">{(pdn.pgw || {}).addr}</div>
-                      <div className="medium_data" style={{color:oc.gray[5]}}>{"PGW IPv6"} </div>
-                      <div className="large_data">{(pdn.pgw || {}).addr6}</div>
-                    </div>
-                  }
-                  {pdn['pcc_rule'] !== undefined &&
-                    pdn.pcc_rule.map((pcc_rule, index) =>
-                      <div key={index}>
+                  <div className="body" style={{color:oc.gray[5]}}>
+                    <div className="medium_data">APN</div>
+                    <div className="medium_data">Type</div>
+                    <div className="small_data">QCI</div>
+                    <div className="small_data">ARP</div>
+                    <div className="medium_data">Capability</div>
+                    <div className="medium_data">Vulnerablility</div>
+                    <div className="large_data">MBR DL/UL(Kbps)</div>
+                    <div className="large_data">GBR DL/UL(Kbps)</div>
+                  </div>
+                  {s_nssai['pdn'] !== undefined &&
+                      s_nssai.pdn.map(pdn =>
+                    <div key={pdn.apn}>
+                      <div className="body">
+                        <div className="medium_data">{pdn.apn}</div>
+                        <div className="medium_data">{pdn.type === 0 ? "IPv4" : (pdn.type === 1 ? "IPv6" : "IPv4v6")}</div>
+                        <div className="small_data">{pdn.qos.qci}</div>
+                        <div className="small_data">{pdn.qos.arp.priority_level}</div>
+                        <div className="medium_data">{pdn.qos.arp.pre_emption_capability === 1 ? "Disabled" : "Enabled"}</div>
+                        <div className="medium_data">{pdn.qos.arp.pre_emption_vulnerability === 1 ? "Disabled" : "Enabled"}</div>
+                        {pdn['ambr'] === undefined ?
+                          <div className="large_data">
+                            unlimited/unlimited
+                            </div> :
+                          <div className="large_data">
+                            {pdn.ambr['downlink'] === undefined ? "unlimited" : pdn.ambr.downlink}
+                            /
+                            {pdn.ambr['uplink'] === undefined ? "unlimited" : pdn.ambr.uplink}
+                          </div>
+                        }
+                        <div className="large_data"></div>
+                      </div>
+                      {pdn['ue'] !== undefined &&
                         <div className="body">
                           <div className="medium_data"></div>
-                          <div className="medium_data"></div>
-                          <div className="small_data">{pcc_rule.qos.qci}</div>
-                          <div className="small_data">{pcc_rule.qos.arp.priority_level}</div>
-                          <div className="medium_data">{pcc_rule.qos.arp.pre_emption_capability === 1 ? "Disabled" : "Enabled"}</div>
-                          <div className="medium_data">{pcc_rule.qos.arp.pre_emption_vulnerability === 1 ? "Disabled" : "Enabled"}</div>
-                          {pcc_rule.qos['mbr'] === undefined ? 
-                            <div className="large_data">
-                              unlimited/unlimited
-                              </div> :
-                            <div className="large_data">
-                              {pcc_rule.qos.mbr['downlink'] === undefined ? "unlimited" : pcc_rule.qos.mbr.downlink}
-                              /
-                              {pcc_rule.qos.mbr['uplink'] === undefined ? "unlimited" : pcc_rule.qos.mbr.uplink}
-                            </div>
-                          }
-                          {pcc_rule.qos['gbr'] === undefined ? 
-                            <div className="large_data">
-                              unlimited/unlimited
-                              </div> :
-                            <div className="large_data">
-                              {pcc_rule.qos.gbr['downlink'] === undefined ? "unlimited" : pcc_rule.qos.gbr.downlink}
-                              /
-                              {pcc_rule.qos.gbr['uplink'] === undefined ? "unlimited" : pcc_rule.qos.gbr.uplink}
-                            </div>
-                          }
+                          <div className="medium_data" style={{color:oc.gray[5]}}>{"UE IPv4"} </div>
+                          <div className="large_data">{(pdn.ue || {}).addr}</div>
+                          <div className="medium_data" style={{color:oc.gray[5]}}>{"UE IPv6"} </div>
+                          <div className="large_data">{(pdn.ue || {}).addr6}</div>
                         </div>
-                        {pcc_rule['flow'] !== undefined &&
-                          pcc_rule.flow.map((flow, index) =>
-                            <div className="body" key={index}>
+                      }
+                      {pdn['pgw'] !== undefined &&
+                        <div className="body">
+                          <div className="medium_data"></div>
+                          <div className="medium_data" style={{color:oc.gray[5]}}>{"PGW IPv4"} </div>
+                          <div className="large_data">{(pdn.pgw || {}).addr}</div>
+                          <div className="medium_data" style={{color:oc.gray[5]}}>{"PGW IPv6"} </div>
+                          <div className="large_data">{(pdn.pgw || {}).addr6}</div>
+                        </div>
+                      }
+                      {pdn['pcc_rule'] !== undefined &&
+                        pdn.pcc_rule.map((pcc_rule, index) =>
+                          <div key={index}>
+                            <div className="body">
                               <div className="medium_data"></div>
-                              <div className="small_data" style={{color:oc.gray[5]}}>
-                                {flow.direction == 1 && "Downlink"}
-                                {flow.direction == 2 && "Uplink"}
-                              </div>
-                              <div className="large_data" style={{width:"480px"}}>{flow.description}</div>
+                              <div className="medium_data"></div>
+                              <div className="small_data">{pcc_rule.qos.qci}</div>
+                              <div className="small_data">{pcc_rule.qos.arp.priority_level}</div>
+                              <div className="medium_data">{pcc_rule.qos.arp.pre_emption_capability === 1 ? "Disabled" : "Enabled"}</div>
+                              <div className="medium_data">{pcc_rule.qos.arp.pre_emption_vulnerability === 1 ? "Disabled" : "Enabled"}</div>
+                              {pcc_rule.qos['mbr'] === undefined ?
+                                <div className="large_data">
+                                  unlimited/unlimited
+                                  </div> :
+                                <div className="large_data">
+                                  {pcc_rule.qos.mbr['downlink'] === undefined ? "unlimited" : pcc_rule.qos.mbr.downlink}
+                                  /
+                                  {pcc_rule.qos.mbr['uplink'] === undefined ? "unlimited" : pcc_rule.qos.mbr.uplink}
+                                </div>
+                              }
+                              {pcc_rule.qos['gbr'] === undefined ?
+                                <div className="large_data">
+                                  unlimited/unlimited
+                                  </div> :
+                                <div className="large_data">
+                                  {pcc_rule.qos.gbr['downlink'] === undefined ? "unlimited" : pcc_rule.qos.gbr.downlink}
+                                  /
+                                  {pcc_rule.qos.gbr['uplink'] === undefined ? "unlimited" : pcc_rule.qos.gbr.uplink}
+                                </div>
+                              }
                             </div>
-                        )}
-                      </div>
+                            {pcc_rule['flow'] !== undefined &&
+                              pcc_rule.flow.map((flow, index) =>
+                                <div className="body" key={index}>
+                                  <div className="medium_data"></div>
+                                  <div className="small_data" style={{color:oc.gray[5]}}>
+                                    {flow.direction == 1 && "Downlink"}
+                                    {flow.direction == 2 && "Uplink"}
+                                  </div>
+                                  <div className="large_data" style={{width:"480px"}}>{flow.description}</div>
+                                </div>
+                            )}
+                          </div>
+                      )}
+                    </div>
                   )}
                 </div>
               )}
-
-            </div>
-          )}
-
-
             </Pdn>
           </Body>
         </Wrapper>

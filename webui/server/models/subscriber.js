@@ -38,41 +38,11 @@ const Subscriber = new Schema({
   },
 
   s_nssai: [{
-
-  pdn: [{
-    apn: { $type: String, required: true },
-    type: {
-      $type: Number, default: 2 // IPv4, IPv6 and dualstack IPv4v6
-    },
-    qos: {
-      qci: Number,
-      arp: {
-        priority_level: Number,
-        pre_emption_capability: {
-          $type: Number, default: 1 // Capability Disabled
-        },
-        pre_emption_vulnerability: {
-          $type : Number, default: 0 // Vulnerability Disabled
-        }
-      }
-    },
-    ambr: {
-      downlink: Schema.Types.Long,
-      uplink: Schema.Types.Long
-    },
-    ue: {
-      addr: String,
-      addr6: String
-    },
-    pgw: {
-      addr: String,
-      addr6: String
-    },
-    pcc_rule: [{
-      flow: [{
-        direction: Number,
-        description: String
-      }],
+    pdn: [{
+      apn: { $type: String, required: true },
+      type: {
+        $type: Number, default: 2 // IPv4, IPv6 and dualstack IPv4v6
+      },
       qos: {
         qci: Number,
         arp: {
@@ -83,22 +53,48 @@ const Subscriber = new Schema({
           pre_emption_vulnerability: {
             $type : Number, default: 0 // Vulnerability Disabled
           }
-        },
-        mbr: {
-          downlink: Schema.Types.Long,
-          uplink: Schema.Types.Long
-        },
-        gbr: {
-          downlink: Schema.Types.Long,
-          uplink: Schema.Types.Long
-        },
+        }
       },
+      ambr: {
+        downlink: Schema.Types.Long,
+        uplink: Schema.Types.Long
+      },
+      ue: {
+        addr: String,
+        addr6: String
+      },
+      pgw: {
+        addr: String,
+        addr6: String
+      },
+      pcc_rule: [{
+        flow: [{
+          direction: Number,
+          description: String
+        }],
+        qos: {
+          qci: Number,
+          arp: {
+            priority_level: Number,
+            pre_emption_capability: {
+              $type: Number, default: 1 // Capability Disabled
+            },
+            pre_emption_vulnerability: {
+              $type : Number, default: 0 // Vulnerability Disabled
+            }
+          },
+          mbr: {
+            downlink: Schema.Types.Long,
+            uplink: Schema.Types.Long
+          },
+          gbr: {
+            downlink: Schema.Types.Long,
+            uplink: Schema.Types.Long
+          },
+        },
+      }]
     }]
   }]
-
-
-  }]
-
 }, { typeKey: '$type' });
 
 module.exports = mongoose.model('Subscriber', Subscriber);
