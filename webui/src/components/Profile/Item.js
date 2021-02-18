@@ -166,7 +166,7 @@ class Item extends Component {
     const {
       _id,
       title,
-      pdn,
+      s_nssai,
       ambr
     } = profile;
 
@@ -175,7 +175,7 @@ class Item extends Component {
         <Profile>
           <div className="title">{title}</div>
           <div className="ambr">{ambr.downlink}/{ambr.uplink}</div>
-          <div className="apn">{pdn[0].apn}</div>
+          <div className="apn">{s_nssai[0].pdn[0].apn}</div>
         </Profile>
         <div className="actions">
           <Tooltip content='Edit' width="60px">

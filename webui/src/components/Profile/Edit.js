@@ -70,21 +70,36 @@ const schema = {
         }
       }
     },
-    "pdn": {
+
+    "s_nssai": {
       "type": "array",
-      "title": "APN Configurations",
+      "title": "S-NSSAI Configurations",
       "minItems": 1,
       "maxItems": 4,
       "messages": {
-        "minItems": "At least 1 APN is required",
-        "maxItems": "4 APNs are supported"
+        "minItems": "At least 1 S-NSSAI is required",
+        "maxItems": "4 S-NSSAI are supported"
+      },
+      "items": {
+        "type": "object",
+        "properties": {
+
+
+    "pdn": {
+      "type": "array",
+      "title": "DNN Configurations",
+      "minItems": 1,
+      "maxItems": 4,
+      "messages": {
+        "minItems": "At least 1 DNN is required",
+        "maxItems": "4 DNNs are supported"
       },
       "items": {
         "type": "object",
         "properties": {
           "apn": {
             "type": "string",
-            "title": "Access Point Name (APN)*",
+            "title": "Data Network Name (DNN)*",
             "required": true
           },
           "type": {
@@ -101,7 +116,7 @@ const schema = {
               "qci": {
                 "type": "number",
                 "title": "QoS Class Identifier (QCI)*",
-                "enum": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 65, 66, 69, 70 ],
+                "enum": [ 1, 2, 3, 4, 65, 66, 67, 75, 71, 72, 73, 74, 76, 5, 6, 7, 8, 9, 69, 70, 79, 80, 82, 83, 84, 85, 86 ],
                 "default": 5,
               },
               "arp" : {
@@ -140,12 +155,14 @@ const schema = {
             "properties": {
               "downlink": {
                 "type": "number",
-                "title": "APN-AMBR Downlink (Kbps)*",
+                "title": "Session AMBR Downlink (Kbps)*",
+                "default": 1024000,
                 "required": true
               },
               "uplink": {
                 "type": "number",
-                "title": "APN-AMBR Uplink (Kbps)*",
+                "title": "Session AMBR Uplink (Kbps)*",
+                "default": 1024000,
                 "required": true
               },
             }
@@ -229,7 +246,7 @@ const schema = {
                     "qci": {
                       "type": "number",
                       "title": "QoS Class Identifier (QCI)*",
-                      "enum": [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 65, 66, 69, 70 ],
+                      "enum": [ 1, 2, 3, 4, 65, 66, 67, 75, 71, 72, 73, 74, 76, 5, 6, 7, 8, 9, 69, 70, 79, 80, 82, 83, 84, 85, 86 ],
                       "default": 1,
                     },
                     "arp" : {
@@ -308,6 +325,12 @@ const schema = {
         }
       }
     }
+
+
+        }
+      }
+    }
+
   }
 };
 
@@ -337,6 +360,10 @@ const uiSchema = {
       classNames: "col-xs-6"
     },
   },
+
+  "s_nssai": {
+    "items": {
+
   "pdn": {
     "items": {
       "apn": {
@@ -348,20 +375,15 @@ const uiSchema = {
       "qos": {
         classNames: "col-xs-12",
         "qci": {
-          "ui:widget": "radio",
-          "ui:options": {
-            "inline": true
-          },
         },
         "arp": {
           "priority_level": {
-            classNames: "col-xs-6"
           },
           "pre_emption_capability": {
-            classNames: "col-xs-3"
+            classNames: "col-xs-6"
           },
           "pre_emption_vulnerability": {
-            classNames: "col-xs-3"
+            classNames: "col-xs-6"
           }
         }
       },
@@ -398,30 +420,24 @@ const uiSchema = {
           "flow": {
             "items": {
               "direction": {
-                classNames: "col-xs-12"
               },
               "description": {
-                classNames: "col-xs-12",
-                "ui:help": "Hint: Flow-Description(TS29.212), IPFilterRule(RFC 3588)",
+                "ui:help": "Hint: 5.4.2 Flow-Description in TS29.212",
               },
             },
           },
           "qos": {
             "qci": {
-              "ui:widget": "radio",
-              "ui:options": {
-                "inline": true
-              },
             },
             "arp": {
               "priority_level": {
-                classNames: "col-xs-6"
+                classNames: "col-xs-12"
               },
               "pre_emption_capability": {
-                classNames: "col-xs-3"
+                classNames: "col-xs-6"
               },
               "pre_emption_vulnerability": {
-                classNames: "col-xs-3"
+                classNames: "col-xs-6"
               }
             },
             "mbr": {
@@ -443,6 +459,10 @@ const uiSchema = {
           }
         }
       }
+    }
+  }
+
+
     }
   }
 }

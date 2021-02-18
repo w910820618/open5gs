@@ -24,8 +24,10 @@ const formData = {
     "downlink": 1024000,
     "uplink": 1024000
   },
-  "pdn": [
-    {
+
+  "s_nssai": [{
+
+  "pdn": [{
       "apn": "internet",
       "type": 2,
       "ambr": {
@@ -52,8 +54,9 @@ const formData = {
           "pre_emption_vulnerability": 1
         }
       },
-    }
-  ]
+  }]
+
+  }]
 }
 
 class Document extends Component {
@@ -180,20 +183,20 @@ class Document extends Component {
       errors.imsi.addError(`'${imsi}' is duplicated`);
     }
 
-    if (formData.pdn) {
-      let apns = formData.pdn.map(pdn => { return pdn.apn } )
+    for (let i = 0; i < formData.s_nssai.length; i++) {
+      let apns = formData.s_nssai[i].pdn.map(pdn => { return pdn.apn } )
       let duplicates = {};
-      for (let i = 0; i < apns.length; i++) {
-        if (duplicates.hasOwnProperty(apns[i])) {
-          duplicates[apns[i]].push(i);
-        } else if (apns.lastIndexOf(apns[i]) !== i) {
-          duplicates[apns[i]] = [i];
+      for (let j = 0; j < apns.length; j++) {
+        if (duplicates.hasOwnProperty(apns[j])) {
+          duplicates[apns[j]].push(j);
+        } else if (apns.lastIndexOf(apns[j]) !== j) {
+          duplicates[apns[j]] = [j];
         }
       }
 
       for (let key in duplicates) {
         duplicates[key].forEach(index => 
-          errors.pdn[index].apn.addError(`'${key}' is duplicated`));
+          errors.s_nssai[i].pdn[index].apn.addError(`'${key}' is duplicated`));
       }
     }
 

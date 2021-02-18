@@ -37,6 +37,8 @@ const Subscriber = new Schema({
     uplink: Schema.Types.Long
   },
 
+  s_nssai: [{
+
   pdn: [{
     apn: { $type: String, required: true },
     type: {
@@ -93,6 +95,10 @@ const Subscriber = new Schema({
       },
     }]
   }]
+
+
+  }]
+
 }, { typeKey: '$type' });
 
 module.exports = mongoose.model('Subscriber', Subscriber);

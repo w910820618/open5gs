@@ -17,6 +17,8 @@ const Profile = new Schema({
     uplink: Schema.Types.Long
   },
 
+  s_nssai: [{
+
   pdn: [{
     apn: { $type: String, required: true },
     type: {
@@ -73,6 +75,9 @@ const Profile = new Schema({
       },
     }]
   }]
+
+  }]
+
 }, { typeKey: '$type' });
 
 module.exports = mongoose.model('Profile', Profile);

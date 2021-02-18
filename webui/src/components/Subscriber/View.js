@@ -162,7 +162,7 @@ const View = ({ visible, disableOnClickOutside, subscriber, onEdit, onDelete, on
   const imsi = (subscriber || {}).imsi;
   const security = ((subscriber || {}).security || {});
   const ambr = ((subscriber || {}).ambr || {});
-  const pdns = ((subscriber || {}).pdn || []);
+  const s_nssai_list = ((subscriber || {}).s_nssai || []);
 
   return (
     <div>
@@ -240,8 +240,12 @@ const View = ({ visible, disableOnClickOutside, subscriber, onEdit, onDelete, on
               </div>
             </Subscriber>
             <Pdn>
+
+      {s_nssai_list.map((s_nssai, index) =>
+          <div key={index}>
+
               <div className="header">
-                APN Configrations
+                S-NSSAI : {index}
               </div>
               <div className="body" style={{color:oc.gray[5]}}>
                 <div className="medium_data">APN</div>
@@ -253,7 +257,8 @@ const View = ({ visible, disableOnClickOutside, subscriber, onEdit, onDelete, on
                 <div className="large_data">MBR DL/UL(Kbps)</div>
                 <div className="large_data">GBR DL/UL(Kbps)</div>
               </div>
-              {pdns.map(pdn =>
+              {s_nssai['pdn'] !== undefined &&
+                  s_nssai.pdn.map(pdn =>
                 <div key={pdn.apn}>
                   <div className="body">
                     <div className="medium_data">{pdn.apn}</div>
@@ -333,13 +338,16 @@ const View = ({ visible, disableOnClickOutside, subscriber, onEdit, onDelete, on
                               </div>
                               <div className="large_data" style={{width:"480px"}}>{flow.description}</div>
                             </div>
-                          )
-                        }
+                        )}
                       </div>
-                    )
-                  }
+                  )}
                 </div>
               )}
+
+            </div>
+          )}
+
+
             </Pdn>
           </Body>
         </Wrapper>
