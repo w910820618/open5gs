@@ -483,7 +483,8 @@ test_bearer_t *test_bearer_find_by_ue_ebi(test_ue_t *test_ue, uint8_t ebi);
 
 test_bearer_t *test_qos_flow_find_by_qfi(test_sess_t *sess, uint8_t qfi);
 
-bson_t *test_db_new_ue(test_ue_t *test_ue);
+void test_db_insert_ue(test_ue_t *test_ue);
+void test_db_remove_ue(test_ue_t *test_ue);
 
 #ifdef __cplusplus
 }

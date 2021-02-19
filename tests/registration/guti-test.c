@@ -96,33 +96,7 @@ static void test1_func(abts_case *tc, void *data)
     testngap_recv(test_ue, recvbuf);
 
     /********** Insert Subscriber in Database */
-    collection = mongoc_client_get_collection(
-        ogs_mongoc()->client, ogs_mongoc()->name, "subscribers");
-    ABTS_PTR_NOTNULL(tc, collection);
-    doc = BCON_NEW("imsi", BCON_UTF8(test_ue->imsi));
-    ABTS_PTR_NOTNULL(tc, doc);
-
-    count = mongoc_collection_count (
-        collection, MONGOC_QUERY_NONE, doc, 0, 0, NULL, &error);
-    if (count) {
-        ABTS_TRUE(tc, mongoc_collection_remove(collection,
-                MONGOC_REMOVE_SINGLE_REMOVE, doc, NULL, &error))
-    }
-    bson_destroy(doc);
-
-    doc = test_db_new_ue(test_ue);
-    ABTS_PTR_NOTNULL(tc, doc);
-    ABTS_TRUE(tc, mongoc_collection_insert(collection,
-                MONGOC_INSERT_NONE, doc, NULL, &error));
-    bson_destroy(doc);
-
-    doc = BCON_NEW("imsi", BCON_UTF8(test_ue->imsi));
-    ABTS_PTR_NOTNULL(tc, doc);
-    do {
-        count = mongoc_collection_count (
-            collection, MONGOC_QUERY_NONE, doc, 0, 0, NULL, &error);
-    } while (count == 0);
-    bson_destroy(doc);
+    test_db_insert_ue(test_ue);
 
     /* Send Registration request */
     test_ue->registration_request_param.guti = 1;
@@ -501,13 +475,7 @@ static void test1_func(abts_case *tc, void *data)
     ogs_msleep(300);
 
     /********** Remove Subscriber in Database */
-    doc = BCON_NEW("imsi", BCON_UTF8(test_ue->imsi));
-    ABTS_PTR_NOTNULL(tc, doc);
-    ABTS_TRUE(tc, mongoc_collection_remove(collection,
-            MONGOC_REMOVE_SINGLE_REMOVE, doc, NULL, &error))
-    bson_destroy(doc);
-
-    mongoc_collection_destroy(collection);
+    test_db_remove_ue(test_ue);
 
     /* gNB disonncect from UPF */
     testgnb_gtpu_close(gtpu);
@@ -596,33 +564,7 @@ static void test2_func(abts_case *tc, void *data)
     testngap_recv(test_ue, recvbuf);
 
     /********** Insert Subscriber in Database */
-    collection = mongoc_client_get_collection(
-        ogs_mongoc()->client, ogs_mongoc()->name, "subscribers");
-    ABTS_PTR_NOTNULL(tc, collection);
-    doc = BCON_NEW("imsi", BCON_UTF8(test_ue->imsi));
-    ABTS_PTR_NOTNULL(tc, doc);
-
-    count = mongoc_collection_count (
-        collection, MONGOC_QUERY_NONE, doc, 0, 0, NULL, &error);
-    if (count) {
-        ABTS_TRUE(tc, mongoc_collection_remove(collection,
-                MONGOC_REMOVE_SINGLE_REMOVE, doc, NULL, &error))
-    }
-    bson_destroy(doc);
-
-    doc = test_db_new_ue(test_ue);
-    ABTS_PTR_NOTNULL(tc, doc);
-    ABTS_TRUE(tc, mongoc_collection_insert(collection,
-                MONGOC_INSERT_NONE, doc, NULL, &error));
-    bson_destroy(doc);
-
-    doc = BCON_NEW("imsi", BCON_UTF8(test_ue->imsi));
-    ABTS_PTR_NOTNULL(tc, doc);
-    do {
-        count = mongoc_collection_count (
-            collection, MONGOC_QUERY_NONE, doc, 0, 0, NULL, &error);
-    } while (count == 0);
-    bson_destroy(doc);
+    test_db_insert_ue(test_ue);
 
     /* Send Registration request */
     test_ue->registration_request_param.guti = 1;
@@ -955,13 +897,7 @@ static void test2_func(abts_case *tc, void *data)
     ogs_msleep(300);
 
     /********** Remove Subscriber in Database */
-    doc = BCON_NEW("imsi", BCON_UTF8(test_ue->imsi));
-    ABTS_PTR_NOTNULL(tc, doc);
-    ABTS_TRUE(tc, mongoc_collection_remove(collection,
-            MONGOC_REMOVE_SINGLE_REMOVE, doc, NULL, &error))
-    bson_destroy(doc);
-
-    mongoc_collection_destroy(collection);
+    test_db_remove_ue(test_ue);
 
     /* gNB disonncect from UPF */
     testgnb_gtpu_close(gtpu);
