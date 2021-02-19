@@ -96,7 +96,7 @@ static void test1_func(abts_case *tc, void *data)
     testngap_recv(test_ue, recvbuf);
 
     /********** Insert Subscriber in Database */
-    test_db_insert_ue(test_ue);
+    ABTS_INT_EQUAL(tc, OGS_OK, test_db_insert_ue(test_ue));
 
     /* Send Registration request */
     test_ue->registration_request_param.guti = 1;
@@ -475,7 +475,7 @@ static void test1_func(abts_case *tc, void *data)
     ogs_msleep(300);
 
     /********** Remove Subscriber in Database */
-    test_db_remove_ue(test_ue);
+    ABTS_INT_EQUAL(tc, OGS_OK, test_db_remove_ue(test_ue));
 
     /* gNB disonncect from UPF */
     testgnb_gtpu_close(gtpu);
@@ -564,7 +564,7 @@ static void test2_func(abts_case *tc, void *data)
     testngap_recv(test_ue, recvbuf);
 
     /********** Insert Subscriber in Database */
-    test_db_insert_ue(test_ue);
+    ABTS_INT_EQUAL(tc, OGS_OK, test_db_insert_ue(test_ue));
 
     /* Send Registration request */
     test_ue->registration_request_param.guti = 1;
@@ -897,7 +897,7 @@ static void test2_func(abts_case *tc, void *data)
     ogs_msleep(300);
 
     /********** Remove Subscriber in Database */
-    test_db_remove_ue(test_ue);
+    ABTS_INT_EQUAL(tc, OGS_OK, test_db_remove_ue(test_ue));
 
     /* gNB disonncect from UPF */
     testgnb_gtpu_close(gtpu);
