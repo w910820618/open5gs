@@ -1143,3 +1143,46 @@ test_bearer_t *test_qos_flow_find_by_qfi(test_sess_t *sess, uint8_t qfi)
 
     return NULL;
 }
+
+bson_t *test_db_new_ue(test_ue_t *test_ue)
+{
+    bson_t *doc = NULL;
+
+    ogs_assert(test_ue);
+    doc = BCON_NEW(
+            "imsi", BCON_UTF8(test_ue->imsi),
+            "ambr", "{",
+                "uplink", BCON_INT64(1024000),
+                "downlink", BCON_INT64(1024000),
+            "}",
+            "pdn", "[", "{",
+                "apn", BCON_UTF8("internet"),
+                "type", BCON_INT32(2),
+                "ambr", "{",
+                    "uplink", BCON_INT64(1024000),
+                    "downlink", BCON_INT64(1024000),
+                "}",
+                "qos", "{",
+                    "qci", BCON_INT32(9),
+                    "arp", "{",
+                        "priority_level", BCON_INT32(8),
+                        "pre_emption_vulnerability", BCON_INT32(1),
+                        "pre_emption_capability", BCON_INT32(1),
+                    "}",
+                "}",
+            "}", "]",
+            "security", "{",
+                "k", BCON_UTF8("70d49a71dd1a2b806a25abe0ef749f1e"),
+                "opc", BCON_UTF8("6f1bf53d624b3a43af6592854e2444c7"),
+                "amf", BCON_UTF8("8000"),
+                "sqn", BCON_INT64(25235952177090),
+            "}",
+            "subscribed_rau_tau_timer", BCON_INT32(12),
+            "network_access_mode", BCON_INT32(2),
+            "subscriber_status", BCON_INT32(0),
+            "access_restriction_data", BCON_INT32(32)
+          );
+    ogs_assert(doc);
+
+    return doc;
+}

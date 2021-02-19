@@ -46,45 +46,6 @@ static void test1_func(abts_case *tc, void *data)
     bson_t *doc = NULL;
     int64_t count = 0;
     bson_error_t error;
-    const char *json =
-      "{"
-        "\"_id\" : { \"$oid\" : \"597223158b8861d7605378c6\" }, "
-        "\"imsi\" : \"901700000021309\","
-        "\"ambr\" : { "
-          "\"uplink\" : { \"$numberLong\" : \"1024000\" }, "
-          "\"downlink\" : { \"$numberLong\" : \"1024000\" } "
-        "},"
-        "\"pdn\" : ["
-          "{"
-            "\"apn\" : \"internet\", "
-            "\"_id\" : { \"$oid\" : \"597223158b8861d7605378c7\" }, "
-            "\"ambr\" : {"
-              "\"uplink\" : { \"$numberLong\" : \"1024000\" }, "
-              "\"downlink\" : { \"$numberLong\" : \"1024000\" } "
-            "},"
-            "\"qos\" : { "
-              "\"qci\" : 9, "
-              "\"arp\" : { "
-                "\"priority_level\" : 8,"
-                "\"pre_emption_vulnerability\" : 1, "
-                "\"pre_emption_capability\" : 1"
-              "} "
-            "}, "
-            "\"type\" : 2"
-          "}"
-        "],"
-        "\"security\" : { "
-          "\"k\" : \"70d49a71dd1a2b806a25abe0ef749f1e\", "
-          "\"opc\" : \"6f1bf53d624b3a43af6592854e2444c7\", "
-          "\"amf\" : \"8000\", "
-          "\"sqn\" : { \"$numberLong\" : \"25235952177090\" } "
-        "}, "
-        "\"subscribed_rau_tau_timer\" : 12,"
-        "\"network_access_mode\" : 2, "
-        "\"subscriber_status\" : 0, "
-        "\"access_restriction_data\" : 32, "
-        "\"__v\" : 0 "
-      "}";
 
     /* Setup Test UE & Session Context */
     memset(&mobile_identity_suci, 0, sizeof(mobile_identity_suci));
@@ -149,7 +110,7 @@ static void test1_func(abts_case *tc, void *data)
     }
     bson_destroy(doc);
 
-    doc = bson_new_from_json((const uint8_t *)json, -1, &error);;
+    doc = test_db_new_ue(test_ue);
     ABTS_PTR_NOTNULL(tc, doc);
     ABTS_TRUE(tc, mongoc_collection_insert(collection,
                 MONGOC_INSERT_NONE, doc, NULL, &error));
@@ -585,45 +546,6 @@ static void test2_func(abts_case *tc, void *data)
     bson_t *doc = NULL;
     int64_t count = 0;
     bson_error_t error;
-    const char *json =
-      "{"
-        "\"_id\" : { \"$oid\" : \"597223158b8861d7605378c6\" }, "
-        "\"imsi\" : \"901700000021309\","
-        "\"ambr\" : { "
-          "\"uplink\" : { \"$numberLong\" : \"1024000\" }, "
-          "\"downlink\" : { \"$numberLong\" : \"1024000\" } "
-        "},"
-        "\"pdn\" : ["
-          "{"
-            "\"apn\" : \"internet\", "
-            "\"_id\" : { \"$oid\" : \"597223158b8861d7605378c7\" }, "
-            "\"ambr\" : {"
-              "\"uplink\" : { \"$numberLong\" : \"1024000\" }, "
-              "\"downlink\" : { \"$numberLong\" : \"1024000\" } "
-            "},"
-            "\"qos\" : { "
-              "\"qci\" : 9, "
-              "\"arp\" : { "
-                "\"priority_level\" : 8,"
-                "\"pre_emption_vulnerability\" : 1, "
-                "\"pre_emption_capability\" : 1"
-              "} "
-            "}, "
-            "\"type\" : 2"
-          "}"
-        "],"
-        "\"security\" : { "
-          "\"k\" : \"70d49a71dd1a2b806a25abe0ef749f1e\", "
-          "\"opc\" : \"6f1bf53d624b3a43af6592854e2444c7\", "
-          "\"amf\" : \"8000\", "
-          "\"sqn\" : { \"$numberLong\" : \"25235952177090\" } "
-        "}, "
-        "\"subscribed_rau_tau_timer\" : 12,"
-        "\"network_access_mode\" : 2, "
-        "\"subscriber_status\" : 0, "
-        "\"access_restriction_data\" : 32, "
-        "\"__v\" : 0 "
-      "}";
 
     /* Setup Test UE & Session Context */
     memset(&mobile_identity_suci, 0, sizeof(mobile_identity_suci));
@@ -688,7 +610,7 @@ static void test2_func(abts_case *tc, void *data)
     }
     bson_destroy(doc);
 
-    doc = bson_new_from_json((const uint8_t *)json, -1, &error);;
+    doc = test_db_new_ue(test_ue);
     ABTS_PTR_NOTNULL(tc, doc);
     ABTS_TRUE(tc, mongoc_collection_insert(collection,
                 MONGOC_INSERT_NONE, doc, NULL, &error));
