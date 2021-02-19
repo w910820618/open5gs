@@ -1317,7 +1317,7 @@ bson_t *test_db_new_multiple_qos_flow(test_ue_t *test_ue)
 
     ogs_assert(test_ue);
 
-#if 0
+#if 1
     doc = BCON_NEW(
             "imsi", BCON_UTF8(test_ue->imsi),
             "ambr", "{",
@@ -1339,6 +1339,34 @@ bson_t *test_db_new_multiple_qos_flow(test_ue_t *test_ue)
                         "pre_emption_capability", BCON_INT32(1),
                     "}",
                 "}",
+                "pcc_rule", "[", "{",
+                    "qos", "{",
+                        "qci", BCON_INT32(1),
+                        "arp", "{",
+                            "priority_level", BCON_INT32(2),
+                            "pre_emption_vulnerability", BCON_INT32(0),
+                            "pre_emption_capability", BCON_INT32(0),
+                        "}",
+                        "mbr", "{",
+                            "downlink", BCON_INT64(64),
+                            "uplink", BCON_INT64(44),
+                        "}",
+                        "gbr", "{",
+                            "downlink", BCON_INT64(64),
+                            "uplink", BCON_INT64(44),
+                        "}",
+                    "}",
+                    "flow", "[",
+                        "{", "direction", BCON_INT32(2),
+                             "description", BCON_UTF8("permit out udp from 10.200.136.98/32 23454 to assigned 1-65535"), "}",
+                        "{", "direction", BCON_INT32(1),
+                             "description", BCON_UTF8("permit out icmp from any to assigned"), "}",
+                        "{", "direction", BCON_INT32(2),
+                             "description", BCON_UTF8("permit out udp from 10.200.136.98/32 23455 to assigned 1-65535"), "}",
+                        "{", "direction", BCON_INT32(1),
+                             "description", BCON_UTF8("permit out udp from 10.200.136.98/32 1-65535 to assigned 50021"), "}",
+                    "]",
+                "}", "]",
             "}", "]",
             "security", "{",
                 "k", BCON_UTF8(test_ue->k_string),
