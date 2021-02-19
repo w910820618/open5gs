@@ -37,11 +37,6 @@ static void test1_func(abts_case *tc, void *data)
     test_sess_t *sess = NULL;
     test_bearer_t *qos_flow = NULL;
 
-    const char *_k_string = "70d49a71dd1a2b806a25abe0ef749f1e";
-    uint8_t k[OGS_KEY_LEN];
-    const char *_opc_string = "6f1bf53d624b3a43af6592854e2444c7";
-    uint8_t opc[OGS_KEY_LEN];
-
     bson_t *doc = NULL;
 
     /* Setup Test UE & Session Context */
