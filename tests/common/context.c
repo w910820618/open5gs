@@ -1231,6 +1231,7 @@ bson_t *test_db_new_simple(test_ue_t *test_ue)
     ogs_hex_to_ascii(test_ue->k, OGS_KEY_LEN, k_string, sizeof(k_string));
     ogs_hex_to_ascii(test_ue->opc, OGS_KEY_LEN, opc_string, sizeof(opc_string));
 
+#if 1
     doc = BCON_NEW(
             "imsi", BCON_UTF8(test_ue->imsi),
             "ambr", "{",
@@ -1264,6 +1265,50 @@ bson_t *test_db_new_simple(test_ue_t *test_ue)
             "subscriber_status", BCON_INT32(0),
             "access_restriction_data", BCON_INT32(32)
           );
+#else /* For verify WebUI */
+    bson_error_t error;
+    const char *json =
+      "{"
+        "\"_id\" : { \"$oid\" : \"597223158b8861d7605378c6\" }, "
+        "\"imsi\" : \"901700000021309\","
+        "\"ambr\" : { "
+          "\"uplink\" : { \"$numberLong\" : \"1024000\" }, "
+          "\"downlink\" : { \"$numberLong\" : \"1024000\" } "
+        "},"
+        "\"pdn\" : ["
+          "{"
+            "\"apn\" : \"internet\", "
+            "\"_id\" : { \"$oid\" : \"597223158b8861d7605378c7\" }, "
+            "\"ambr\" : {"
+              "\"uplink\" : { \"$numberLong\" : \"1024000\" }, "
+              "\"downlink\" : { \"$numberLong\" : \"1024000\" } "
+            "},"
+            "\"qos\" : { "
+              "\"qci\" : 9, "
+              "\"arp\" : { "
+                "\"priority_level\" : 8,"
+                "\"pre_emption_vulnerability\" : 1, "
+                "\"pre_emption_capability\" : 1"
+              "} "
+            "}, "
+            "\"type\" : 2"
+          "}"
+        "],"
+        "\"security\" : { "
+          "\"k\" : \"70d49a71dd1a2b806a25abe0ef749f1e\", "
+          "\"opc\" : \"6f1bf53d624b3a43af6592854e2444c7\", "
+          "\"amf\" : \"8000\", "
+          "\"sqn\" : { \"$numberLong\" : \"64\" } "
+        "}, "
+        "\"subscribed_rau_tau_timer\" : 12,"
+        "\"network_access_mode\" : 2, "
+        "\"subscriber_status\" : 0, "
+        "\"access_restriction_data\" : 32, "
+        "\"__v\" : 0 "
+      "}";
+
+    doc = bson_new_from_json((const uint8_t *)json, -1, &error);;
+#endif
     ogs_assert(doc);
 
     return doc;
