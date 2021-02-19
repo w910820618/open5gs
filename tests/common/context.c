@@ -1144,15 +1144,58 @@ test_bearer_t *test_qos_flow_find_by_qfi(test_sess_t *sess, uint8_t qfi)
     return NULL;
 }
 
-int test_db_insert_ue(test_ue_t *test_ue)
+int test_db_insert_ue(test_ue_t *test_ue, bson_t *doc)
 {
     mongoc_collection_t *collection = NULL;
-    bson_t *doc = NULL;
+    bson_t *key = NULL;
     int64_t count = 0;
     bson_error_t error;
 
-    char k_string[OGS_KEYSTRLEN(OGS_KEY_LEN)];
-    char opc_string[OGS_KEYSTRLEN(OGS_KEY_LEN)];
+    ogs_assert(test_ue);
+    ogs_assert(doc);
+
+    collection = mongoc_client_get_collection(
+        ogs_mongoc()->client, ogs_mongoc()->name, "subscribers");
+    if (!collection) {
+        ogs_error("mongoc_client_get_collection() failed");
+        return OGS_ERROR;
+    }
+    key = BCON_NEW("imsi", BCON_UTF8(test_ue->imsi));
+    ogs_assert(key);
+
+    count = mongoc_collection_count (
+        collection, MONGOC_QUERY_NONE, key, 0, 0, NULL, &error);
+    if (count) {
+        if (mongoc_collection_remove(collection,
+                MONGOC_REMOVE_SINGLE_REMOVE, key, NULL, &error) != true) {
+            ogs_error("mongoc_collection_remove() failed");
+            return OGS_ERROR;
+        }
+    }
+
+    if (mongoc_collection_insert(collection,
+                MONGOC_INSERT_NONE, doc, NULL, &error) != true) {
+        ogs_error("mongoc_collection_insert() failed");
+        return OGS_ERROR;
+    }
+
+    key = BCON_NEW("imsi", BCON_UTF8(test_ue->imsi));
+    ogs_assert(key);
+    do {
+        count = mongoc_collection_count(
+            collection, MONGOC_QUERY_NONE, key, 0, 0, NULL, &error);
+    } while (count == 0);
+
+    mongoc_collection_destroy(collection);
+
+    return OGS_OK;
+}
+
+int test_db_remove_ue(test_ue_t *test_ue)
+{
+    mongoc_collection_t *collection = NULL;
+    bson_t *key = NULL;
+    bson_error_t error;
 
     ogs_assert(test_ue);
 
@@ -1162,18 +1205,28 @@ int test_db_insert_ue(test_ue_t *test_ue)
         ogs_error("mongoc_client_get_collection() failed");
         return OGS_ERROR;
     }
-    doc = BCON_NEW("imsi", BCON_UTF8(test_ue->imsi));
-    ogs_assert(doc);
 
-    count = mongoc_collection_count (
-        collection, MONGOC_QUERY_NONE, doc, 0, 0, NULL, &error);
-    if (count) {
-        if (mongoc_collection_remove(collection,
-                MONGOC_REMOVE_SINGLE_REMOVE, doc, NULL, &error) != true) {
-            ogs_error("mongoc_collection_remove() failed");
-            return OGS_ERROR;
-        }
+    key = BCON_NEW("imsi", BCON_UTF8(test_ue->imsi));
+    ogs_assert(key);
+    if (mongoc_collection_remove(collection,
+            MONGOC_REMOVE_SINGLE_REMOVE, key, NULL, &error) != true) {
+        ogs_error("mongoc_collection_remove() failed");
+        return OGS_ERROR;
     }
+
+    mongoc_collection_destroy(collection);
+
+    return OGS_OK;
+}
+
+bson_t *test_db_new_simple(test_ue_t *test_ue)
+{
+    bson_t *doc = NULL;
+
+    char k_string[OGS_KEYSTRLEN(OGS_KEY_LEN)];
+    char opc_string[OGS_KEYSTRLEN(OGS_KEY_LEN)];
+
+    ogs_assert(test_ue);
 
     ogs_hex_to_ascii(test_ue->k, OGS_KEY_LEN, k_string, sizeof(k_string));
     ogs_hex_to_ascii(test_ue->opc, OGS_KEY_LEN, opc_string, sizeof(opc_string));
@@ -1213,48 +1266,5 @@ int test_db_insert_ue(test_ue_t *test_ue)
           );
     ogs_assert(doc);
 
-    if (mongoc_collection_insert(collection,
-                MONGOC_INSERT_NONE, doc, NULL, &error) != true) {
-        ogs_error("mongoc_collection_insert() failed");
-        return OGS_ERROR;
-    }
-
-    doc = BCON_NEW("imsi", BCON_UTF8(test_ue->imsi));
-    ogs_assert(doc);
-    do {
-        count = mongoc_collection_count(
-            collection, MONGOC_QUERY_NONE, doc, 0, 0, NULL, &error);
-    } while (count == 0);
-
-    mongoc_collection_destroy(collection);
-
-    return OGS_OK;
-}
-
-int test_db_remove_ue(test_ue_t *test_ue)
-{
-    mongoc_collection_t *collection = NULL;
-    bson_t *doc = NULL;
-    bson_error_t error;
-
-    ogs_assert(test_ue);
-
-    collection = mongoc_client_get_collection(
-        ogs_mongoc()->client, ogs_mongoc()->name, "subscribers");
-    if (!collection) {
-        ogs_error("mongoc_client_get_collection() failed");
-        return OGS_ERROR;
-    }
-
-    doc = BCON_NEW("imsi", BCON_UTF8(test_ue->imsi));
-    ogs_assert(doc);
-    if (mongoc_collection_remove(collection,
-            MONGOC_REMOVE_SINGLE_REMOVE, doc, NULL, &error) != true) {
-        ogs_error("mongoc_collection_remove() failed");
-        return OGS_ERROR;
-    }
-
-    mongoc_collection_destroy(collection);
-
-    return OGS_OK;
+    return doc;
 }

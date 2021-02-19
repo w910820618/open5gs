@@ -96,7 +96,9 @@ static void test1_func(abts_case *tc, void *data)
     testngap_recv(test_ue, recvbuf);
 
     /********** Insert Subscriber in Database */
-    ABTS_INT_EQUAL(tc, OGS_OK, test_db_insert_ue(test_ue));
+    doc = test_db_new_simple(test_ue);
+    ABTS_PTR_NOTNULL(tc, doc);
+    ABTS_INT_EQUAL(tc, OGS_OK, test_db_insert_ue(test_ue, doc));
 
     /* Send Registration request */
     test_ue->registration_request_param.guti = 1;
@@ -564,7 +566,9 @@ static void test2_func(abts_case *tc, void *data)
     testngap_recv(test_ue, recvbuf);
 
     /********** Insert Subscriber in Database */
-    ABTS_INT_EQUAL(tc, OGS_OK, test_db_insert_ue(test_ue));
+    doc = test_db_new_simple(test_ue);
+    ABTS_PTR_NOTNULL(tc, doc);
+    ABTS_INT_EQUAL(tc, OGS_OK, test_db_insert_ue(test_ue, doc));
 
     /* Send Registration request */
     test_ue->registration_request_param.guti = 1;
