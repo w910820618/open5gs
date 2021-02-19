@@ -532,8 +532,8 @@ static void test2_func(abts_case *tc, void *data)
     test_ue->nas.registration.follow_on_request = 1;
     test_ue->nas.registration.value = OGS_NAS_5GS_REGISTRATION_TYPE_INITIAL;
 
-    test_ue->k_string = "70d49a71dd1a2b806a25abe0ef749f1e";
-    test_ue->opc_string = "6f1bf53d624b3a43af6592854e2444c7";
+    test_ue->k_string = "465b5ce8b199b49faa5f0a2ee238a6bc";
+    test_ue->opc_string = "e8ed289deba952e4283b54e88e6183ca";
 
     /* gNB connects to AMF */
     ngap = testngap_client(AF_INET);
