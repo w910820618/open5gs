@@ -833,7 +833,6 @@ static void test2_func(abts_case *tc, void *data)
     rv = testgnb_ngap_send(ngap, sendbuf);
     ABTS_INT_EQUAL(tc, OGS_OK, rv);
 
-#if 0
     /* Send GTP-U ICMP Packet */
     qos_flow = test_qos_flow_find_by_qfi(sess, 1);
     ogs_assert(qos_flow);
@@ -887,7 +886,6 @@ static void test2_func(abts_case *tc, void *data)
     ABTS_PTR_NOTNULL(tc, sendbuf);
     rv = testgnb_ngap_send(ngap, sendbuf);
     ABTS_INT_EQUAL(tc, OGS_OK, rv);
-#endif
 
     /* Send PDU session establishment request */
     sess->ul_nas_transport_param.request_type =

@@ -1148,7 +1148,14 @@ bson_t *test_db_new_ue(test_ue_t *test_ue)
 {
     bson_t *doc = NULL;
 
+    char k_string[OGS_KEYSTRLEN(OGS_KEY_LEN)];
+    char opc_string[OGS_KEYSTRLEN(OGS_KEY_LEN)];
+
     ogs_assert(test_ue);
+
+    ogs_hex_to_ascii(test_ue->k, OGS_KEY_LEN, k_string, sizeof(k_string));
+    ogs_hex_to_ascii(test_ue->opc, OGS_KEY_LEN, opc_string, sizeof(opc_string));
+
     doc = BCON_NEW(
             "imsi", BCON_UTF8(test_ue->imsi),
             "ambr", "{",
@@ -1172,8 +1179,8 @@ bson_t *test_db_new_ue(test_ue_t *test_ue)
                 "}",
             "}", "]",
             "security", "{",
-                "k", BCON_UTF8("70d49a71dd1a2b806a25abe0ef749f1e"),
-                "opc", BCON_UTF8("6f1bf53d624b3a43af6592854e2444c7"),
+                "k", BCON_UTF8(k_string),
+                "opc", BCON_UTF8(opc_string),
                 "amf", BCON_UTF8("8000"),
                 "sqn", BCON_INT64(25235952177090),
             "}",
