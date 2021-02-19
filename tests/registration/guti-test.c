@@ -42,10 +42,7 @@ static void test1_func(abts_case *tc, void *data)
     const char *_opc_string = "6f1bf53d624b3a43af6592854e2444c7";
     uint8_t opc[OGS_KEY_LEN];
 
-    mongoc_collection_t *collection = NULL;
     bson_t *doc = NULL;
-    int64_t count = 0;
-    bson_error_t error;
 
     /* Setup Test UE & Session Context */
     memset(&mobile_identity_suci, 0, sizeof(mobile_identity_suci));
@@ -512,10 +509,7 @@ static void test2_func(abts_case *tc, void *data)
     const char *_opc_string = "6f1bf53d624b3a43af6592854e2444c7";
     uint8_t opc[OGS_KEY_LEN];
 
-    mongoc_collection_t *collection = NULL;
     bson_t *doc = NULL;
-    int64_t count = 0;
-    bson_error_t error;
 
     /* Setup Test UE & Session Context */
     memset(&mobile_identity_suci, 0, sizeof(mobile_identity_suci));
