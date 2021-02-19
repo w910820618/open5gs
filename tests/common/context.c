@@ -1182,7 +1182,7 @@ bson_t *test_db_new_ue(test_ue_t *test_ue)
                 "k", BCON_UTF8(k_string),
                 "opc", BCON_UTF8(opc_string),
                 "amf", BCON_UTF8("8000"),
-                "sqn", BCON_INT64(25235952177090),
+                "sqn", BCON_INT64(64),
             "}",
             "subscribed_rau_tau_timer", BCON_INT32(12),
             "network_access_mode", BCON_INT32(2),
