@@ -1154,6 +1154,9 @@ int test_db_insert_ue(test_ue_t *test_ue, bson_t *doc)
     ogs_assert(test_ue);
     ogs_assert(doc);
 
+    OGS_HEX(test_ue->k_string, strlen(test_ue->k_string), test_ue->k);
+    OGS_HEX(test_ue->opc_string, strlen(test_ue->opc_string), test_ue->opc);
+
     collection = mongoc_client_get_collection(
         ogs_mongoc()->client, ogs_mongoc()->name, "subscribers");
     if (!collection) {
@@ -1223,13 +1226,7 @@ bson_t *test_db_new_simple(test_ue_t *test_ue)
 {
     bson_t *doc = NULL;
 
-    char k_string[OGS_KEYSTRLEN(OGS_KEY_LEN)];
-    char opc_string[OGS_KEYSTRLEN(OGS_KEY_LEN)];
-
     ogs_assert(test_ue);
-
-    ogs_hex_to_ascii(test_ue->k, OGS_KEY_LEN, k_string, sizeof(k_string));
-    ogs_hex_to_ascii(test_ue->opc, OGS_KEY_LEN, opc_string, sizeof(opc_string));
 
 #if 1
     doc = BCON_NEW(
@@ -1255,8 +1252,8 @@ bson_t *test_db_new_simple(test_ue_t *test_ue)
                 "}",
             "}", "]",
             "security", "{",
-                "k", BCON_UTF8(k_string),
-                "opc", BCON_UTF8(opc_string),
+                "k", BCON_UTF8(test_ue->k_string),
+                "opc", BCON_UTF8(test_ue->opc_string),
                 "amf", BCON_UTF8("8000"),
                 "sqn", BCON_INT64(64),
             "}",

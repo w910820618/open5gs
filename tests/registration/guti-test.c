@@ -70,8 +70,9 @@ static void test1_func(abts_case *tc, void *data)
     test_ue->nas.registration.follow_on_request = 1;
     test_ue->nas.registration.value = OGS_NAS_5GS_REGISTRATION_TYPE_INITIAL;
 
-    OGS_HEX(_k_string, strlen(_k_string), test_ue->k);
-    OGS_HEX(_opc_string, strlen(_opc_string), test_ue->opc);
+    test_ue->k_string = "70d49a71dd1a2b806a25abe0ef749f1e";
+    test_ue->opc_string = "6f1bf53d624b3a43af6592854e2444c7";
+
 
     /* gNB connects to AMF */
     ngap = testngap_client(AF_INET);
@@ -537,8 +538,8 @@ static void test2_func(abts_case *tc, void *data)
     test_ue->nas.registration.follow_on_request = 1;
     test_ue->nas.registration.value = OGS_NAS_5GS_REGISTRATION_TYPE_INITIAL;
 
-    OGS_HEX(_k_string, strlen(_k_string), test_ue->k);
-    OGS_HEX(_opc_string, strlen(_opc_string), test_ue->opc);
+    test_ue->k_string = "70d49a71dd1a2b806a25abe0ef749f1e";
+    test_ue->opc_string = "6f1bf53d624b3a43af6592854e2444c7";
 
     /* gNB connects to AMF */
     ngap = testngap_client(AF_INET);

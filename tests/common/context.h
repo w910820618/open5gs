@@ -304,7 +304,9 @@ typedef struct test_ue_s {
     ogs_nr_cgi_t nr_cgi;
 
     uint8_t k[OGS_KEY_LEN];
+    const char *k_string;
     uint8_t opc[OGS_KEY_LEN];
+    const char *opc_string;
 
     uint8_t rand[OGS_RAND_LEN];
     uint8_t autn[OGS_AUTN_LEN];
