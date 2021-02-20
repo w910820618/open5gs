@@ -1172,15 +1172,19 @@ int test_db_insert_ue(test_ue_t *test_ue, bson_t *doc)
         if (mongoc_collection_remove(collection,
                 MONGOC_REMOVE_SINGLE_REMOVE, key, NULL, &error) != true) {
             ogs_error("mongoc_collection_remove() failed");
+            bson_destroy(key);
             return OGS_ERROR;
         }
     }
+    bson_destroy(key);
 
     if (mongoc_collection_insert(collection,
                 MONGOC_INSERT_NONE, doc, NULL, &error) != true) {
         ogs_error("mongoc_collection_insert() failed");
+        bson_destroy(doc);
         return OGS_ERROR;
     }
+    bson_destroy(doc);
 
     key = BCON_NEW("imsi", BCON_UTF8(test_ue->imsi));
     ogs_assert(key);
@@ -1188,6 +1192,7 @@ int test_db_insert_ue(test_ue_t *test_ue, bson_t *doc)
         count = mongoc_collection_count(
             collection, MONGOC_QUERY_NONE, key, 0, 0, NULL, &error);
     } while (count == 0);
+    bson_destroy(key);
 
     mongoc_collection_destroy(collection);
 
@@ -1214,8 +1219,10 @@ int test_db_remove_ue(test_ue_t *test_ue)
     if (mongoc_collection_remove(collection,
             MONGOC_REMOVE_SINGLE_REMOVE, key, NULL, &error) != true) {
         ogs_error("mongoc_collection_remove() failed");
+        bson_destroy(key);
         return OGS_ERROR;
     }
+    bson_destroy(key);
 
     mongoc_collection_destroy(collection);
 
