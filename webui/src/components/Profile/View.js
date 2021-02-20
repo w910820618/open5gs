@@ -243,9 +243,14 @@ const View = ({ visible, disableOnClickOutside, profile, onEdit, onDelete, onHid
             <Pdn>
               {s_nssai_list.map((s_nssai, index) =>
                 <div key={index}>
-                  <div className="header">
-                    S-NSSAI : {index}
-                  </div>
+                  {s_nssai.sd === undefined ?
+                    <div className="header">
+                      S-NSSAI : SST : {s_nssai.sst}
+                    </div> :
+                    <div className="header">
+                      S-NSSAI : SST : {s_nssai.sst}, SD : {s_nssai.sd}
+                    </div>
+                  }
                   <div className="body" style={{color:oc.gray[5]}}>
                     <div className="medium_data">APN</div>
                     <div className="medium_data">Type</div>

@@ -38,6 +38,8 @@ const Subscriber = new Schema({
   },
 
   s_nssai: [{
+    sst: { $type: Number, default: 1, required: true },
+    sd: String,
     pdn: [{
       apn: { $type: String, required: true },
       type: {
