@@ -1283,6 +1283,12 @@ bson_t *test_db_new_simple(test_ue_t *test_ue)
           "\"uplink\" : { \"$numberLong\" : \"1024000\" }, "
           "\"downlink\" : { \"$numberLong\" : \"1024000\" } "
         "},"
+
+        "\"s_nssai\" : ["
+          "{"
+        "\"sst\" : 1, "
+
+
         "\"pdn\" : ["
           "{"
             "\"apn\" : \"internet\", "
@@ -1301,7 +1307,12 @@ bson_t *test_db_new_simple(test_ue_t *test_ue)
             "}, "
             "\"type\" : 2"
           "}"
+        "]"
+
+
+          "}"
         "],"
+
         "\"security\" : { "
           "\"k\" : \"70d49a71dd1a2b806a25abe0ef749f1e\", "
           "\"opc\" : \"6f1bf53d624b3a43af6592854e2444c7\", "
