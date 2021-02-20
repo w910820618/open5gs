@@ -74,29 +74,45 @@ const schema = {
       "type": "array",
       "title": "S-NSSAI Configurations",
       "minItems": 1,
-      "maxItems": 4,
+      "maxItems": 8,
       "messages": {
         "minItems": "At least 1 S-NSSAI is required",
-        "maxItems": "4 S-NSSAI are supported"
+        "maxItems": "8 S-NSSAI are supported"
       },
       "items": {
         "type": "object",
         "properties": {
+          "sst": {
+            "type": "number",
+            "title": "SST*",
+            "enum": [ 1, 2, 3, 4 ],
+            "required": true
+          },
+          "sd": {
+            "type": "string",
+            "title": "SD",
+            "pattern": "^[0-9a-fA-F]+$",
+            "minLength": 6,
+            "maxLength": 6,
+            "messages": {
+              "pattern": "Only hexadecimal digits are allowed"
+            }
+          },
           "pdn": {
             "type": "array",
-            "title": "DNN Configurations",
+            "title": "DNN/APN Configurations",
             "minItems": 1,
             "maxItems": 4,
             "messages": {
-              "minItems": "At least 1 DNN is required",
-              "maxItems": "4 DNNs are supported"
+              "minItems": "At least 1 DNN/APN is required",
+              "maxItems": "4 DNN/APNs are supported"
             },
             "items": {
               "type": "object",
               "properties": {
                 "apn": {
                   "type": "string",
-                  "title": "Data Network Name (DNN)*",
+                  "title": "DNN/APN*",
                   "required": true
                 },
                 "type": {
@@ -356,7 +372,18 @@ const uiSchema = {
   },
   "s_nssai": {
     "items": {
+      "sst": {
+        classNames: "col-xs-4",
+        "ui:widget": "radio",
+        "ui:options": {
+          "inline": true
+        },
+      },
+      "sd": {
+        classNames: "col-xs-8",
+      },
       "pdn": {
+        classNames: "col-xs-12",
         "items": {
           "apn": {
             classNames: "col-xs-8",

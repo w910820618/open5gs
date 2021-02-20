@@ -24,6 +24,7 @@ const formData = {
     "uplink": 1024000
   },
   "s_nssai": [{
+    "sst": 1,
     "pdn": [{
         "apn": "internet",
         "type": 2,
