@@ -245,10 +245,10 @@ const View = ({ visible, disableOnClickOutside, profile, onEdit, onDelete, onHid
                 <div key={index}>
                   {s_nssai.sd === undefined ?
                     <div className="header">
-                      S-NSSAI : SST : {s_nssai.sst}
+                      S-NSSAI - SST:{s_nssai.sst}
                     </div> :
                     <div className="header">
-                      S-NSSAI : SST : {s_nssai.sst}, SD : {s_nssai.sd}
+                      S-NSSAI - SST:{s_nssai.sst} SD:{s_nssai.sd}
                     </div>
                   }
                   <div className="body" style={{color:oc.gray[5]}}>
