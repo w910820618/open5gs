@@ -1697,7 +1697,8 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                         "pre_emption_capability", BCON_INT32(1),
                     "}",
                 "}",
-                "pcc_rule", "[", "{",
+                "pcc_rule", "[",
+                  "{",
                     "qos", "{",
                         "qci", BCON_INT32(1),
                         "arp", "{",
@@ -1714,7 +1715,26 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                             "uplink", BCON_INT64(44),
                         "}",
                     "}",
-                "}", "]",
+                  "}",
+                  "{",
+                    "qos", "{",
+                        "qci", BCON_INT32(2),
+                        "arp", "{",
+                            "priority_level", BCON_INT32(4),
+                            "pre_emption_vulnerability", BCON_INT32(0),
+                            "pre_emption_capability", BCON_INT32(0),
+                        "}",
+                        "mbr", "{",
+                            "downlink", BCON_INT64(802),
+                            "uplink", BCON_INT64(802),
+                        "}",
+                        "gbr", "{",
+                            "downlink", BCON_INT64(802),
+                            "uplink", BCON_INT64(802),
+                        "}",
+                    "}",
+                  "}",
+                "]",
               "}",
             "]",
             "security", "{",
@@ -1757,15 +1777,33 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                 "\"qos\" : {"
                   "\"qci\" : 1,"
                   "\"gbr\" : {"
-                    "\"downlink\" : { \"$numberLong\" : \"64\" },"
-                    "\"uplink\" : { \"$numberLong\" : \"44\" }"
+                    "\"downlink\" : { \"$numberLong\" : \"82\" },"
+                    "\"uplink\" : { \"$numberLong\" : \"82\" }"
                   "},"
                   "\"mbr\" : {"
-                    "\"downlink\" : { \"$numberLong\" : \"64\" },"
-                    "\"uplink\" : { \"$numberLong\" : \"44\" }"
+                    "\"downlink\" : { \"$numberLong\" : \"82\" },"
+                    "\"uplink\" : { \"$numberLong\" : \"82\" }"
                   "},"
                   "\"arp\" : {"
-                    "\"priority_level\" : 3,"
+                    "\"priority_level\" : 2,"
+                    "\"pre_emption_vulnerability\" : 0,"
+                    "\"pre_emption_capability\" : 0 }"
+                  "}"
+              "},"
+              "{"
+                "\"_id\" : { \"$oid\" : \"599eb929c850caabcbfdcd4d\" },"
+                "\"qos\" : {"
+                  "\"qci\" : 2,"
+                  "\"gbr\" : {"
+                    "\"downlink\" : { \"$numberLong\" : \"802\" },"
+                    "\"uplink\" : { \"$numberLong\" : \"802\" }"
+                  "},"
+                  "\"mbr\" : {"
+                    "\"downlink\" : { \"$numberLong\" : \"802\" },"
+                    "\"uplink\" : { \"$numberLong\" : \"802\" }"
+                  "},"
+                  "\"arp\" : {"
+                    "\"priority_level\" : 4,"
                     "\"pre_emption_vulnerability\" : 0,"
                     "\"pre_emption_capability\" : 0 }"
                   "}"
