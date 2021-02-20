@@ -1651,3 +1651,161 @@ bson_t *test_db_new_multiple_session(test_ue_t *test_ue)
 
     return doc;
 }
+
+bson_t *test_db_new_ims(test_ue_t *test_ue)
+{
+    bson_t *doc = NULL;
+
+    ogs_assert(test_ue);
+
+#if 1
+    doc = BCON_NEW(
+            "imsi", BCON_UTF8(test_ue->imsi),
+            "ambr", "{",
+                "uplink", BCON_INT64(1024000),
+                "downlink", BCON_INT64(1024000),
+            "}",
+            "pdn", "[",
+              "{",
+                "apn", BCON_UTF8("internet"),
+                "type", BCON_INT32(2),
+                "ambr", "{",
+                    "uplink", BCON_INT64(1024000),
+                    "downlink", BCON_INT64(1024000),
+                "}",
+                "qos", "{",
+                    "qci", BCON_INT32(9),
+                    "arp", "{",
+                        "priority_level", BCON_INT32(8),
+                        "pre_emption_vulnerability", BCON_INT32(1),
+                        "pre_emption_capability", BCON_INT32(1),
+                    "}",
+                "}",
+              "}",
+              "{",
+                "apn", BCON_UTF8("ims"),
+                "type", BCON_INT32(2),
+                "ambr", "{",
+                    "uplink", BCON_INT64(1024000),
+                    "downlink", BCON_INT64(1024000),
+                "}",
+                "qos", "{",
+                    "qci", BCON_INT32(5),
+                    "arp", "{",
+                        "priority_level", BCON_INT32(1),
+                        "pre_emption_vulnerability", BCON_INT32(1),
+                        "pre_emption_capability", BCON_INT32(1),
+                    "}",
+                "}",
+                "pcc_rule", "[", "{",
+                    "qos", "{",
+                        "qci", BCON_INT32(1),
+                        "arp", "{",
+                            "priority_level", BCON_INT32(3),
+                            "pre_emption_vulnerability", BCON_INT32(0),
+                            "pre_emption_capability", BCON_INT32(0),
+                        "}",
+                        "mbr", "{",
+                            "downlink", BCON_INT64(64),
+                            "uplink", BCON_INT64(44),
+                        "}",
+                        "gbr", "{",
+                            "downlink", BCON_INT64(64),
+                            "uplink", BCON_INT64(44),
+                        "}",
+                    "}",
+                "}", "]",
+              "}",
+            "]",
+            "security", "{",
+                "k", BCON_UTF8(test_ue->k_string),
+                "opc", BCON_UTF8(test_ue->opc_string),
+                "amf", BCON_UTF8("8000"),
+                "sqn", BCON_INT64(64),
+            "}",
+            "subscribed_rau_tau_timer", BCON_INT32(12),
+            "network_access_mode", BCON_INT32(2),
+            "subscriber_status", BCON_INT32(0),
+            "access_restriction_data", BCON_INT32(32)
+          );
+#else /* For verify WebUI */
+    bson_error_t error;
+    const char *json =
+      "{"
+        "\"_id\" : { \"$oid\" : \"310014158b8861d7605378c6\" }, "
+        "\"imsi\" : \"001010123456819\", "
+        "\"pdn\" : ["
+          "{"
+            "\"_id\" : { \"$oid\" : \"599eb929c850caabcbfdcd32\" },"
+            "\"apn\" : \"internet\","
+            "\"qos\" : {"
+              "\"qci\" : 9,"
+              "\"arp\" : {"
+                "\"priority_level\" : 8,"
+                "\"pre_emption_vulnerability\" : 1,"
+                "\"pre_emption_capability\" : 1"
+              "}"
+            "},"
+            "\"type\" : 2"
+          "},"
+          "{"
+            "\"_id\" : { \"$oid\" : \"310014158b8861d7605378c7\" }, "
+            "\"apn\" : \"ims\", "
+            "\"pcc_rule\" : ["
+              "{"
+                "\"_id\" : { \"$oid\" : \"599eb929c850caabcbfdcd2d\" },"
+                "\"qos\" : {"
+                  "\"qci\" : 1,"
+                  "\"gbr\" : {"
+                    "\"downlink\" : { \"$numberLong\" : \"64\" },"
+                    "\"uplink\" : { \"$numberLong\" : \"44\" }"
+                  "},"
+                  "\"mbr\" : {"
+                    "\"downlink\" : { \"$numberLong\" : \"64\" },"
+                    "\"uplink\" : { \"$numberLong\" : \"44\" }"
+                  "},"
+                  "\"arp\" : {"
+                    "\"priority_level\" : 3,"
+                    "\"pre_emption_vulnerability\" : 0,"
+                    "\"pre_emption_capability\" : 0 }"
+                  "}"
+              "}"
+            "],"
+            "\"ambr\" : {"
+              "\"uplink\" : { \"$numberLong\" : \"1000000\" }, "
+              "\"downlink\" : { \"$numberLong\" : \"1000000\" } "
+            "},"
+            "\"qos\" : { "
+              "\"qci\" : 5, "
+              "\"arp\" : { "
+                "\"priority_level\" : 1,"
+                "\"pre_emption_vulnerability\" : 1, "
+                "\"pre_emption_capability\" : 1"
+              "} "
+            "}, "
+            "\"type\" : 2"
+          "}"
+        "],"
+        "\"ambr\" : { "
+          "\"uplink\" : { \"$numberLong\" : \"1000000\" }, "
+          "\"downlink\" : { \"$numberLong\" : \"1000000\" } "
+        "},"
+        "\"subscribed_rau_tau_timer\" : 12,"
+        "\"network_access_mode\" : 2, "
+        "\"subscriber_status\" : 0, "
+        "\"access_restriction_data\" : 32, "
+        "\"security\" : { "
+          "\"k\" : \"465B5CE8 B199B49F AA5F0A2E E238A6BC\", "
+          "\"opc\" : \"E8ED289D EBA952E4 283B54E8 8E6183CA\", "
+          "\"amf\" : \"8000\", "
+          "\"sqn\" : { \"$numberLong\" : \"64\" } "
+        "}, "
+        "\"__v\" : 0 "
+      "}";
+
+    doc = bson_new_from_json((const uint8_t *)json, -1, &error);;
+#endif
+    ogs_assert(doc);
+
+    return doc;
+}
