@@ -178,7 +178,7 @@ typedef struct ogs_nr_cgi_s {
 
 /************************************
  * S-NSSAI Structure                */
-#define OGS_MAX_NUM_OF_S_NSSAI      16
+#define OGS_MAX_NUM_OF_S_NSSAI      8
 #define OGS_S_NSSAI_NO_SD_VALUE     0xffffff
 typedef struct ogs_s_nssai_s {
     uint8_t sst;
@@ -476,6 +476,16 @@ ED3(uint8_t ext:1;,
 int ogs_pco_parse(ogs_pco_t *pco, unsigned char *data, int data_len);
 int ogs_pco_build(unsigned char *data, int data_len, ogs_pco_t *pco);
 
+typedef struct ogs_slice_data_s {
+    uint8_t sst;
+    ogs_uint24_t sd;
+
+    uint32_t context_identifier; /* for checking default APN */
+
+    int num_of_pdn;
+    ogs_pdn_t pdn[OGS_MAX_NUM_OF_SESS];
+} ogs_slice_data_t;
+
 typedef struct ogs_subscription_data_s {
 #define OGS_ACCESS_RESTRICTION_UTRAN_NOT_ALLOWED                (1)
 #define OGS_ACCESS_RESTRICTION_GERAN_NOT_ALLOWED                (1<<1)
@@ -498,9 +508,8 @@ typedef struct ogs_subscription_data_s {
 #define OGS_RAU_TAU_DEFAULT_TIME                (12*60)     /* 12 min */
     uint32_t                subscribed_rau_tau_timer;       /* unit : seconds */
 
-    uint32_t                context_identifier;             /* default APN */
-    ogs_pdn_t               pdn[OGS_MAX_NUM_OF_SESS];
-    int                     num_of_pdn;
+    int num_of_slice;
+    ogs_slice_data_t slice[OGS_MAX_NUM_OF_S_NSSAI];
 
 #define OGS_MAX_NUM_OF_MSISDN                                   4
     int num_of_msisdn;

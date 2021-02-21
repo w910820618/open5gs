@@ -51,6 +51,7 @@ void mme_s6a_handle_ula(mme_ue_t *mme_ue,
         ogs_diam_s6a_ula_message_t *ula_message)
 {
     ogs_subscription_data_t *subscription_data = NULL;
+    ogs_slice_data_t *slice_data = NULL;
     int i;
 
     ogs_assert(mme_ue);
@@ -58,30 +59,33 @@ void mme_s6a_handle_ula(mme_ue_t *mme_ue,
     subscription_data = &ula_message->subscription_data;
     ogs_assert(subscription_data);
 
+    ogs_assert(subscription_data->num_of_slice == 1);
+    slice_data = &subscription_data->slice[0];
+
     memcpy(&mme_ue->ambr, &subscription_data->ambr, sizeof(ogs_bitrate_t));
 
     mme_pdn_remove_all(mme_ue);
 
-    mme_ue->num_of_pdn = subscription_data->num_of_pdn;
-    mme_ue->context_identifier = subscription_data->context_identifier;
+    mme_ue->num_of_pdn = slice_data->num_of_pdn;
+    mme_ue->context_identifier = slice_data->context_identifier;
 
-    for (i = 0; i < subscription_data->num_of_pdn; i++) {
-        mme_ue->pdn[i].name = ogs_strdup(subscription_data->pdn[i].name);
+    for (i = 0; i < slice_data->num_of_pdn; i++) {
+        mme_ue->pdn[i].name = ogs_strdup(slice_data->pdn[i].name);
         ogs_assert(mme_ue->pdn[i].name);
 
         mme_ue->pdn[i].context_identifier =
-            subscription_data->pdn[i].context_identifier;
+            slice_data->pdn[i].context_identifier;
 
-        mme_ue->pdn[i].pdn_type = subscription_data->pdn[i].pdn_type;
-        memcpy(&mme_ue->pdn[i].paa, &subscription_data->pdn[i].paa,
+        mme_ue->pdn[i].pdn_type = slice_data->pdn[i].pdn_type;
+        memcpy(&mme_ue->pdn[i].paa, &slice_data->pdn[i].paa,
                 sizeof(mme_ue->pdn[i].paa));
 
-        memcpy(&mme_ue->pdn[i].qos, &subscription_data->pdn[i].qos,
+        memcpy(&mme_ue->pdn[i].qos, &slice_data->pdn[i].qos,
                 sizeof(mme_ue->pdn[i].qos));
-        memcpy(&mme_ue->pdn[i].ambr, &subscription_data->pdn[i].ambr,
+        memcpy(&mme_ue->pdn[i].ambr, &slice_data->pdn[i].ambr,
                 sizeof(mme_ue->pdn[i].ambr));
 
-        memcpy(&mme_ue->pdn[i].pgw_ip, &subscription_data->pdn[i].pgw_ip,
+        memcpy(&mme_ue->pdn[i].pgw_ip, &slice_data->pdn[i].pgw_ip,
                 sizeof(mme_ue->pdn[i].pgw_ip));
     }
 }

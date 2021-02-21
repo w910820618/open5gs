@@ -327,6 +327,7 @@ bool udr_nudr_dr_handle_subscription_provisioned(
     ogs_sbi_message_t sendmsg;
     ogs_sbi_response_t *response = NULL;
     ogs_subscription_data_t subscription_data;
+    ogs_slice_data_t *slice_data = NULL;
 
     char *supi = NULL;
 
@@ -362,6 +363,9 @@ bool udr_nudr_dr_handle_subscription_provisioned(
         goto cleanup;
     }
 
+    ogs_assert(subscription_data.num_of_slice == 1);
+    slice_data = &subscription_data.slice[0];
+
     SWITCH(recvmsg->h.resource.component[4])
     CASE(OGS_SBI_RESOURCE_NAME_AM_DATA)
         OpenAPI_access_and_mobility_subscription_data_t
@@ -386,8 +390,8 @@ bool udr_nudr_dr_handle_subscription_provisioned(
                 subscription_data.ambr.downlink, OGS_SBI_BITRATE_KBPS);
 
         SubscribedDnnList = OpenAPI_list_create();
-        for (i = 0; i < subscription_data.num_of_pdn; i++) {
-            OpenAPI_list_add(SubscribedDnnList, subscription_data.pdn[i].name);
+        for (i = 0; i < slice_data->num_of_pdn; i++) {
+            OpenAPI_list_add(SubscribedDnnList, slice_data->pdn[i].name);
         }
 
         memset(&AccessAndMobilitySubscriptionData, 0,
@@ -463,8 +467,8 @@ bool udr_nudr_dr_handle_subscription_provisioned(
 
         dnnConfigurationList = OpenAPI_list_create();
 
-        for (i = 0; i < subscription_data.num_of_pdn; i++) {
-            ogs_pdn_t *pdn = &subscription_data.pdn[i];
+        for (i = 0; i < slice_data->num_of_pdn; i++) {
+            ogs_pdn_t *pdn = &slice_data->pdn[i];
             ogs_assert(pdn);
             ogs_assert(pdn->name);
 
@@ -710,6 +714,7 @@ bool udr_nudr_dr_handle_policy_data(
     ogs_sbi_response_t *response = NULL;
 
     ogs_subscription_data_t subscription_data;
+    ogs_slice_data_t *slice_data = NULL;
 
     ogs_assert(stream);
     ogs_assert(recvmsg);
@@ -743,6 +748,9 @@ bool udr_nudr_dr_handle_policy_data(
                 status = OGS_SBI_HTTP_STATUS_NOT_FOUND;
                 goto cleanup;
             }
+
+            ogs_assert(subscription_data.num_of_slice == 1);
+            slice_data = &subscription_data.slice[0];
 
             SWITCH(recvmsg->h.resource.component[3])
             CASE(OGS_SBI_RESOURCE_NAME_AM_DATA)
@@ -787,8 +795,8 @@ bool udr_nudr_dr_handle_policy_data(
                 SmPolicyDnnDataList = OpenAPI_list_create();
                 ogs_assert(SmPolicyDnnDataList);
 
-                for (i = 0; i < subscription_data.num_of_pdn; i++) {
-                    ogs_pdn_t *pdn = &subscription_data.pdn[i];
+                for (i = 0; i < slice_data->num_of_pdn; i++) {
+                    ogs_pdn_t *pdn = &slice_data->pdn[i];
                     ogs_assert(pdn);
                     ogs_assert(pdn->name);
 

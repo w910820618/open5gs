@@ -281,6 +281,7 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
     int rv;
     uint32_t result_code = 0;
     ogs_subscription_data_t subscription_data;
+    ogs_slice_data_t *slice_data = NULL;
     struct sockaddr_in sin;
     struct sockaddr_in6 sin6;
 
@@ -289,7 +290,7 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
     ogs_debug("[HSS] Update-Location-Request\n");
 
     memset(&subscription_data, 0, sizeof(ogs_subscription_data_t));
-	
+
 	/* Create answer header */
 	qry = *msg;
 	ret = fd_msg_new_answer_from_req(fd_g_config->cnf_dict, msg, 0);
@@ -455,7 +456,9 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
         ret = fd_msg_avp_add(avp, MSG_BRW_LAST_CHILD, avp_rau_tau_timer);
         ogs_assert(ret == 0);
 
-        if (subscription_data.num_of_pdn) {
+        ogs_assert(subscription_data.num_of_slice == 1);
+        slice_data = &subscription_data.slice[0];
+        if (slice_data->num_of_pdn) {
             /* Set the APN Configuration Profile */
             struct avp *apn_configuration_profile;
             struct avp *context_identifier;
@@ -488,7 +491,7 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
                     all_apn_configuration_included_indicator);
             ogs_assert(ret == 0);
 
-            for (i = 0; i < subscription_data.num_of_pdn; i++) {
+            for (i = 0; i < slice_data->num_of_pdn; i++) {
                 /* Set the APN Configuration */
                 struct avp *apn_configuration, *context_identifier, *pdn_type;
                 struct avp *served_party_ip_address, *service_selection;
@@ -497,7 +500,7 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
                 struct avp *pre_emption_capability, *pre_emption_vulnerability;
                 struct avp *mip6_agent_info, *mip_home_agent_address;
 
-                ogs_pdn_t *pdn = &subscription_data.pdn[i];
+                ogs_pdn_t *pdn = &slice_data->pdn[i];
                 ogs_assert(pdn);
                 pdn->context_identifier = i+1;
 

@@ -324,7 +324,12 @@ int ogs_dbi_subscription_data(char *supi,
             }
         } else if (!strcmp(key, "pdn") &&
             BSON_ITER_HOLDS_ARRAY(&iter)) {
+
+            ogs_slice_data_t *slice_data = NULL;
             int pdn_index = 0;
+
+            slice_data =
+                &subscription_data->slice[subscription_data->num_of_slice];
 
             bson_iter_recurse(&iter, &child1_iter);
             while (bson_iter_next(&child1_iter)) {
@@ -335,7 +340,7 @@ int ogs_dbi_subscription_data(char *supi,
                 pdn_index = atoi(child1_key);
                 ogs_assert(pdn_index < OGS_MAX_NUM_OF_SESS);
 
-                pdn = &subscription_data->pdn[pdn_index];
+                pdn = &slice_data->pdn[pdn_index];
 
                 bson_iter_recurse(&child1_iter, &child2_iter);
                 while (bson_iter_next(&child2_iter)) {
@@ -461,7 +466,8 @@ int ogs_dbi_subscription_data(char *supi,
                 }
                 pdn_index++;
             }
-            subscription_data->num_of_pdn = pdn_index;
+            slice_data->num_of_pdn = pdn_index;
+            subscription_data->num_of_slice++;
         }
     }
 

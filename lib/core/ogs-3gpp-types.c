@@ -475,16 +475,22 @@ char *ogs_ipv6_to_string(uint8_t *addr6)
 
 void ogs_subscription_data_free(ogs_subscription_data_t *subscription_data)
 {
-    int i;
+    int i, j;
 
     ogs_assert(subscription_data);
 
-    for (i = 0; i < subscription_data->num_of_pdn; i++) {
-        if (subscription_data->pdn[i].name)
-            ogs_free(subscription_data->pdn[i].name);
+    for (i = 0; i < subscription_data->num_of_slice; i++) {
+        ogs_slice_data_t *slice_data = &subscription_data->slice[i];
+
+        for (j = 0; j < slice_data->num_of_pdn; j++) {
+            if (slice_data->pdn[j].name)
+                ogs_free(slice_data->pdn[j].name);
+        }
+
+        slice_data->num_of_pdn = 0;
     }
 
-    subscription_data->num_of_pdn = 0;
+    subscription_data->num_of_slice = 0;
 }
 
 void ogs_session_data_free(ogs_session_data_t *session_data)

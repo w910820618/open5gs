@@ -814,22 +814,25 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                 ogs_diam_s6a_apn_configuration_profile, &avpch1);
         ogs_assert(ret == 0);
         if (avpch1) {
+            ogs_slice_data_t *slice_data = NULL;
+
             ret = fd_msg_browse(avpch1, MSG_BRW_FIRST_CHILD, &avpch2, NULL);
             ogs_assert(ret == 0);
+
+            ogs_assert(subscription_data->num_of_slice == 0);
+            slice_data = &subscription_data->slice[0];
             while (avpch2) {
                 ret = fd_msg_avp_hdr(avpch2, &hdr);
                 ogs_assert(ret == 0);
                 switch(hdr->avp_code) {
                 case OGS_DIAM_S6A_AVP_CODE_CONTEXT_IDENTIFIER:
-                    subscription_data->context_identifier = 
-                            hdr->avp_value->i32;
+                    slice_data->context_identifier = hdr->avp_value->i32;
                     break;
                 case OGS_DIAM_S6A_AVP_CODE_ALL_APN_CONFIG_INC_IND:
                     break;
                 case OGS_DIAM_S6A_AVP_CODE_APN_CONFIGURATION:
                 {
-                    ogs_pdn_t *pdn = &subscription_data->pdn[
-                                    subscription_data->num_of_pdn];
+                    ogs_pdn_t *pdn = &slice_data->pdn[slice_data->num_of_pdn];
                     ogs_assert(pdn);
                     ret = fd_avp_search_avp(
                         avpch2, ogs_diam_s6a_service_selection, &avpch3);
@@ -1060,7 +1063,7 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                         }
                     }
 
-                    subscription_data->num_of_pdn++;
+                    slice_data->num_of_pdn++;
                     break;
                 }
                 default:
@@ -1070,6 +1073,9 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
 
                 fd_msg_browse(avpch2, MSG_BRW_NEXT, &avpch2, NULL);
             }
+
+            if (slice_data->num_of_pdn)
+                subscription_data->num_of_slice = 1;
         } else {
             ogs_error("no_APN-Configuration-Profile");
             error++;
