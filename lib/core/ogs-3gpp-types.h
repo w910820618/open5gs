@@ -396,7 +396,6 @@ typedef struct ogs_pcc_rule_s {
  * PDN Structure                 */
 typedef struct ogs_pdn_s {
     char *name;
-
     uint32_t context_identifier;
 
 #define OGS_DIAM_PDN_TYPE_IPV4                      0

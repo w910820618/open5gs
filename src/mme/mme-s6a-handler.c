@@ -58,17 +58,30 @@ void mme_s6a_handle_ula(mme_ue_t *mme_ue,
     subscription_data = &ula_message->subscription_data;
     ogs_assert(subscription_data);
 
+    memcpy(&mme_ue->ambr, &subscription_data->ambr, sizeof(ogs_bitrate_t));
+
     mme_pdn_remove_all(mme_ue);
 
     mme_ue->num_of_pdn = subscription_data->num_of_pdn;
     mme_ue->context_identifier = subscription_data->context_identifier;
 
     for (i = 0; i < subscription_data->num_of_pdn; i++) {
-        memcpy(&mme_ue->pdn[i], &subscription_data->pdn[i], sizeof(ogs_pdn_t));
-
         mme_ue->pdn[i].name = ogs_strdup(subscription_data->pdn[i].name);
         ogs_assert(mme_ue->pdn[i].name);
-    }
 
-    memcpy(&mme_ue->ambr, &subscription_data->ambr, sizeof(ogs_bitrate_t));
+        mme_ue->pdn[i].context_identifier =
+            subscription_data->pdn[i].context_identifier;
+
+        mme_ue->pdn[i].pdn_type = subscription_data->pdn[i].pdn_type;
+        memcpy(&mme_ue->pdn[i].paa, &subscription_data->pdn[i].paa,
+                sizeof(mme_ue->pdn[i].paa));
+
+        memcpy(&mme_ue->pdn[i].qos, &subscription_data->pdn[i].qos,
+                sizeof(mme_ue->pdn[i].qos));
+        memcpy(&mme_ue->pdn[i].ambr, &subscription_data->pdn[i].ambr,
+                sizeof(mme_ue->pdn[i].ambr));
+
+        memcpy(&mme_ue->pdn[i].pgw_ip, &subscription_data->pdn[i].pgw_ip,
+                sizeof(mme_ue->pdn[i].pgw_ip));
+    }
 }
