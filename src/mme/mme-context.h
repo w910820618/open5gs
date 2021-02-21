@@ -395,7 +395,12 @@ struct mme_ue_s {
     uint8_t         selected_int_algorithm;
 
     /* HSS Info */
-    ogs_subscription_data_t subscription_data;
+    ogs_bitrate_t   ambr; /* UE-AMBR */
+
+    uint32_t        context_identifier; /* default APN */
+
+    int             num_of_pdn;
+    ogs_pdn_t       pdn[OGS_MAX_NUM_OF_SESS];
 
     /* ESM Info */
     ogs_list_t      sess_list;

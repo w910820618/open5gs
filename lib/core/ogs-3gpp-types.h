@@ -395,11 +395,10 @@ typedef struct ogs_pcc_rule_s {
 /**********************************
  * PDN Structure                 */
 typedef struct ogs_pdn_s {
+    char *name;
+
     uint32_t context_identifier;
-    union {
-        char apn[OGS_MAX_APN_LEN+1];
-        char dnn[OGS_MAX_DNN_LEN+1];
-    };
+
 #define OGS_DIAM_PDN_TYPE_IPV4                      0
 #define OGS_DIAM_PDN_TYPE_IPV6                      1
 #define OGS_DIAM_PDN_TYPE_IPV4V6                    2
@@ -512,6 +511,8 @@ typedef struct ogs_subscription_data_s {
         char bcd[OGS_MAX_MSISDN_BCD_LEN+1];
     } msisdn[OGS_MAX_NUM_OF_MSISDN];
 } ogs_subscription_data_t;
+
+void ogs_subscription_data_free(ogs_subscription_data_t *subscription_data);
 
 typedef struct ogs_session_data_s {
     ogs_pdn_t           pdn;

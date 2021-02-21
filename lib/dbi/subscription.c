@@ -218,8 +218,15 @@ int ogs_dbi_subscription_data(char *supi,
     char *supi_type = NULL;
     char *supi_id = NULL;
 
+    ogs_subscription_data_t zero_data;
+
     ogs_assert(subscription_data);
     ogs_assert(supi);
+
+    memset(&zero_data, 0, sizeof(zero_data));
+
+    /* subscription_data should be initialized to zero */
+    ogs_assert(memcmp(subscription_data, &zero_data, sizeof(zero_data)) == 0);
 
     supi_type = ogs_id_get_type(supi);
     ogs_assert(supi_type);
@@ -256,7 +263,6 @@ int ogs_dbi_subscription_data(char *supi,
         goto out;
     }
 
-    memset(subscription_data, 0, sizeof(ogs_subscription_data_t));
     while (bson_iter_next(&iter)) {
         const char *key = bson_iter_key(&iter);
         if (!strcmp(key, "msisdn") &&
@@ -334,11 +340,12 @@ int ogs_dbi_subscription_data(char *supi,
                 bson_iter_recurse(&child1_iter, &child2_iter);
                 while (bson_iter_next(&child2_iter)) {
                     const char *child2_key = bson_iter_key(&child2_iter);
-                    if (!strcmp(child2_key, "apn") &&
+                    if ((!strcmp(child2_key, "apn") ||
+                            !strcmp(child2_key, "dnn")) &&
                         BSON_ITER_HOLDS_UTF8(&child2_iter)) {
                         utf8 = bson_iter_utf8(&child2_iter, &length);
-                        ogs_cpystrn(pdn->apn, utf8,
-                            ogs_min(length, OGS_MAX_APN_LEN)+1);
+                        pdn->name = ogs_strndup(utf8, length);
+                        ogs_assert(pdn->name);
                     } else if (!strcmp(child2_key, "type") &&
                         BSON_ITER_HOLDS_INT32(&child2_iter)) {
                         pdn->pdn_type = bson_iter_int32(&child2_iter);

@@ -51,12 +51,24 @@ void mme_s6a_handle_ula(mme_ue_t *mme_ue,
         ogs_diam_s6a_ula_message_t *ula_message)
 {
     ogs_subscription_data_t *subscription_data = NULL;
+    int i;
 
     ogs_assert(mme_ue);
     ogs_assert(ula_message);
     subscription_data = &ula_message->subscription_data;
     ogs_assert(subscription_data);
 
-    memcpy(&mme_ue->subscription_data,
-            subscription_data, sizeof(ogs_subscription_data_t));
+    mme_pdn_remove_all(mme_ue);
+
+    mme_ue->num_of_pdn = subscription_data->num_of_pdn;
+    mme_ue->context_identifier = subscription_data->context_identifier;
+
+    for (i = 0; i < subscription_data->num_of_pdn; i++) {
+        memcpy(&mme_ue->pdn[i], &subscription_data->pdn[i], sizeof(ogs_pdn_t));
+
+        mme_ue->pdn[i].name = ogs_strdup(subscription_data->pdn[i].name);
+        ogs_assert(mme_ue->pdn[i].name);
+    }
+
+    memcpy(&mme_ue->ambr, &subscription_data->ambr, sizeof(ogs_bitrate_t));
 }

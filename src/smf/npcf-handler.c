@@ -394,7 +394,7 @@ bool smf_npcf_smpolicycontrol_handle_create(
     dl_pdr->ue_ip_addr.sd = OGS_PFCP_UE_IP_DST;
 
     ogs_info("UE SUPI[%s] DNN[%s] IPv4[%s] IPv6[%s]",
-	    smf_ue->supi, sess->pdn.dnn,
+	    smf_ue->supi, sess->pdn.name,
         sess->ipv4 ? OGS_INET_NTOP(&sess->ipv4->addr, buf1) : "",
         sess->ipv6 ? OGS_INET6_NTOP(&sess->ipv6->addr, buf2) : "");
 
@@ -408,7 +408,7 @@ bool smf_npcf_smpolicycontrol_handle_create(
     } else {
         resource = ogs_pfcp_gtpu_resource_find(
                 &sess->pfcp_node->gtpu_resource_list,
-                sess->pdn.dnn, OGS_PFCP_INTERFACE_ACCESS);
+                sess->pdn.name, OGS_PFCP_INTERFACE_ACCESS);
         if (resource) {
             ogs_pfcp_user_plane_ip_resource_info_to_sockaddr(&resource->info,
                 &sess->upf_n3_addr, &sess->upf_n3_addr6);

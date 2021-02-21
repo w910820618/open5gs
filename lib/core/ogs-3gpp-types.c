@@ -473,11 +473,28 @@ char *ogs_ipv6_to_string(uint8_t *addr6)
     return (char *)OGS_INET6_NTOP(addr6, buf);
 }
 
+void ogs_subscription_data_free(ogs_subscription_data_t *subscription_data)
+{
+    int i;
+
+    ogs_assert(subscription_data);
+
+    for (i = 0; i < subscription_data->num_of_pdn; i++) {
+        if (subscription_data->pdn[i].name)
+            ogs_free(subscription_data->pdn[i].name);
+    }
+
+    subscription_data->num_of_pdn = 0;
+}
+
 void ogs_session_data_free(ogs_session_data_t *session_data)
 {
     int i;
 
     ogs_assert(session_data);
+
+    if (session_data->pdn.name)
+        ogs_free(session_data->pdn.name);
 
     for (i = 0; i < session_data->num_of_pcc_rule; i++)
         OGS_PCC_RULE_FREE(&session_data->pcc_rule[i]);

@@ -109,8 +109,8 @@ bool smf_nudm_sdm_handle_get(smf_sess_t *sess, ogs_sbi_stream_t *stream,
                 continue;
             }
 
-            if (sess->dnn &&
-                ogs_strcasecmp(sess->dnn, dnnConfigurationMap->key) != 0)
+            if (sess->pdn.name &&
+                ogs_strcasecmp(sess->pdn.name, dnnConfigurationMap->key) != 0)
                 continue;
 
             if (sess->ue_pdu_session_type) {
@@ -219,15 +219,14 @@ bool smf_nudm_sdm_handle_get(smf_sess_t *sess, ogs_sbi_stream_t *stream,
             }
 
             /* Succeeded to get PDU Session */
-            ogs_cpystrn(sess->pdn.dnn, dnnConfigurationMap->key,
-                ogs_min(strlen(dnnConfigurationMap->key),
-                    OGS_MAX_DNN_LEN)+1);
+            if (!sess->pdn.name)
+                sess->pdn.name = ogs_strdup(dnnConfigurationMap->key);
 
             break;
         }
     }
 
-    if (!strlen(sess->pdn.dnn)) {
+    if (!sess->pdn.name) {
         strerror = ogs_msprintf("[%s:%d] No dnnConfiguration",
                 smf_ue->supi, sess->psi);
         return false;

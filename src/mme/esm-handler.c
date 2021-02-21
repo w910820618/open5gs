@@ -96,7 +96,8 @@ int esm_handle_pdn_connectivity_request(mme_bearer_t *bearer,
         mme_bearer_t *default_bearer = NULL;
         mme_bearer_t *dedicated_bearer = NULL, *next_dedicated_bearer = NULL;
 
-        ogs_debug("    APN[%s]", sess->pdn->apn);
+        ogs_assert(sess->pdn->name);
+        ogs_debug("    APN[%s]", sess->pdn->name);
 
         default_bearer = mme_default_bearer_in_sess(sess);
         if (default_bearer) {
@@ -148,7 +149,8 @@ int esm_handle_information_response(mme_sess_t *sess,
     }
 
     if (sess->pdn) {
-        ogs_debug("    APN[%s]", sess->pdn->apn);
+        ogs_assert(sess->pdn->name);
+        ogs_debug("    APN[%s]", sess->pdn->name);
 
         if (SESSION_CONTEXT_IS_AVAILABLE(mme_ue) &&
             OGS_GTP_PDN_TYPE_IS_VALID(sess->pdn->paa.pdn_type)) {

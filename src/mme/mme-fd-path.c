@@ -836,9 +836,9 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                     ogs_assert(ret == 0);
                     if (avpch3) {
                         ret = fd_msg_avp_hdr(avpch3, &hdr);
-                        ogs_cpystrn(pdn->apn,
-                            (char*)hdr->avp_value->os.data,
-                            ogs_min(hdr->avp_value->os.len, OGS_MAX_APN_LEN)+1);
+                        pdn->name = ogs_strndup(
+                                        (char*)hdr->avp_value->os.data,
+                                        hdr->avp_value->os.len);
                     } else {
                         ogs_error("no_Service-Selection");
                         error++;
@@ -1088,11 +1088,15 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
         rv = ogs_queue_push(ogs_app()->queue, e);
         if (rv != OGS_OK) {
             ogs_error("ogs_queue_push() failed:%d", (int)rv);
+            ogs_subscription_data_free(subscription_data);
             ogs_pkbuf_free(e->pkbuf);
             mme_event_free(e);
         } else {
             ogs_pollset_notify(ogs_app()->pollset);
         }
+    } else {
+        ogs_subscription_data_free(subscription_data);
+        ogs_pkbuf_free(s6abuf);
     }
 
     /* Free the message */

@@ -119,6 +119,7 @@ ogs_pkbuf_t *esm_build_activate_default_bearer_context_request(
     ogs_assert(mme_ue);
     pdn = sess->pdn;
     ogs_assert(pdn);
+    ogs_assert(pdn->name);
     bearer = mme_default_bearer_in_sess(sess);
     ogs_assert(bearer);
     ogs_assert(mme_bearer_next(bearer) == NULL);
@@ -145,10 +146,10 @@ ogs_pkbuf_t *esm_build_activate_default_bearer_context_request(
             bearer->qos.mbr.downlink, bearer->qos.mbr.uplink,
             bearer->qos.gbr.downlink, bearer->qos.gbr.uplink);
 
-    access_point_name->length = strlen(pdn->apn);
-    ogs_cpystrn(access_point_name->apn, pdn->apn,
+    access_point_name->length = strlen(pdn->name);
+    ogs_cpystrn(access_point_name->apn, pdn->name,
             ogs_min(access_point_name->length, OGS_MAX_APN_LEN) + 1);
-    ogs_debug("    APN[%s]", pdn->apn);
+    ogs_debug("    APN[%s]", pdn->name);
 
     /*
      * In TS24.301 V15.6.0

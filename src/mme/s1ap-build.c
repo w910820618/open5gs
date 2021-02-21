@@ -283,13 +283,10 @@ ogs_pkbuf_t *s1ap_build_initial_context_setup_request(
     enb_ue_t *enb_ue = NULL;
     mme_sess_t *sess = NULL;
     mme_bearer_t *bearer = NULL;
-    ogs_subscription_data_t *subscription_data = NULL;
 
     ogs_assert(mme_ue);
     enb_ue = enb_ue_cycle(mme_ue->enb_ue);
     ogs_assert(enb_ue);
-    subscription_data = &mme_ue->subscription_data;
-    ogs_assert(subscription_data);
 
     ogs_debug("InitialContextSetupRequest");
 
@@ -355,10 +352,10 @@ ogs_pkbuf_t *s1ap_build_initial_context_setup_request(
 
     asn_uint642INTEGER(
             &UEAggregateMaximumBitrate->uEaggregateMaximumBitRateUL, 
-            subscription_data->ambr.uplink);
+            mme_ue->ambr.uplink);
     asn_uint642INTEGER(
             &UEAggregateMaximumBitrate->uEaggregateMaximumBitRateDL, 
-            subscription_data->ambr.downlink);
+            mme_ue->ambr.downlink);
 
     ogs_list_for_each(&mme_ue->sess_list, sess) {
         ogs_list_for_each(&sess->bearer_list, bearer) {
@@ -1124,7 +1121,6 @@ ogs_pkbuf_t *s1ap_build_e_rab_release_command(
 
     mme_ue_t *mme_ue = NULL;
     enb_ue_t *enb_ue = NULL;
-    ogs_subscription_data_t *subscription_data = NULL;
 
     ogs_assert(esmbuf);
     ogs_assert(bearer);
@@ -1133,8 +1129,6 @@ ogs_pkbuf_t *s1ap_build_e_rab_release_command(
     ogs_assert(mme_ue);
     enb_ue = enb_ue_cycle(mme_ue->enb_ue);
     ogs_assert(enb_ue);
-    subscription_data = &mme_ue->subscription_data;
-    ogs_assert(subscription_data);
 
     ogs_debug("E-RABReleaseCommand");
 
@@ -1207,10 +1201,10 @@ ogs_pkbuf_t *s1ap_build_e_rab_release_command(
     if (UEAggregateMaximumBitrate) {
         asn_uint642INTEGER(
                 &UEAggregateMaximumBitrate->uEaggregateMaximumBitRateUL,
-                subscription_data->ambr.uplink);
+                mme_ue->ambr.uplink);
         asn_uint642INTEGER(
                 &UEAggregateMaximumBitrate->uEaggregateMaximumBitRateDL,
-                subscription_data->ambr.downlink);
+                mme_ue->ambr.downlink);
     }
 
     item = CALLOC(1, sizeof(S1AP_E_RABItemIEs_t));
@@ -1824,7 +1818,6 @@ ogs_pkbuf_t *s1ap_build_handover_request(
     mme_ue_t *mme_ue = NULL;
     mme_sess_t *sess = NULL;
     mme_bearer_t *bearer = NULL;
-    ogs_subscription_data_t *subscription_data = NULL;
 
     ogs_assert(handovertype);
     ogs_assert(cause);
@@ -1833,8 +1826,6 @@ ogs_pkbuf_t *s1ap_build_handover_request(
     ogs_assert(target_ue);
     mme_ue = target_ue->mme_ue;
     ogs_assert(mme_ue);
-    subscription_data = &mme_ue->subscription_data;
-    ogs_assert(subscription_data);
 
     ogs_debug("HandoverRequest");
 
@@ -1935,10 +1926,10 @@ ogs_pkbuf_t *s1ap_build_handover_request(
 
     asn_uint642INTEGER(
             &UEAggregateMaximumBitrate->uEaggregateMaximumBitRateUL, 
-            subscription_data->ambr.uplink);
+            mme_ue->ambr.uplink);
     asn_uint642INTEGER(
             &UEAggregateMaximumBitrate->uEaggregateMaximumBitRateDL, 
-            subscription_data->ambr.downlink);
+            mme_ue->ambr.downlink);
 
     ogs_list_for_each(&mme_ue->sess_list, sess) {
         ogs_list_for_each(&sess->bearer_list, bearer) {

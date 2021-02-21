@@ -444,8 +444,9 @@ void smf_gx_send_ccr(smf_sess_t *sess, ogs_gtp_xact_t *xact,
     /* Set Called-Station-Id */
     ret = fd_msg_avp_new(ogs_diam_gx_called_station_id, 0, &avp);
     ogs_assert(ret == 0);
-    val.os.data = (uint8_t*)sess->pdn.apn;
-    val.os.len = strlen(sess->pdn.apn);
+    ogs_assert(sess->pdn.name);
+    val.os.data = (uint8_t*)sess->pdn.name;
+    val.os.len = strlen(sess->pdn.name);
     ret = fd_msg_avp_setvalue(avp, &val);
     ogs_assert(ret == 0);
     ret = fd_msg_avp_add(req, MSG_BRW_LAST_CHILD, avp);

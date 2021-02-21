@@ -614,9 +614,10 @@ static bool compare_ue_info(ogs_pfcp_node_t *node, smf_sess_t *sess)
 
     ogs_assert(node);
     ogs_assert(sess);
+    ogs_assert(sess->pdn.name);
 
     for (i = 0; i < node->num_of_dnn; i++)
-        if (ogs_strcasecmp(node->dnn[i], sess->pdn.dnn) == 0) return true;
+        if (ogs_strcasecmp(node->dnn[i], sess->pdn.name) == 0) return true;
 
     for (i = 0; i < node->num_of_e_cell_id; i++)
         if (node->e_cell_id[i] == sess->e_cgi.cell_id) return true;
@@ -739,7 +740,8 @@ smf_sess_t *smf_sess_add_by_apn(smf_ue_t *smf_ue, char *apn)
     ogs_pfcp_bar_new(&sess->pfcp);
 
     /* Set APN */
-    ogs_cpystrn(sess->pdn.apn, apn, OGS_MAX_APN_LEN+1);
+    sess->pdn.name = ogs_strdup(apn);
+    ogs_assert(sess->pdn.name);
 
     /* Setup Timer */
     sess->t_release_holding = ogs_timer_add(
@@ -809,7 +811,7 @@ smf_sess_t *smf_sess_add_by_gtp_message(ogs_gtp_message_t *message)
     sess = smf_sess_find_by_apn(smf_ue, apn);
     if (sess) {
         ogs_warn("OLD Session Release [IMSI:%s,APN:%s]",
-                smf_ue->imsi_bcd, sess->pdn.apn);
+                smf_ue->imsi_bcd, sess->pdn.name);
         smf_sess_remove(sess);
     }
 
@@ -948,8 +950,9 @@ void smf_sess_set_ue_ip(smf_sess_t *sess)
         ogs_pfcp_subnet_t *subnet = NULL;
         ogs_pfcp_subnet_t *subnet6 = NULL;
 
-        subnet = ogs_pfcp_find_subnet_by_dnn(AF_INET, sess->pdn.dnn);
-        subnet6 = ogs_pfcp_find_subnet_by_dnn(AF_INET6, sess->pdn.dnn);
+        ogs_assert(sess->pdn.name);
+        subnet = ogs_pfcp_find_subnet_by_dnn(AF_INET, sess->pdn.name);
+        subnet6 = ogs_pfcp_find_subnet_by_dnn(AF_INET6, sess->pdn.name);
 
         if (subnet != NULL && subnet6 == NULL)
             sess->pdn.pdn_type = OGS_PDU_SESSION_TYPE_IPV4;
@@ -973,14 +976,14 @@ void smf_sess_set_ue_ip(smf_sess_t *sess)
 
     if (sess->pdn.pdn_type == OGS_PDU_SESSION_TYPE_IPV4) {
         sess->ipv4 = ogs_pfcp_ue_ip_alloc(
-                AF_INET, sess->pdn.dnn, (uint8_t *)&sess->pdn.ue_ip.addr);
+                AF_INET, sess->pdn.name, (uint8_t *)&sess->pdn.ue_ip.addr);
         ogs_assert(sess->ipv4);
         sess->pdn.paa.addr = sess->ipv4->addr[0];
         ogs_hash_set(smf_self()->ipv4_hash,
                 sess->ipv4->addr, OGS_IPV4_LEN, sess);
     } else if (sess->pdn.pdn_type == OGS_PDU_SESSION_TYPE_IPV6) {
         sess->ipv6 = ogs_pfcp_ue_ip_alloc(
-                AF_INET6, sess->pdn.dnn, sess->pdn.ue_ip.addr6);
+                AF_INET6, sess->pdn.name, sess->pdn.ue_ip.addr6);
         ogs_assert(sess->ipv6);
 
         subnet6 = sess->ipv6->subnet;
@@ -992,10 +995,10 @@ void smf_sess_set_ue_ip(smf_sess_t *sess)
                 sess->ipv6->addr, OGS_IPV6_LEN, sess);
     } else if (sess->pdn.pdn_type == OGS_PDU_SESSION_TYPE_IPV4V6) {
         sess->ipv4 = ogs_pfcp_ue_ip_alloc(
-                AF_INET, sess->pdn.dnn, (uint8_t *)&sess->pdn.ue_ip.addr);
+                AF_INET, sess->pdn.name, (uint8_t *)&sess->pdn.ue_ip.addr);
         ogs_assert(sess->ipv4);
         sess->ipv6 = ogs_pfcp_ue_ip_alloc(
-                AF_INET6, sess->pdn.dnn, sess->pdn.ue_ip.addr6);
+                AF_INET6, sess->pdn.name, sess->pdn.ue_ip.addr6);
         ogs_assert(sess->ipv6);
 
         subnet6 = sess->ipv6->subnet;
@@ -1114,7 +1117,7 @@ void smf_sess_remove(smf_sess_t *sess)
    
     ogs_info("Removed Session: UE IMSI:[%s] DNN:[%s:%d] IPv4:[%s] IPv6:[%s]",
             smf_ue->supi ? smf_ue->supi : smf_ue->imsi_bcd,
-            sess->pdn.dnn, sess->psi,
+            sess->pdn.name, sess->psi,
             sess->ipv4 ? OGS_INET_NTOP(&sess->ipv4->addr, buf1) : "",
             sess->ipv6 ? OGS_INET6_NTOP(&sess->ipv6->addr, buf2) : "");
 
@@ -1163,8 +1166,8 @@ void smf_sess_remove(smf_sess_t *sess)
     if (sess->policy_association_id)
         ogs_free(sess->policy_association_id);
 
-    if (sess->dnn)
-        ogs_free(sess->dnn);
+    if (sess->pdn.name)
+        ogs_free(sess->pdn.name);
 
     if (sess->upf_n3_addr)
         ogs_freeaddrinfo(sess->upf_n3_addr);
@@ -1231,7 +1234,7 @@ smf_sess_t *smf_sess_find_by_apn(smf_ue_t *smf_ue, char *apn)
     ogs_assert(apn);
 
     ogs_list_for_each(&smf_ue->sess_list, sess) {
-        if (!ogs_strcasecmp(sess->pdn.apn, apn))
+        if (!ogs_strcasecmp(sess->pdn.name, apn))
             return sess;
     }
 
@@ -1311,8 +1314,8 @@ smf_bearer_t *smf_qos_flow_add(smf_sess_t *sess)
 
     dl_pdr->src_if = OGS_PFCP_INTERFACE_CORE;
 
-    if (strlen(sess->pdn.apn))
-        dl_pdr->apn = ogs_strdup(sess->pdn.apn);
+    if (sess->pdn.name)
+        dl_pdr->apn = ogs_strdup(sess->pdn.name);
 
     ul_pdr = ogs_pfcp_pdr_add(&sess->pfcp);
     ogs_assert(ul_pdr);
@@ -1320,8 +1323,8 @@ smf_bearer_t *smf_qos_flow_add(smf_sess_t *sess)
 
     ul_pdr->src_if = OGS_PFCP_INTERFACE_ACCESS;
 
-    if (strlen(sess->pdn.apn))
-        ul_pdr->apn = ogs_strdup(sess->pdn.apn);
+    if (sess->pdn.name)
+        ul_pdr->apn = ogs_strdup(sess->pdn.name);
 
     ul_pdr->outer_header_removal_len = 1;
     if (sess->pdn.pdn_type == OGS_GTP_PDN_TYPE_IPV4) {
@@ -1548,8 +1551,8 @@ smf_bearer_t *smf_bearer_add(smf_sess_t *sess)
 
     dl_pdr->src_if = OGS_PFCP_INTERFACE_CORE;
 
-    if (strlen(sess->pdn.apn))
-        dl_pdr->apn = ogs_strdup(sess->pdn.apn);
+    ogs_assert(sess->pdn.name);
+    dl_pdr->apn = ogs_strdup(sess->pdn.name);
 
     ul_pdr = ogs_pfcp_pdr_add(&sess->pfcp);
     ogs_assert(ul_pdr);
@@ -1557,8 +1560,8 @@ smf_bearer_t *smf_bearer_add(smf_sess_t *sess)
 
     ul_pdr->src_if = OGS_PFCP_INTERFACE_ACCESS;
 
-    if (strlen(sess->pdn.apn))
-        ul_pdr->apn = ogs_strdup(sess->pdn.apn);
+    ogs_assert(sess->pdn.name);
+    ul_pdr->apn = ogs_strdup(sess->pdn.name);
 
     ul_pdr->outer_header_removal_len = 1;
     if (sess->pdn.pdn_type == OGS_GTP_PDN_TYPE_IPV4) {
@@ -1600,7 +1603,7 @@ smf_bearer_t *smf_bearer_add(smf_sess_t *sess)
     } else {
         resource = ogs_pfcp_gtpu_resource_find(
                 &sess->pfcp_node->gtpu_resource_list,
-                sess->pdn.apn, OGS_PFCP_INTERFACE_ACCESS);
+                sess->pdn.name, OGS_PFCP_INTERFACE_ACCESS);
         if (resource) {
             ogs_pfcp_user_plane_ip_resource_info_to_sockaddr(&resource->info,
                 &bearer->pgw_s5u_addr, &bearer->pgw_s5u_addr6);

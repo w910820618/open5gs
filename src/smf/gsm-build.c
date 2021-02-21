@@ -218,8 +218,9 @@ ogs_pkbuf_t *gsm_build_pdu_session_establishment_accept(smf_sess_t *sess)
     /* DNN */
     pdu_session_establishment_accept->presencemask |=
         OGS_NAS_5GS_PDU_SESSION_ESTABLISHMENT_ACCEPT_DNN_PRESENT;
-    dnn->length = strlen(sess->pdn.dnn);
-    ogs_cpystrn(dnn->value, sess->pdn.dnn,
+    ogs_assert(sess->pdn.name);
+    dnn->length = strlen(sess->pdn.name);
+    ogs_cpystrn(dnn->value, sess->pdn.name,
             ogs_min(dnn->length, OGS_MAX_DNN_LEN) + 1);
 
     pkbuf = ogs_nas_5gs_plain_encode(&message);

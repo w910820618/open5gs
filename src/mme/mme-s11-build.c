@@ -46,6 +46,7 @@ ogs_pkbuf_t *mme_s11_build_create_session_request(
     ogs_assert(sess);
     pdn = sess->pdn;
     ogs_assert(pdn);
+    ogs_assert(pdn->name);
     bearer = mme_default_bearer_in_sess(sess);
     ogs_assert(bearer);
     mme_ue = sess->mme_ue;
@@ -131,9 +132,9 @@ ogs_pkbuf_t *mme_s11_build_create_session_request(
         ogs_sockaddr_t *pgw_addr6 = NULL;
 
         pgw_addr = mme_pgw_addr_find_by_apn(
-                &mme_self()->pgw_list, AF_INET, pdn->apn);
+                &mme_self()->pgw_list, AF_INET, pdn->name);
         pgw_addr6 = mme_pgw_addr_find_by_apn(
-                &mme_self()->pgw_list, AF_INET6, pdn->apn);
+                &mme_self()->pgw_list, AF_INET6, pdn->name);
         if (!pgw_addr && !pgw_addr6) {
             pgw_addr = mme_self()->pgw_addr;
             pgw_addr6 = mme_self()->pgw_addr6;
@@ -149,7 +150,7 @@ ogs_pkbuf_t *mme_s11_build_create_session_request(
 
     req->access_point_name.presence = 1;
     req->access_point_name.len = ogs_fqdn_build(
-            apn, pdn->apn, strlen(pdn->apn));
+            apn, pdn->name, strlen(pdn->name));
     req->access_point_name.data = apn;
 
     req->selection_mode.presence = 1;

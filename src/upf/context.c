@@ -555,7 +555,6 @@ void upf_sess_set_ue_ip(upf_sess_t *sess,
     ogs_assert(ue_ip);
 
     /* Set PDN-Type and UE IP Address */
-    sess->pdn.pdn_type = pdn_type;
     if (pdn_type == OGS_GTP_PDN_TYPE_IPV4) {
         if (ue_ip->ipv4 || pdr->dnn) {
             sess->ipv4 = ogs_pfcp_ue_ip_alloc(

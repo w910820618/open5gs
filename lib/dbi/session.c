@@ -119,8 +119,8 @@ int ogs_dbi_session_data(char *supi, char *dnn,
                             !strcmp(child2_key, "dnn")) &&
                         BSON_ITER_HOLDS_UTF8(&child2_iter)) {
                         utf8 = bson_iter_utf8(&child2_iter, &length);
-                        ogs_cpystrn(pdn->dnn, utf8,
-                            ogs_min(length, OGS_MAX_APN_LEN)+1);
+                        pdn->name = ogs_strndup(utf8, length);
+                        ogs_assert(pdn->name);
                     } else if (!strcmp(child2_key, "type") &&
                         BSON_ITER_HOLDS_INT32(&child2_iter)) {
                         pdn->pdn_type = bson_iter_int32(&child2_iter);

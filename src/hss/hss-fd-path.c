@@ -287,6 +287,8 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
     ogs_assert(msg);
 
     ogs_debug("[HSS] Update-Location-Request\n");
+
+    memset(&subscription_data, 0, sizeof(ogs_subscription_data_t));
 	
 	/* Create answer header */
 	qry = *msg;
@@ -562,8 +564,9 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
                 ret = fd_msg_avp_new(ogs_diam_s6a_service_selection, 0, 
                         &service_selection);
                 ogs_assert(ret == 0);
-                val.os.data = (uint8_t *)pdn->apn;
-                val.os.len = strlen(pdn->apn);
+                ogs_assert(pdn->name);
+                val.os.data = (uint8_t *)pdn->name;
+                val.os.len = strlen(pdn->name);
                 ret = fd_msg_avp_setvalue(service_selection, &val);
                 ogs_assert(ret == 0);
                 ret = fd_msg_avp_add(apn_configuration, 
@@ -726,6 +729,8 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
 	ogs_diam_logger_self()->stats.nb_echoed++;
 	ogs_assert( pthread_mutex_unlock(&ogs_diam_logger_self()->stats_lock) == 0);
 
+    ogs_subscription_data_free(&subscription_data);
+
 	return 0;
 
 out:
@@ -748,6 +753,8 @@ out:
 
 	ret = fd_msg_send(msg, NULL, NULL);
     ogs_assert(ret == 0);
+
+    ogs_subscription_data_free(&subscription_data);
 
     return 0;
 }

@@ -30,6 +30,8 @@ bool pcf_nudr_dr_handle_query_am_data(
     ogs_sbi_header_t header;
     ogs_sbi_response_t *response = NULL;
 
+    ogs_subscription_data_t subscription_data;
+
     ogs_assert(pcf_ue);
     ogs_assert(stream);
     server = ogs_sbi_server_from_stream(stream);
@@ -37,10 +39,10 @@ bool pcf_nudr_dr_handle_query_am_data(
 
     ogs_assert(recvmsg);
 
+    memset(&subscription_data, 0, sizeof(ogs_subscription_data_t));
+
     SWITCH(recvmsg->h.resource.component[3])
     CASE(OGS_SBI_RESOURCE_NAME_AM_DATA)
-        ogs_subscription_data_t subscription_data;
-
         OpenAPI_policy_association_t PolicyAssociation;
         OpenAPI_ambr_t UeAmbr;
         OpenAPI_list_t *TriggerList = NULL;
@@ -141,6 +143,8 @@ bool pcf_nudr_dr_handle_query_am_data(
         if (UeAmbr.downlink)
             ogs_free(UeAmbr.downlink);
 
+        ogs_subscription_data_free(&subscription_data);
+
         return true;
 
     DEFAULT
@@ -154,6 +158,8 @@ cleanup:
     ogs_error("%s", strerror);
     ogs_sbi_server_send_error(stream, status, recvmsg, strerror, NULL);
     ogs_free(strerror);
+
+    ogs_subscription_data_free(&subscription_data);
 
     return false;
 }
@@ -576,6 +582,7 @@ bool pcf_nudr_dr_handle_query_sm_data(
 
 cleanup:
     ogs_assert(strerror);
+    ogs_assert(status);
     ogs_error("%s", strerror);
     ogs_sbi_server_send_error(stream, status, recvmsg, strerror, NULL);
     ogs_free(strerror);

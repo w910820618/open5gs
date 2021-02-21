@@ -249,10 +249,6 @@ typedef struct smf_sess_s {
     ogs_nr_cgi_t    nr_cgi;
     ogs_time_t      ue_location_timestamp;
 
-    /* S_NSSAI & DNN */
-    ogs_s_nssai_t   s_nssai;
-    char            *dnn;
-
     /* PCF ID */
     char            *pcf_id;
 
@@ -261,6 +257,9 @@ typedef struct smf_sess_s {
         uint8_t mbr_dl;
         uint8_t mbr_ul;
     } integrity_protection;
+
+    /* S_NSSAI */
+    ogs_s_nssai_t   s_nssai;
 
     /* PDN Configuration */
     ogs_pdn_t pdn;

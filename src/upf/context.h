@@ -72,7 +72,6 @@ typedef struct upf_sess_s {
     uint64_t        smf_n4_seid;        /* SMF SEID is received from Peer */
 
     /* APN Configuration */
-    ogs_pdn_t       pdn;
     ogs_pfcp_ue_ip_t *ipv4;
     ogs_pfcp_ue_ip_t *ipv6;
 

@@ -2743,7 +2743,8 @@ mme_sess_t *mme_sess_find_by_apn(mme_ue_t *mme_ue, char *apn)
 
     sess = mme_sess_first(mme_ue);
     while (sess) {
-        if (sess->pdn && ogs_strcasecmp(sess->pdn->apn, apn) == 0)
+        ogs_assert(sess->pdn->name);
+        if (sess->pdn && ogs_strcasecmp(sess->pdn->name, apn) == 0)
             return sess;
 
         sess = mme_sess_next(sess);
@@ -3077,30 +3078,30 @@ mme_bearer_t *mme_bearer_cycle(mme_bearer_t *bearer)
 
 void mme_pdn_remove_all(mme_ue_t *mme_ue)
 {
-    ogs_subscription_data_t *subscription_data = NULL;
+    int i;
 
     ogs_assert(mme_ue);
-    subscription_data = &mme_ue->subscription_data;
-    ogs_assert(subscription_data);
 
-    subscription_data->num_of_pdn = 0;
+    for (i = 0; i < mme_ue->num_of_pdn; i++) {
+        if (mme_ue->pdn[i].name)
+            ogs_free(mme_ue->pdn[i].name);
+    }
+
+    mme_ue->num_of_pdn = 0;
 }
 
 ogs_pdn_t *mme_pdn_find_by_apn(mme_ue_t *mme_ue, char *apn)
 {
-    ogs_subscription_data_t *subscription_data = NULL;
     ogs_pdn_t *pdn = NULL;
     int i = 0;
     
     ogs_assert(mme_ue);
     ogs_assert(apn);
 
-    subscription_data = &mme_ue->subscription_data;
-    ogs_assert(subscription_data);
-
-    for (i = 0; i < subscription_data->num_of_pdn; i++) {
-        pdn = &subscription_data->pdn[i];
-        if (ogs_strcasecmp(pdn->apn, apn) == 0)
+    for (i = 0; i < mme_ue->num_of_pdn; i++) {
+        pdn = &mme_ue->pdn[i];
+        ogs_assert(pdn->name);
+        if (ogs_strcasecmp(pdn->name, apn) == 0)
             return pdn;
     }
 
@@ -3109,17 +3110,14 @@ ogs_pdn_t *mme_pdn_find_by_apn(mme_ue_t *mme_ue, char *apn)
 
 ogs_pdn_t *mme_default_pdn(mme_ue_t *mme_ue)
 {
-    ogs_subscription_data_t *subscription_data = NULL;
     ogs_pdn_t *pdn = NULL;
     int i = 0;
     
     ogs_assert(mme_ue);
-    subscription_data = &mme_ue->subscription_data;
-    ogs_assert(subscription_data);
 
-    for (i = 0; i < subscription_data->num_of_pdn; i++) {
-        pdn = &subscription_data->pdn[i];
-        if (pdn->context_identifier == subscription_data->context_identifier)
+    for (i = 0; i < mme_ue->num_of_pdn; i++) {
+        pdn = &mme_ue->pdn[i];
+        if (pdn->context_identifier == mme_ue->context_identifier)
             return pdn;
     }
 

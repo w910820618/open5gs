@@ -41,8 +41,8 @@ ogs_sbi_request_t *smf_nudm_sdm_build_get(smf_sess_t *sess, void *data)
     memcpy(&message.param.single_nssai, &sess->s_nssai,
             sizeof(message.param.single_nssai));
 
-    if (sess->dnn)
-        message.param.dnn = sess->dnn;
+    if (sess->pdn.name)
+        message.param.dnn = sess->pdn.name;
 
     request = ogs_sbi_build_request(&message);
     ogs_assert(request);
