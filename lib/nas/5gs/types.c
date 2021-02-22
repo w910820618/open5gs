@@ -302,8 +302,8 @@ void ogs_nas_build_qos_flow_descriptions(
                 ogs_assert(target.param[j].len == 3);
                 ogs_assert(length + target.param[j].len <=
                         OGS_NAS_MAX_QOS_FLOW_DESCRIPTIONS_LEN);
-                target.param[j].br.bitrate =
-                    htobe16(target.param[j].br.bitrate);
+                target.param[j].br.value =
+                    htobe16(target.param[j].br.value);
                 memcpy(buffer + length, &target.param[j].br,
                         target.param[j].len);
                 length += target.param[j].len;
