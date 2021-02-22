@@ -174,8 +174,30 @@ class Item extends Component {
       <Card disabled={disabled} onClick={() => onView(_id)}>
         <Profile>
           <div className="title">{title}</div>
-          <div className="ambr">{ambr.downlink}/{ambr.uplink}</div>
-          <div className="apn">{s_nssai[0].pdn[0].apn}</div>
+          <div className="ambr">
+            {ambr['downlink'] === undefined ? "unlimited" :
+              ambr.downlink['value'] === undefined ? "unlimited" :
+                ambr.downlink.value
+            } {ambr['downlink'] === undefined ? "unlimited" :
+                 ambr.downlink['unit'] === undefined ? "bps" :
+                    ambr.downlink.unit === 0 ? "bps" :
+                    ambr.downlink.unit === 1 ? "Kbps" :
+                    ambr.downlink.unit === 2 ? "Mbps" :
+                    ambr.downlink.unit === 3 ? "Gbps" :
+                    ambr.downlink.unit === 4 ? "Tbps" :
+                      "Unknown Unit"
+            } / {ambr['uplink'] === undefined ? "unlimited" :
+              ambr.uplink['value'] === undefined ? "unlimited" :
+                ambr.uplink.value
+            } {ambr['uplink'] === undefined ? "unlimited" :
+                 ambr.uplink['unit'] === undefined ? "bps" :
+                    ambr.uplink.unit === 0 ? "bps" :
+                    ambr.uplink.unit === 1 ? "Kbps" :
+                    ambr.uplink.unit === 2 ? "Mbps" :
+                    ambr.uplink.unit === 3 ? "Gbps" :
+                    ambr.uplink.unit === 4 ? "Tbps" :
+                      "Unknown Unit" }
+           </div>
         </Profile>
         <div className="actions">
           <Tooltip content='Edit' width="60px">

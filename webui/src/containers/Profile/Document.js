@@ -20,8 +20,14 @@ const formData = {
     op_value: "E8ED289D EBA952E4 283B54E8 8E6183CA",
   },
   "ambr": {
-    "downlink": 1024000,
-    "uplink": 1024000
+    "downlink": {
+      "value": 1,
+      "unit": 3
+    },
+    "uplink": {
+      "value": 1,
+      "unit": 3
+    }
   },
   "s_nssai": [{
     "sst": 1,
@@ -29,8 +35,14 @@ const formData = {
         "apn": "internet",
         "type": 2,
         "ambr": {
-          "downlink": 1024000,
-          "uplink": 1024000
+          "downlink": {
+            "value": 1,
+            "unit": 3
+          },
+          "uplink": {
+            "value": 1,
+            "unit": 3
+          }
         },
         "qos": {
           "qci": 9,
@@ -95,10 +107,10 @@ class Document extends Component {
       //    The followings are changed from 'String' to 'Number' after DB CREATE or UPDATE
       //     - ambr.downlink, ambr.uplink, qos.mbr.downlink, qos.mbr.uplink, qos.gbr.downlink, qos.gbr.uplink
       // 
-      traverse(profile.data).forEach(function(x) {
-        if (this.key == 'downlink') this.update(Number(x));
-        if (this.key == 'uplink') this.update(Number(x));
-      })
+      //traverse(profile.data).forEach(function(x) {
+      //  if (this.key == 'downlink') this.update(Number(x));
+      //  if (this.key == 'uplink') this.update(Number(x));
+      //})
 
       if (profile.data.security) {
         if (profile.data.security.opc) {

@@ -33,8 +33,8 @@ const Subscriber = new Schema({
   },
 
   ambr: {
-    downlink: Schema.Types.Long,
-    uplink: Schema.Types.Long
+    downlink: { value: Number, unit: Number },
+    uplink: { value: Number, unit: Number }
   },
 
   s_nssai: [{
@@ -58,8 +58,8 @@ const Subscriber = new Schema({
         }
       },
       ambr: {
-        downlink: Schema.Types.Long,
-        uplink: Schema.Types.Long
+        downlink: { value: Number, unit: Number },
+        uplink: { value: Number, unit: Number }
       },
       ue: {
         addr: String,
@@ -86,12 +86,12 @@ const Subscriber = new Schema({
             }
           },
           mbr: {
-            downlink: Schema.Types.Long,
-            uplink: Schema.Types.Long
+            downlink: { value: Number, unit: Number },
+            uplink: { value: Number, unit: Number }
           },
           gbr: {
-            downlink: Schema.Types.Long,
-            uplink: Schema.Types.Long
+            downlink: { value: Number, unit: Number },
+            uplink: { value: Number, unit: Number }
           },
         },
       }]

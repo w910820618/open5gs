@@ -65,14 +65,40 @@ const schema = {
       "title": "",
       "properties": {
         "downlink": {
-          "type": "number",
-          "title": "UE-AMBR Downlink (Kbps)*",
-          "required": true
+          "type": "object",
+          "title": "",
+          "properties": {
+            "value": {
+              "type": "number",
+              "title": "UE-AMBR Downlink*",
+              "required": true,
+            },
+            "unit": {
+              "type": "number",
+              "title": "Unit",
+              "enum": [0, 1, 2, 3, 4],
+              "enumNames": ["bps", "Kbps", "Mbps", "Gbps", "Tbps"],
+              "default": 3,
+            }
+          }
         },
         "uplink": {
-          "type": "number",
-          "title": "UE-AMBR Uplink (Kbps)*",
-          "required": true
+          "type": "object",
+          "title": "",
+          "properties": {
+            "value": {
+              "type": "number",
+              "title": "UE-AMBR Uplink*",
+              "required": true,
+            },
+            "unit": {
+              "type": "number",
+              "title": "Unit",
+              "enum": [0, 1, 2, 3, 4],
+              "enumNames": ["bps", "Kbps", "Mbps", "Gbps", "Tbps"],
+              "default": 3,
+            }
+          }
         }
       }
     },
@@ -173,17 +199,43 @@ const schema = {
                   "title": "",
                   "properties": {
                     "downlink": {
-                      "type": "number",
-                      "title": "Session AMBR Downlink (Kbps)*",
-                      "default": 1024000,
-                      "required": true
+                      "type": "object",
+                      "title": "",
+                      "properties": {
+                        "value": {
+                          "type": "number",
+                          "title": "Session-AMBR Downlink*",
+                          "default": 1,
+                          "required": true,
+                        },
+                        "unit": {
+                          "type": "number",
+                          "title": "Unit",
+                          "enum": [0, 1, 2, 3, 4],
+                          "enumNames": ["bps", "Kbps", "Mbps", "Gbps", "Tbps"],
+                          "default": 3,
+                        }
+                      }
                     },
                     "uplink": {
-                      "type": "number",
-                      "title": "Session AMBR Uplink (Kbps)*",
-                      "default": 1024000,
-                      "required": true
-                    },
+                      "type": "object",
+                      "title": "",
+                      "properties": {
+                        "value": {
+                          "type": "number",
+                          "title": "Session-AMBR Uplink*",
+                          "default": 1,
+                          "required": true,
+                        },
+                        "unit": {
+                          "type": "number",
+                          "title": "Unit",
+                          "enum": [0, 1, 2, 3, 4],
+                          "enumNames": ["bps", "Kbps", "Mbps", "Gbps", "Tbps"],
+                          "default": 3,
+                        }
+                      }
+                    }
                   }
                 },
                 "ue": {
@@ -313,13 +365,39 @@ const schema = {
                             "title": "",
                             "properties": {
                               "downlink": {
-                                "type": "number",
-                                "title": "MBR Downlink (Kbps)",
+                                "type": "object",
+                                "title": "",
+                                "properties": {
+                                  "value": {
+                                    "type": "number",
+                                    "title": "MBR Downlink",
+                                  },
+                                  "unit": {
+                                    "type": "number",
+                                    "title": "Unit",
+                                    "enum": [0, 1, 2, 3, 4],
+                                    "enumNames": ["bps", "Kbps", "Mbps", "Gbps", "Tbps"],
+                                    "default": 1,
+                                  }
+                                }
                               },
                               "uplink": {
-                                "type": "number",
-                                "title": "MBR Uplink (Kbps)",
-                              },
+                                "type": "object",
+                                "title": "",
+                                "properties": {
+                                  "value": {
+                                    "type": "number",
+                                    "title": "MBR Uplink",
+                                  },
+                                  "unit": {
+                                    "type": "number",
+                                    "title": "Unit",
+                                    "enum": [0, 1, 2, 3, 4],
+                                    "enumNames": ["bps", "Kbps", "Mbps", "Gbps", "Tbps"],
+                                    "default": 1,
+                                  }
+                                }
+                              }
                             }
                           },
                           "gbr": {
@@ -327,13 +405,39 @@ const schema = {
                             "title": "",
                             "properties": {
                               "downlink": {
-                                "type": "number",
-                                "title": "GBR Downlink (Kbps)",
+                                "type": "object",
+                                "title": "",
+                                "properties": {
+                                  "value": {
+                                    "type": "number",
+                                    "title": "GBR Downlink",
+                                  },
+                                  "unit": {
+                                    "type": "number",
+                                    "title": "Unit",
+                                    "enum": [0, 1, 2, 3, 4],
+                                    "enumNames": ["bps", "Kbps", "Mbps", "Gbps", "Tbps"],
+                                    "default": 1,
+                                  }
+                                }
                               },
                               "uplink": {
-                                "type": "number",
-                                "title": "GBR Uplink (Kbps)",
-                              },
+                                "type": "object",
+                                "title": "",
+                                "properties": {
+                                  "value": {
+                                    "type": "number",
+                                    "title": "GBR Uplink",
+                                  },
+                                  "unit": {
+                                    "type": "number",
+                                    "title": "Unit",
+                                    "enum": [0, 1, 2, 3, 4],
+                                    "enumNames": ["bps", "Kbps", "Mbps", "Gbps", "Tbps"],
+                                    "default": 1,
+                                  }
+                                }
+                              }
                             }
                           },
                         },
@@ -369,21 +473,32 @@ const uiSchema = {
     },
   },
   "ambr" : {
-    "downlink" : {
-      classNames: "col-xs-6"
+    "downlink": {
+      classNames: "col-xs-6",
+      "value": {
+        classNames: "col-xs-8",
+      },
+      "unit": {
+        classNames: "col-xs-4",
+      },
     },
-    "uplink" : {
-      classNames: "col-xs-6"
-    },
+    "uplink": {
+      classNames: "col-xs-6",
+      "value": {
+        classNames: "col-xs-8",
+      },
+      "unit": {
+        classNames: "col-xs-4",
+      },
+    }
   },
   "s_nssai": {
+    classNames: "col-xs-12",
     "items": {
       "sst": {
         classNames: "col-xs-4",
         "ui:widget": "radio",
-        "ui:options": {
-          "inline": true
-        },
+        "ui:options": { "inline": true },
       },
       "sd": {
         classNames: "col-xs-8",
@@ -414,11 +529,21 @@ const uiSchema = {
           },
           "ambr" : {
             classNames: "col-xs-12",
-            "downlink" : {
-              classNames: "col-xs-6"
+            "downlink": {
+              "value": {
+                classNames: "col-xs-8"
+              },
+              "unit": {
+                classNames: "col-xs-4"
+              },
             },
-            "uplink" : {
-              classNames: "col-xs-6"
+            "uplink": {
+              "value": {
+                classNames: "col-xs-8"
+              },
+              "unit": {
+                classNames: "col-xs-4"
+              },
             },
           },
           "ue" : {
@@ -467,18 +592,38 @@ const uiSchema = {
                 },
                 "mbr": {
                   "downlink": {
-                    classNames: "col-xs-6"
+                    "value": {
+                      classNames: "col-xs-8"
+                    },
+                    "unit": {
+                      classNames: "col-xs-4"
+                    },
                   },
                   "uplink": {
-                    classNames: "col-xs-6"
+                    "value": {
+                      classNames: "col-xs-8"
+                    },
+                    "unit": {
+                      classNames: "col-xs-4"
+                    },
                   }
                 },
                 "gbr": {
                   "downlink": {
-                    classNames: "col-xs-6"
+                    "value": {
+                      classNames: "col-xs-8"
+                    },
+                    "unit": {
+                      classNames: "col-xs-4"
+                    },
                   },
                   "uplink": {
-                    classNames: "col-xs-6"
+                    "value": {
+                      classNames: "col-xs-8"
+                    },
+                    "unit": {
+                      classNames: "col-xs-4"
+                    },
                   }
                 }
               }
@@ -590,10 +735,10 @@ class Edit extends Component {
     delete formData._id;
     delete formData.__v;
 
-    traverse(formData).forEach(function(x) {
-      if (this.key == 'downlink') this.update(Number(x));
-      if (this.key == 'uplink') this.update(Number(x));
-    })
+    //traverse(formData).forEach(function(x) {
+    //  if (this.key == 'downlink') this.update(Number(x));
+    //  if (this.key == 'uplink') this.update(Number(x));
+    //})
     if (formData.security) {
       if (formData.security.opc) {
         formData.security.op_type = 0;

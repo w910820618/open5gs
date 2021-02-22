@@ -230,11 +230,31 @@ const View = ({ visible, disableOnClickOutside, profile, onEdit, onDelete, onHid
                 </div>
                 <div className="right">
                   <div className="data">
-                    {ambr.downlink} Kbps
+                    {ambr['downlink'] === undefined ? "unlimited" :
+                      ambr.downlink['value'] === undefined ? "unlimited" :
+                        ambr.downlink.value
+                    } {ambr['downlink'] === undefined ? "unlimited" :
+                         ambr.downlink['unit'] === undefined ? "bps" :
+                            ambr.downlink.unit === 0 ? "bps" :
+                            ambr.downlink.unit === 1 ? "Kbps" :
+                            ambr.downlink.unit === 2 ? "Mbps" :
+                            ambr.downlink.unit === 3 ? "Gbps" :
+                            ambr.downlink.unit === 4 ? "Tbps" :
+                              "Unknown Unit" }
                     <span style={{color:oc.gray[5]}}><KeyboardControlIcon/>UL</span>
                   </div>
                   <div className="data">
-                    {ambr.uplink} Kbps
+                    {ambr['uplink'] === undefined ? "unlimited" :
+                      ambr.uplink['value'] === undefined ? "unlimited" :
+                        ambr.uplink.value
+                    } {ambr['uplink'] === undefined ? "unlimited" :
+                         ambr.uplink['unit'] === undefined ? "bps" :
+                            ambr.uplink.unit === 0 ? "bps" :
+                            ambr.uplink.unit === 1 ? "Kbps" :
+                            ambr.uplink.unit === 2 ? "Mbps" :
+                            ambr.uplink.unit === 3 ? "Gbps" :
+                            ambr.uplink.unit === 4 ? "Tbps" :
+                              "Unknown Unit" }
                     <span style={{color:oc.gray[5]}}><KeyboardControlIcon/>DL</span>
                   </div>
                 </div>
@@ -258,8 +278,8 @@ const View = ({ visible, disableOnClickOutside, profile, onEdit, onDelete, onHid
                     <div className="small_data">ARP</div>
                     <div className="medium_data">Capability</div>
                     <div className="medium_data">Vulnerablility</div>
-                    <div className="large_data">MBR DL/UL(Kbps)</div>
-                    <div className="large_data">GBR DL/UL(Kbps)</div>
+                    <div className="large_data">MBR DL/UL</div>
+                    <div className="large_data">GBR DL/UL</div>
                   </div>
                   {s_nssai['pdn'] !== undefined &&
                       s_nssai.pdn.map(pdn =>
@@ -274,11 +294,36 @@ const View = ({ visible, disableOnClickOutside, profile, onEdit, onDelete, onHid
                         {pdn['ambr'] === undefined ?
                           <div className="large_data">
                             unlimited/unlimited
-                            </div> :
+                          </div> :
                           <div className="large_data">
-                            {pdn.ambr['downlink'] === undefined ? "unlimited" : pdn.ambr.downlink}
-                            /
-                            {pdn.ambr['uplink'] === undefined ? "unlimited" : pdn.ambr.uplink}
+                            {pdn.ambr['downlink'] === undefined ? "unlimited" :
+                              pdn.ambr.downlink['value'] === undefined ?
+                                "unlimited" : pdn.ambr.downlink.value
+                            } {pdn.ambr['downlink'] === undefined ?
+                                "unlimited" :
+                                  pdn.ambr.downlink['unit'] === undefined ?
+                                    "bps" :
+                                    pdn.ambr.downlink.unit === 0 ? "bps" :
+                                    pdn.ambr.downlink.unit === 1 ? "Kbps" :
+                                    pdn.ambr.downlink.unit === 2 ? "Mbps" :
+                                    pdn.ambr.downlink.unit === 3 ? "Gbps" :
+                                    pdn.ambr.downlink.unit === 4 ? "Tbps" :
+                                        "Unknown Unit"
+                            } / {pdn.ambr['uplink'] ===
+                                    undefined ?  "unlimited" :
+                              pdn.ambr.uplink['value'] === undefined ?
+                                "unlimited" : pdn.ambr.uplink.value
+                            } {pdn.ambr['uplink'] === undefined ?
+                                "unlimited" :
+                                  pdn.ambr.uplink['unit'] === undefined ?
+                                    "bps" :
+                                    pdn.ambr.uplink.unit === 0 ? "bps" :
+                                    pdn.ambr.uplink.unit === 1 ? "Kbps" :
+                                    pdn.ambr.uplink.unit === 2 ? "Mbps" :
+                                    pdn.ambr.uplink.unit === 3 ? "Gbps" :
+                                    pdn.ambr.uplink.unit === 4 ? "Tbps" :
+                                        "Unknown Unit"
+                            }
                           </div>
                         }
                         <div className="large_data"></div>
@@ -314,21 +359,93 @@ const View = ({ visible, disableOnClickOutside, profile, onEdit, onDelete, onHid
                               {pcc_rule.qos['mbr'] === undefined ?
                                 <div className="large_data">
                                   unlimited/unlimited
-                                  </div> :
+                                </div> :
                                 <div className="large_data">
-                                  {pcc_rule.qos.mbr['downlink'] === undefined ? "unlimited" : pcc_rule.qos.mbr.downlink}
-                                  /
-                                  {pcc_rule.qos.mbr['uplink'] === undefined ? "unlimited" : pcc_rule.qos.mbr.uplink}
+                                  {pcc_rule.qos.mbr['downlink'] ===
+                                      undefined ? "unlimited" :
+                                    pcc_rule.qos.mbr.downlink['value'] ===
+                                      undefined ?  "unlimited" :
+                                      pcc_rule.qos.mbr.downlink.value
+                                  } {pcc_rule.qos.mbr['downlink'] ===
+                                       undefined ?  "unlimited" :
+                                       pcc_rule.qos.mbr.downlink['unit'] ===
+                                          undefined ?  "bps" :
+                                       pcc_rule.qos.mbr.downlink.unit === 0 ?
+                                          "bps" :
+                                       pcc_rule.qos.mbr.downlink.unit === 1 ?
+                                          "Kbps" :
+                                       pcc_rule.qos.mbr.downlink.unit === 2 ?
+                                          "Mbps" :
+                                       pcc_rule.qos.mbr.downlink.unit === 3 ?
+                                          "Gbps" :
+                                       pcc_rule.qos.mbr.downlink.unit === 4 ?
+                                          "Tbps" : "Unknown Unit"
+                                  } / {pcc_rule.qos.mbr['uplink'] ===
+                                      undefined ? "unlimited" :
+                                    pcc_rule.qos.mbr.uplink['value'] ===
+                                      undefined ?  "unlimited" :
+                                      pcc_rule.qos.mbr.uplink.value
+                                  } {pcc_rule.qos.mbr['uplink'] ===
+                                       undefined ?  "unlimited" :
+                                       pcc_rule.qos.mbr.uplink['unit'] ===
+                                          undefined ?  "bps" :
+                                       pcc_rule.qos.mbr.uplink.unit === 0 ?
+                                          "bps" :
+                                       pcc_rule.qos.mbr.uplink.unit === 1 ?
+                                          "Kbps" :
+                                       pcc_rule.qos.mbr.uplink.unit === 2 ?
+                                          "Mbps" :
+                                       pcc_rule.qos.mbr.uplink.unit === 3 ?
+                                          "Gbps" :
+                                       pcc_rule.qos.mbr.uplink.unit === 4 ?
+                                          "Tbps" : "Unknown Unit"
+                                  }
                                 </div>
                               }
                               {pcc_rule.qos['gbr'] === undefined ?
                                 <div className="large_data">
                                   unlimited/unlimited
-                                  </div> :
+                                </div> :
                                 <div className="large_data">
-                                  {pcc_rule.qos.gbr['downlink'] === undefined ? "unlimited" : pcc_rule.qos.gbr.downlink}
-                                  /
-                                  {pcc_rule.qos.gbr['uplink'] === undefined ? "unlimited" : pcc_rule.qos.gbr.uplink}
+                                  {pcc_rule.qos.gbr['downlink'] ===
+                                      undefined ? "unlimited" :
+                                    pcc_rule.qos.gbr.downlink['value'] ===
+                                      undefined ?  "unlimited" :
+                                      pcc_rule.qos.gbr.downlink.value
+                                  } {pcc_rule.qos.gbr['downlink'] ===
+                                       undefined ?  "unlimited" :
+                                       pcc_rule.qos.gbr.downlink['unit'] ===
+                                          undefined ?  "bps" :
+                                       pcc_rule.qos.gbr.downlink.unit === 0 ?
+                                          "bps" :
+                                       pcc_rule.qos.gbr.downlink.unit === 1 ?
+                                          "Kbps" :
+                                       pcc_rule.qos.gbr.downlink.unit === 2 ?
+                                          "Mbps" :
+                                       pcc_rule.qos.gbr.downlink.unit === 3 ?
+                                          "Gbps" :
+                                       pcc_rule.qos.gbr.downlink.unit === 4 ?
+                                          "Tbps" : "Unknown Unit"
+                                  } / {pcc_rule.qos.gbr['uplink'] ===
+                                      undefined ? "unlimited" :
+                                    pcc_rule.qos.gbr.uplink['value'] ===
+                                      undefined ?  "unlimited" :
+                                      pcc_rule.qos.gbr.uplink.value
+                                  } {pcc_rule.qos.gbr['uplink'] ===
+                                       undefined ?  "unlimited" :
+                                       pcc_rule.qos.gbr.uplink['unit'] ===
+                                          undefined ?  "bps" :
+                                       pcc_rule.qos.gbr.uplink.unit === 0 ?
+                                          "bps" :
+                                       pcc_rule.qos.gbr.uplink.unit === 1 ?
+                                          "Kbps" :
+                                       pcc_rule.qos.gbr.uplink.unit === 2 ?
+                                          "Mbps" :
+                                       pcc_rule.qos.gbr.uplink.unit === 3 ?
+                                          "Gbps" :
+                                       pcc_rule.qos.gbr.uplink.unit === 4 ?
+                                          "Tbps" : "Unknown Unit"
+                                  }
                                 </div>
                               }
                             </div>
