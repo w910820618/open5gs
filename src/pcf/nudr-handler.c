@@ -225,7 +225,8 @@ bool pcf_nudr_dr_handle_query_sm_data(
         ogs_assert(pcf_ue->supi);
         ogs_assert(sess->dnn);
 
-        rv = ogs_dbi_session_data(pcf_ue->supi, sess->dnn, &session_data);
+        rv = ogs_dbi_session_data(
+                pcf_ue->supi, &sess->s_nssai, sess->dnn, &session_data);
         if (rv != OGS_OK) {
             strerror = ogs_msprintf("[%s:%d] Cannot find SUPI in DB",
                     pcf_ue->supi, sess->psi);

@@ -211,7 +211,8 @@ int ogs_dbi_subscription_data(char *supi,
     bson_error_t error;
     const bson_t *document;
     bson_iter_t iter;
-    bson_iter_t child1_iter, child2_iter, child3_iter, child4_iter;
+    bson_iter_t child1_iter, child2_iter, child3_iter;
+    bson_iter_t child4_iter, child5_iter, child6_iter;
     const char *utf8 = NULL;
     uint32_t length = 0;
 
@@ -307,8 +308,7 @@ int ogs_dbi_subscription_data(char *supi,
             BSON_ITER_HOLDS_INT32(&iter)) {
             subscription_data->subscribed_rau_tau_timer =
                 bson_iter_int32(&iter);
-        } else if (!strcmp(key, "ambr") &&
-            BSON_ITER_HOLDS_DOCUMENT(&iter)) {
+        } else if (!strcmp(key, "ambr") && BSON_ITER_HOLDS_DOCUMENT(&iter)) {
             bson_iter_recurse(&iter, &child1_iter);
             while (bson_iter_next(&child1_iter)) {
                 const char *child1_key = bson_iter_key(&child1_iter);
@@ -322,152 +322,198 @@ int ogs_dbi_subscription_data(char *supi,
                         bson_iter_int64(&child1_iter) * 1024;
                 }
             }
-        } else if (!strcmp(key, "pdn") &&
-            BSON_ITER_HOLDS_ARRAY(&iter)) {
-
-            ogs_slice_data_t *slice_data = NULL;
-            int pdn_index = 0;
-
-            slice_data =
-                &subscription_data->slice[subscription_data->num_of_slice];
+        } else if (!strcmp(key, "s_nssai") && BSON_ITER_HOLDS_ARRAY(&iter)) {
 
             bson_iter_recurse(&iter, &child1_iter);
             while (bson_iter_next(&child1_iter)) {
-                const char *child1_key = bson_iter_key(&child1_iter);
-                ogs_pdn_t *pdn = NULL;
+                ogs_slice_data_t *slice_data = NULL;
+                const char *child1_key = NULL;
+                int slice_index = 0;
 
+                child1_key = bson_iter_key(&child1_iter);
                 ogs_assert(child1_key);
-                pdn_index = atoi(child1_key);
-                ogs_assert(pdn_index < OGS_MAX_NUM_OF_SESS);
+                slice_index = atoi(child1_key);
+                ogs_assert(slice_index < OGS_MAX_NUM_OF_SLICE);
 
-                pdn = &slice_data->pdn[pdn_index];
+                slice_data = &subscription_data->slice[slice_index];
+
+                slice_data->sst = 0;
+                slice_data->sd.v = OGS_S_NSSAI_NO_SD_VALUE;
 
                 bson_iter_recurse(&child1_iter, &child2_iter);
                 while (bson_iter_next(&child2_iter)) {
                     const char *child2_key = bson_iter_key(&child2_iter);
-                    if ((!strcmp(child2_key, "apn") ||
-                            !strcmp(child2_key, "dnn")) &&
+
+                    if (!strcmp(child2_key, "sst") &&
+                        BSON_ITER_HOLDS_INT32(&child2_iter)) {
+                        slice_data->sst = bson_iter_int32(&child2_iter);
+                    } else if (!strcmp(child2_key, "sd") &&
                         BSON_ITER_HOLDS_UTF8(&child2_iter)) {
                         utf8 = bson_iter_utf8(&child2_iter, &length);
-                        pdn->name = ogs_strndup(utf8, length);
-                        ogs_assert(pdn->name);
-                    } else if (!strcmp(child2_key, "type") &&
-                        BSON_ITER_HOLDS_INT32(&child2_iter)) {
-                        pdn->pdn_type = bson_iter_int32(&child2_iter);
-                    } else if (!strcmp(child2_key, "qos") &&
-                        BSON_ITER_HOLDS_DOCUMENT(&child2_iter)) {
-                        bson_iter_recurse(&child2_iter, &child3_iter);
-                        while (bson_iter_next(&child3_iter)) {
-                            const char *child3_key =
-                                bson_iter_key(&child3_iter);
-                            if (!strcmp(child3_key, "qci") &&
-                                BSON_ITER_HOLDS_INT32(&child3_iter)) {
-                                pdn->qos.qci = bson_iter_int32(&child3_iter);
-                            } else if (!strcmp(child3_key, "arp") &&
-                                BSON_ITER_HOLDS_DOCUMENT(&child3_iter)) {
-                                bson_iter_recurse(&child3_iter, &child4_iter);
-                                while (bson_iter_next(&child4_iter)) {
-                                    const char *child4_key =
-                                        bson_iter_key(&child4_iter);
-                                    if (!strcmp(child4_key, "priority_level") &&
-                                        BSON_ITER_HOLDS_INT32(&child4_iter)) {
-                                        pdn->qos.arp.priority_level =
-                                            bson_iter_int32(&child4_iter);
-                                    } else if (!strcmp(child4_key,
-                                                "pre_emption_capability") &&
-                                        BSON_ITER_HOLDS_INT32(&child4_iter)) {
-                                        pdn->qos.arp.pre_emption_capability =
-                                            bson_iter_int32(&child4_iter);
-                                    } else if (!strcmp(child4_key,
+                        ogs_assert(utf8);
+                        slice_data->sd = ogs_s_nssai_sd_from_string(utf8);
+                    } else if (!strcmp(child2_key, "pdn") &&
+                        BSON_ITER_HOLDS_ARRAY(&child2_iter)) {
+
+                    bson_iter_recurse(&child2_iter, &child3_iter);
+                    while (bson_iter_next(&child3_iter)) {
+                        ogs_pdn_t *pdn = NULL;
+                        const char *child3_key = NULL;
+                        int pdn_index = 0;
+
+                        child3_key = bson_iter_key(&child3_iter);
+                        ogs_assert(child3_key);
+                        pdn_index = atoi(child3_key);
+                        ogs_assert(pdn_index < OGS_MAX_NUM_OF_SESS);
+
+                        pdn = &slice_data->pdn[pdn_index];
+
+                        bson_iter_recurse(&child3_iter, &child4_iter);
+                        while (bson_iter_next(&child4_iter)) {
+                            const char *child4_key =
+                                bson_iter_key(&child4_iter);
+                            if ((!strcmp(child4_key, "apn") ||
+                                    !strcmp(child4_key, "dnn")) &&
+                                BSON_ITER_HOLDS_UTF8(&child4_iter)) {
+                                utf8 = bson_iter_utf8(&child4_iter, &length);
+                                pdn->name = ogs_strndup(utf8, length);
+                                ogs_assert(pdn->name);
+                            } else if (!strcmp(child4_key, "type") &&
+                                BSON_ITER_HOLDS_INT32(&child4_iter)) {
+                                pdn->pdn_type = bson_iter_int32(&child4_iter);
+                            } else if (!strcmp(child4_key, "qos") &&
+                                BSON_ITER_HOLDS_DOCUMENT(&child4_iter)) {
+                                bson_iter_recurse(&child4_iter, &child5_iter);
+                                while (bson_iter_next(&child5_iter)) {
+                                    const char *child5_key =
+                                        bson_iter_key(&child5_iter);
+                                    if (!strcmp(child5_key, "qci") &&
+                                        BSON_ITER_HOLDS_INT32(&child5_iter)) {
+                                        pdn->qos.qci =
+                                            bson_iter_int32(&child5_iter);
+                                    } else if (!strcmp(child5_key, "arp") &&
+                                        BSON_ITER_HOLDS_DOCUMENT(
+                                            &child5_iter)) {
+                                        bson_iter_recurse(
+                                                &child5_iter, &child6_iter);
+                                        while (bson_iter_next(&child6_iter)) {
+                                            const char *child6_key =
+                                                bson_iter_key(&child6_iter);
+                                            if (!strcmp(child6_key,
+                                                        "priority_level") &&
+                                                BSON_ITER_HOLDS_INT32(
+                                                    &child6_iter)) {
+                                                pdn->qos.arp.priority_level =
+                                                    bson_iter_int32(
+                                                            &child6_iter);
+                                            } else if (!strcmp(child6_key,
+                                                    "pre_emption_capability") &&
+                                                BSON_ITER_HOLDS_INT32(
+                                                    &child6_iter)) {
+                                                pdn->qos.arp.
+                                                    pre_emption_capability =
+                                                        bson_iter_int32(
+                                                                &child6_iter);
+                                            } else if (!strcmp(child6_key,
                                                 "pre_emption_vulnerability") &&
-                                        BSON_ITER_HOLDS_INT32(&child4_iter)) {
-                                        pdn->qos.arp.pre_emption_vulnerability =
-                                            bson_iter_int32(&child4_iter);
+                                                BSON_ITER_HOLDS_INT32(
+                                                    &child6_iter)) {
+                                                pdn->qos.arp.
+                                                    pre_emption_vulnerability =
+                                                        bson_iter_int32(
+                                                                &child6_iter);
+                                            }
+                                        }
+                                    }
+                                }
+                            } else if (!strcmp(child4_key, "ambr") &&
+                                BSON_ITER_HOLDS_DOCUMENT(&child4_iter)) {
+                                bson_iter_recurse(&child4_iter, &child5_iter);
+                                while (bson_iter_next(&child5_iter)) {
+                                    const char *child5_key =
+                                        bson_iter_key(&child5_iter);
+                                    if (!strcmp(child5_key, "uplink") &&
+                                        BSON_ITER_HOLDS_INT64(&child5_iter)) {
+                                        pdn->ambr.uplink = bson_iter_int64(
+                                                &child5_iter) * 1024;
+                                    } else if (!strcmp(child5_key,
+                                                "downlink") &&
+                                        BSON_ITER_HOLDS_INT64(&child5_iter)) {
+                                        pdn->ambr.downlink = bson_iter_int64(
+                                                &child5_iter) * 1024;
+                                    }
+                                }
+                            } else if (!strcmp(child4_key, "pgw") &&
+                                BSON_ITER_HOLDS_DOCUMENT(&child4_iter)) {
+                                bson_iter_recurse(&child4_iter, &child5_iter);
+                                while (bson_iter_next(&child5_iter)) {
+                                    const char *child5_key =
+                                        bson_iter_key(&child5_iter);
+                                    if (!strcmp(child5_key, "addr") &&
+                                        BSON_ITER_HOLDS_UTF8(&child5_iter)) {
+                                        ogs_ipsubnet_t ipsub;
+                                        const char *v = bson_iter_utf8(
+                                                &child5_iter, &length);
+                                        rv = ogs_ipsubnet(&ipsub, v, NULL);
+                                        if (rv == OGS_OK) {
+                                            pdn->pgw_ip.ipv4 = 1;
+                                            pdn->pgw_ip.addr = ipsub.sub[0];
+                                        }
+                                    } else if (!strcmp(child5_key, "addr6") &&
+                                        BSON_ITER_HOLDS_UTF8(&child5_iter)) {
+                                        ogs_ipsubnet_t ipsub;
+                                        const char *v = bson_iter_utf8(
+                                                &child5_iter, &length);
+                                        rv = ogs_ipsubnet(&ipsub, v, NULL);
+                                        if (rv == OGS_OK) {
+                                            pdn->pgw_ip.ipv6 = 1;
+                                            memcpy(pdn->pgw_ip.addr6, ipsub.sub,
+                                                    sizeof(ipsub.sub));
+                                        }
+                                    }
+                                }
+                            } else if (!strcmp(child4_key, "ue") &&
+                                BSON_ITER_HOLDS_DOCUMENT(&child4_iter)) {
+                                bson_iter_recurse(&child4_iter, &child5_iter);
+                                while (bson_iter_next(&child5_iter)) {
+                                    const char *child5_key =
+                                        bson_iter_key(&child5_iter);
+                                    if (!strcmp(child5_key, "addr") &&
+                                        BSON_ITER_HOLDS_UTF8(&child5_iter)) {
+                                        ogs_ipsubnet_t ipsub;
+                                        const char *v = bson_iter_utf8(
+                                                &child5_iter, &length);
+                                        rv = ogs_ipsubnet(&ipsub, v, NULL);
+                                        if (rv == OGS_OK) {
+                                            pdn->ue_ip.ipv4 = true;
+                                            pdn->ue_ip.addr = ipsub.sub[0];
+                                        }
+                                    } else if (!strcmp(child5_key, "addr6") &&
+                                        BSON_ITER_HOLDS_UTF8(&child5_iter)) {
+                                        ogs_ipsubnet_t ipsub;
+                                        const char *v = bson_iter_utf8(
+                                                &child5_iter, &length);
+                                        rv = ogs_ipsubnet(&ipsub, v, NULL);
+                                        if (rv == OGS_OK) {
+                                            pdn->ue_ip.ipv6 = true;
+                                            memcpy(pdn->ue_ip.addr6,
+                                                    ipsub.sub, OGS_IPV6_LEN);
+                                        }
+
                                     }
                                 }
                             }
                         }
-                    } else if (!strcmp(child2_key, "ambr") &&
-                        BSON_ITER_HOLDS_DOCUMENT(&child2_iter)) {
-                        bson_iter_recurse(&child2_iter, &child3_iter);
-                        while (bson_iter_next(&child3_iter)) {
-                            const char *child3_key =
-                                bson_iter_key(&child3_iter);
-                            if (!strcmp(child3_key, "uplink") &&
-                                BSON_ITER_HOLDS_INT64(&child3_iter)) {
-                                pdn->ambr.uplink =
-                                    bson_iter_int64(&child3_iter) * 1024;
-                            } else if (!strcmp(child3_key, "downlink") &&
-                                BSON_ITER_HOLDS_INT64(&child3_iter)) {
-                                pdn->ambr.downlink =
-                                    bson_iter_int64(&child3_iter) * 1024;
-                            }
-                        }
-                    } else if (!strcmp(child2_key, "pgw") &&
-                        BSON_ITER_HOLDS_DOCUMENT(&child2_iter)) {
-                        bson_iter_recurse(&child2_iter, &child3_iter);
-                        while (bson_iter_next(&child3_iter)) {
-                            const char *child3_key =
-                                bson_iter_key(&child3_iter);
-                            if (!strcmp(child3_key, "addr") &&
-                                BSON_ITER_HOLDS_UTF8(&child3_iter)) {
-                                ogs_ipsubnet_t ipsub;
-                                const char *v = 
-                                    bson_iter_utf8(&child3_iter, &length);
-                                rv = ogs_ipsubnet(&ipsub, v, NULL);
-                                if (rv == OGS_OK) {
-                                    pdn->pgw_ip.ipv4 = 1;
-                                    pdn->pgw_ip.addr = ipsub.sub[0];
-                                }
-                            } else if (!strcmp(child3_key, "addr6") &&
-                                BSON_ITER_HOLDS_UTF8(&child3_iter)) {
-                                ogs_ipsubnet_t ipsub;
-                                const char *v = 
-                                    bson_iter_utf8(&child3_iter, &length);
-                                rv = ogs_ipsubnet(&ipsub, v, NULL);
-                                if (rv == OGS_OK) {
-                                    pdn->pgw_ip.ipv6 = 1;
-                                    memcpy(pdn->pgw_ip.addr6,
-                                            ipsub.sub, sizeof(ipsub.sub));
-                                }
-                            }
-                        }
-                    } else if (!strcmp(child2_key, "ue") &&
-                        BSON_ITER_HOLDS_DOCUMENT(&child2_iter)) {
-                        bson_iter_recurse(&child2_iter, &child3_iter);
-                        while (bson_iter_next(&child3_iter)) {
-                            const char *child3_key =
-                                bson_iter_key(&child3_iter);
-                            if (!strcmp(child3_key, "addr") &&
-                                BSON_ITER_HOLDS_UTF8(&child3_iter)) {
-                                ogs_ipsubnet_t ipsub;
-                                const char *v = 
-                                    bson_iter_utf8(&child3_iter, &length);
-                                rv = ogs_ipsubnet(&ipsub, v, NULL);
-                                if (rv == OGS_OK) {
-                                    pdn->ue_ip.ipv4 = true;
-                                    pdn->ue_ip.addr = ipsub.sub[0];
-                                }
-                            } else if (!strcmp(child3_key, "addr6") &&
-                                BSON_ITER_HOLDS_UTF8(&child3_iter)) {
-                                ogs_ipsubnet_t ipsub;
-                                const char *v = 
-                                    bson_iter_utf8(&child3_iter, &length);
-                                rv = ogs_ipsubnet(&ipsub, v, NULL);
-                                if (rv == OGS_OK) {
-                                    pdn->ue_ip.ipv6 = true;
-                                    memcpy(pdn->ue_ip.addr6,
-                                            ipsub.sub, OGS_IPV6_LEN);
-                                }
+                        slice_data->num_of_pdn = ogs_max(
+                                slice_data->num_of_pdn, pdn_index+1);
+                    }
 
-                            }
-                        }
+                    subscription_data->num_of_slice = ogs_max(
+                            subscription_data->num_of_slice, slice_index+1);
+
                     }
                 }
-                pdn_index++;
             }
-            slice_data->num_of_pdn = pdn_index;
-            subscription_data->num_of_slice++;
         }
     }
 
