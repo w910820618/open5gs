@@ -589,7 +589,7 @@ int amf_context_parse_config(void)
                                         self.plmn_support[
                                             self.num_of_plmn_support].
                                                 num_of_s_nssai <=
-                                            OGS_MAX_NUM_OF_S_NSSAI);
+                                            OGS_MAX_NUM_OF_SLICE);
                                     s_nssai = &self.plmn_support[
                                             self.num_of_plmn_support].s_nssai[
                                                 self.plmn_support[

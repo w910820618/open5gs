@@ -229,7 +229,7 @@ int ogs_nas_parse_nssai(ogs_s_nssai_t *s_nssai, ogs_nas_nssai_t *nas_nssai)
     }
 
     while (pos < nas_nssai->length &&
-            num_of_s_nssai < OGS_MAX_NUM_OF_S_NSSAI) {
+            num_of_s_nssai < OGS_MAX_NUM_OF_SLICE) {
 
         len = ogs_nas_parse_s_nssai(s_nssai + num_of_s_nssai,
                 (ogs_nas_s_nssai_t *)(nas_nssai->buffer + pos));

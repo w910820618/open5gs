@@ -65,7 +65,7 @@ typedef struct amf_context_s {
     struct {
         ogs_plmn_id_t plmn_id;
         int num_of_s_nssai;
-        ogs_s_nssai_t s_nssai[OGS_MAX_NUM_OF_S_NSSAI];
+        ogs_s_nssai_t s_nssai[OGS_MAX_NUM_OF_SLICE];
     } plmn_support[OGS_MAX_NUM_OF_PLMN];
 
     /* defined in 'nas_ies.h'
@@ -136,7 +136,7 @@ typedef struct amf_gnb_s {
         struct {
             ogs_plmn_id_t plmn_id;
             uint8_t num_of_s_nssai;
-            ogs_s_nssai_t s_nssai[OGS_MAX_NUM_OF_S_NSSAI];
+            ogs_s_nssai_t s_nssai[OGS_MAX_NUM_OF_SLICE];
         } bplmn_list[OGS_MAX_NUM_OF_BPLMN];
     } supported_ta_list[OGS_MAX_NUM_OF_TAI];
 
@@ -275,7 +275,7 @@ struct amf_ue_s {
     ogs_nas_ue_usage_setting_t ue_usage_setting;
 
     int num_of_requested_nssai;
-    ogs_s_nssai_t   requested_nssai[OGS_MAX_NUM_OF_S_NSSAI];
+    ogs_s_nssai_t   requested_nssai[OGS_MAX_NUM_OF_SLICE];
 
     /* PCF sends the RESPONSE
      * of [POST] /npcf-am-polocy-control/v1/policies */

@@ -178,7 +178,7 @@ typedef struct ogs_nr_cgi_s {
 
 /************************************
  * S-NSSAI Structure                */
-#define OGS_MAX_NUM_OF_S_NSSAI      8
+#define OGS_MAX_NUM_OF_SLICE        8
 #define OGS_S_NSSAI_NO_SD_VALUE     0xffffff
 typedef struct ogs_s_nssai_s {
     uint8_t sst;
@@ -509,7 +509,7 @@ typedef struct ogs_subscription_data_s {
     uint32_t                subscribed_rau_tau_timer;       /* unit : seconds */
 
     int num_of_slice;
-    ogs_slice_data_t slice[OGS_MAX_NUM_OF_S_NSSAI];
+    ogs_slice_data_t slice[OGS_MAX_NUM_OF_SLICE];
 
 #define OGS_MAX_NUM_OF_MSISDN                                   4
     int num_of_msisdn;
