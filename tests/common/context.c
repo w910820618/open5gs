@@ -1239,8 +1239,14 @@ bson_t *test_db_new_simple(test_ue_t *test_ue)
     doc = BCON_NEW(
             "imsi", BCON_UTF8(test_ue->imsi),
             "ambr", "{",
-                "uplink", BCON_INT64(1024000),
-                "downlink", BCON_INT64(1024000),
+                "downlink", "{",
+                    "value", BCON_INT32(1),
+                    "unit", BCON_INT32(3),
+                "}",
+                "uplink", "{",
+                    "value", BCON_INT32(1),
+                    "unit", BCON_INT32(3),
+                "}",
             "}",
             "s_nssai", "[", "{",
                 "sst", BCON_INT32(1),
@@ -1248,8 +1254,14 @@ bson_t *test_db_new_simple(test_ue_t *test_ue)
                     "apn", BCON_UTF8("internet"),
                     "type", BCON_INT32(2),
                     "ambr", "{",
-                        "uplink", BCON_INT64(1024000),
-                        "downlink", BCON_INT64(1024000),
+                        "downlink", "{",
+                            "value", BCON_INT32(1),
+                            "unit", BCON_INT32(3),
+                        "}",
+                        "uplink", "{",
+                            "value", BCON_INT32(1),
+                            "unit", BCON_INT32(3),
+                        "}",
                     "}",
                     "qos", "{",
                         "qci", BCON_INT32(9),
@@ -1283,10 +1295,15 @@ bson_t *test_db_new_simple(test_ue_t *test_ue)
         "\"msisdn\" : [\"82107654321\", \"821012345678\" ], "
 #endif
         "\"ambr\" : { "
-          "\"uplink\" : { \"$numberLong\" : \"1024000\" }, "
-          "\"downlink\" : { \"$numberLong\" : \"1024000\" } "
+          "\"downlink\" : {"
+            "\"value\" : 1,"
+            "\"unit\" : 3"
+          "},"
+          "\"uplink\" : {"
+            "\"value\" : 1,"
+            "\"unit\" : 3"
+          "}"
         "},"
-
         "\"s_nssai\" : ["
           "{"
             "\"sst\" : 1,"
@@ -1295,8 +1312,14 @@ bson_t *test_db_new_simple(test_ue_t *test_ue)
                 "\"apn\" : \"internet\", "
                 "\"_id\" : { \"$oid\" : \"597223158b8861d7605378c7\" }, "
                 "\"ambr\" : {"
-                  "\"uplink\" : { \"$numberLong\" : \"1024000\" }, "
-                  "\"downlink\" : { \"$numberLong\" : \"1024000\" } "
+                  "\"downlink\" : {"
+                    "\"value\" : 1,"
+                    "\"unit\" : 3"
+                  "},"
+                  "\"uplink\" : {"
+                    "\"value\" : 1,"
+                    "\"unit\" : 3"
+                  "}"
                 "},"
                 "\"qos\" : { "
                   "\"qci\" : 9, "

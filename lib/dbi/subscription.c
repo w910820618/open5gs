@@ -308,15 +308,48 @@ int ogs_dbi_subscription_data(char *supi,
             bson_iter_recurse(&iter, &child1_iter);
             while (bson_iter_next(&child1_iter)) {
                 const char *child1_key = bson_iter_key(&child1_iter);
-                if (!strcmp(child1_key, "uplink") &&
-                    BSON_ITER_HOLDS_INT64(&child1_iter)) {
-                    subscription_data->ambr.uplink =
-                        bson_iter_int64(&child1_iter) * 1024;
-                } else if (!strcmp(child1_key, "downlink") &&
-                    BSON_ITER_HOLDS_INT64(&child1_iter)) {
-                    subscription_data->ambr.downlink =
-                        bson_iter_int64(&child1_iter) * 1024;
+                if (!strcmp(child1_key, "downlink") &&
+                        BSON_ITER_HOLDS_DOCUMENT(&child1_iter)) {
+                    uint8_t unit = 0;
+                    int n;
+
+                    bson_iter_recurse(&child1_iter, &child2_iter);
+                    while (bson_iter_next(&child2_iter)) {
+                        const char *child2_key = bson_iter_key(&child2_iter);
+                        if (!strcmp(child2_key, "value") &&
+                            BSON_ITER_HOLDS_INT32(&child2_iter)) {
+                            subscription_data->ambr.downlink =
+                                bson_iter_int32(&child2_iter);
+                        } else if (!strcmp(child2_key, "unit") &&
+                            BSON_ITER_HOLDS_INT32(&child2_iter)) {
+                            unit = bson_iter_int32(&child2_iter);
+                        }
+                    }
+
+                    for (n = 0; n < unit; n++)
+                        subscription_data->ambr.downlink *= 1024;
+                } else if (!strcmp(child1_key, "uplink") &&
+                        BSON_ITER_HOLDS_DOCUMENT(&child1_iter)) {
+                    uint8_t unit = 0;
+                    int n;
+
+                    bson_iter_recurse(&child1_iter, &child2_iter);
+                    while (bson_iter_next(&child2_iter)) {
+                        const char *child2_key = bson_iter_key(&child2_iter);
+                        if (!strcmp(child2_key, "value") &&
+                            BSON_ITER_HOLDS_INT32(&child2_iter)) {
+                            subscription_data->ambr.uplink =
+                                bson_iter_int32(&child2_iter);
+                        } else if (!strcmp(child2_key, "unit") &&
+                            BSON_ITER_HOLDS_INT32(&child2_iter)) {
+                            unit = bson_iter_int32(&child2_iter);
+                        }
+                    }
+
+                    for (n = 0; n < unit; n++)
+                        subscription_data->ambr.uplink *= 1024;
                 }
+
             }
         } else if (!strcmp(key, "s_nssai") && BSON_ITER_HOLDS_ARRAY(&iter)) {
 
@@ -424,22 +457,71 @@ int ogs_dbi_subscription_data(char *supi,
                                     BSON_ITER_HOLDS_DOCUMENT(&child4_iter)) {
                                     bson_iter_recurse(
                                             &child4_iter, &child5_iter);
+
                                     while (bson_iter_next(&child5_iter)) {
                                         const char *child5_key =
                                             bson_iter_key(&child5_iter);
-                                        if (!strcmp(child5_key, "uplink") &&
-                                            BSON_ITER_HOLDS_INT64(
-                                                &child5_iter)) {
-                                            pdn->ambr.uplink =
-                                                bson_iter_int64(
-                                                    &child5_iter) * 1024;
+                                        if (!strcmp(child5_key, "downlink") &&
+                                                BSON_ITER_HOLDS_DOCUMENT(
+                                                    &child5_iter)) {
+                                            uint8_t unit = 0;
+                                            int n;
+
+                                            bson_iter_recurse(
+                                                    &child5_iter, &child6_iter);
+                                            while (bson_iter_next(
+                                                        &child6_iter)) {
+                                                const char *child6_key =
+                                                    bson_iter_key(&child6_iter);
+                                                if (!strcmp(child6_key,
+                                                            "value") &&
+                                                    BSON_ITER_HOLDS_INT32(
+                                                        &child6_iter)) {
+                                                    pdn->ambr.downlink =
+                                                        bson_iter_int32(
+                                                                &child6_iter);
+                                                } else if (!strcmp(child6_key,
+                                                            "unit") &&
+                                                    BSON_ITER_HOLDS_INT32(
+                                                        &child6_iter)) {
+                                                    unit = bson_iter_int32(
+                                                            &child6_iter);
+                                                }
+                                            }
+
+                                            for (n = 0; n < unit; n++)
+                                                pdn->ambr.downlink *= 1024;
                                         } else if (!strcmp(child5_key,
-                                                    "downlink") &&
-                                            BSON_ITER_HOLDS_INT64(
-                                                &child5_iter)) {
-                                            pdn->ambr.downlink =
-                                                bson_iter_int64(
-                                                    &child5_iter) * 1024;
+                                                    "uplink") &&
+                                                BSON_ITER_HOLDS_DOCUMENT(
+                                                    &child5_iter)) {
+                                            uint8_t unit = 0;
+                                            int n;
+
+                                            bson_iter_recurse(
+                                                    &child5_iter, &child6_iter);
+                                            while (bson_iter_next(
+                                                        &child6_iter)) {
+                                                const char *child6_key =
+                                                    bson_iter_key(&child6_iter);
+                                                if (!strcmp(child6_key,
+                                                            "value") &&
+                                                    BSON_ITER_HOLDS_INT32(
+                                                        &child6_iter)) {
+                                                    pdn->ambr.uplink =
+                                                        bson_iter_int32(
+                                                                &child6_iter);
+                                                } else if (!strcmp(child6_key,
+                                                            "unit") &&
+                                                    BSON_ITER_HOLDS_INT32(
+                                                        &child6_iter)) {
+                                                    unit = bson_iter_int32(
+                                                            &child6_iter);
+                                                }
+                                            }
+
+                                            for (n = 0; n < unit; n++)
+                                                pdn->ambr.uplink *= 1024;
                                         }
                                     }
                                 } else if (!strcmp(child4_key, "pgw") &&
