@@ -234,6 +234,7 @@ const View = ({ visible, disableOnClickOutside, profile, onEdit, onDelete, onHid
                       ambr.downlink['value'] === undefined ? "unlimited" :
                         ambr.downlink.value
                     } {ambr['downlink'] === undefined ? "unlimited" :
+                         ambr.downlink['value'] === undefined ? "" :
                          ambr.downlink['unit'] === undefined ? "bps" :
                             ambr.downlink.unit === 0 ? "bps" :
                             ambr.downlink.unit === 1 ? "Kbps" :
@@ -248,6 +249,7 @@ const View = ({ visible, disableOnClickOutside, profile, onEdit, onDelete, onHid
                       ambr.uplink['value'] === undefined ? "unlimited" :
                         ambr.uplink.value
                     } {ambr['uplink'] === undefined ? "unlimited" :
+                         ambr.uplink['value'] === undefined ? "" :
                          ambr.uplink['unit'] === undefined ? "bps" :
                             ambr.uplink.unit === 0 ? "bps" :
                             ambr.uplink.unit === 1 ? "Kbps" :
@@ -289,8 +291,8 @@ const View = ({ visible, disableOnClickOutside, profile, onEdit, onDelete, onHid
                         <div className="medium_data">{pdn.type === 0 ? "IPv4" : (pdn.type === 1 ? "IPv6" : "IPv4v6")}</div>
                         <div className="small_data">{pdn.qos.qci}</div>
                         <div className="small_data">{pdn.qos.arp.priority_level}</div>
-                        <div className="medium_data">{pdn.qos.arp.pre_emption_capability === 1 ? "Disabled" : "Enabled"}</div>
-                        <div className="medium_data">{pdn.qos.arp.pre_emption_vulnerability === 1 ? "Disabled" : "Enabled"}</div>
+                        <div className="medium_data">{pdn.qos.arp.pre_emption_capability === 1 ? "Enabled" : "Disabled"}</div>
+                        <div className="medium_data">{pdn.qos.arp.pre_emption_vulnerability === 1 ? "Enabled" : "Disabled"}</div>
                         {pdn['ambr'] === undefined ?
                           <div className="large_data">
                             unlimited/unlimited
@@ -301,8 +303,10 @@ const View = ({ visible, disableOnClickOutside, profile, onEdit, onDelete, onHid
                                 "unlimited" : pdn.ambr.downlink.value
                             } {pdn.ambr['downlink'] === undefined ?
                                 "unlimited" :
-                                  pdn.ambr.downlink['unit'] === undefined ?
-                                    "bps" :
+                                  pdn.ambr.downlink['value'] ===
+                                    undefined ?  "" :
+                                  pdn.ambr.downlink['unit'] ===
+                                    undefined ?  "bps" :
                                     pdn.ambr.downlink.unit === 0 ? "bps" :
                                     pdn.ambr.downlink.unit === 1 ? "Kbps" :
                                     pdn.ambr.downlink.unit === 2 ? "Mbps" :
@@ -310,13 +314,15 @@ const View = ({ visible, disableOnClickOutside, profile, onEdit, onDelete, onHid
                                     pdn.ambr.downlink.unit === 4 ? "Tbps" :
                                         "Unknown Unit"
                             } / {pdn.ambr['uplink'] ===
-                                    undefined ?  "unlimited" :
+                                    undefined ? "unlimited" :
                               pdn.ambr.uplink['value'] === undefined ?
                                 "unlimited" : pdn.ambr.uplink.value
                             } {pdn.ambr['uplink'] === undefined ?
                                 "unlimited" :
-                                  pdn.ambr.uplink['unit'] === undefined ?
-                                    "bps" :
+                                  pdn.ambr.uplink['value'] ===
+                                    undefined ?  "" :
+                                  pdn.ambr.uplink['unit'] ===
+                                    undefined ?  "bps" :
                                     pdn.ambr.uplink.unit === 0 ? "bps" :
                                     pdn.ambr.uplink.unit === 1 ? "Kbps" :
                                     pdn.ambr.uplink.unit === 2 ? "Mbps" :
@@ -354,8 +360,8 @@ const View = ({ visible, disableOnClickOutside, profile, onEdit, onDelete, onHid
                               <div className="medium_data"></div>
                               <div className="small_data">{pcc_rule.qos.qci}</div>
                               <div className="small_data">{pcc_rule.qos.arp.priority_level}</div>
-                              <div className="medium_data">{pcc_rule.qos.arp.pre_emption_capability === 1 ? "Disabled" : "Enabled"}</div>
-                              <div className="medium_data">{pcc_rule.qos.arp.pre_emption_vulnerability === 1 ? "Disabled" : "Enabled"}</div>
+                              <div className="medium_data">{pcc_rule.qos.arp.pre_emption_capability === 1 ? "Enabled" : "Disabled"}</div>
+                              <div className="medium_data">{pcc_rule.qos.arp.pre_emption_vulnerability === 1 ? "Enabled" : "Disabled"}</div>
                               {pcc_rule.qos['mbr'] === undefined ?
                                 <div className="large_data">
                                   unlimited/unlimited
@@ -364,10 +370,12 @@ const View = ({ visible, disableOnClickOutside, profile, onEdit, onDelete, onHid
                                   {pcc_rule.qos.mbr['downlink'] ===
                                       undefined ? "unlimited" :
                                     pcc_rule.qos.mbr.downlink['value'] ===
-                                      undefined ?  "unlimited" :
+                                      undefined ? "unlimited" :
                                       pcc_rule.qos.mbr.downlink.value
                                   } {pcc_rule.qos.mbr['downlink'] ===
-                                       undefined ?  "unlimited" :
+                                       undefined ? "unlimited" :
+                                       pcc_rule.qos.mbr.downlink['value'] ===
+                                          undefined ? "" :
                                        pcc_rule.qos.mbr.downlink['unit'] ===
                                           undefined ?  "bps" :
                                        pcc_rule.qos.mbr.downlink.unit === 0 ?
@@ -383,10 +391,12 @@ const View = ({ visible, disableOnClickOutside, profile, onEdit, onDelete, onHid
                                   } / {pcc_rule.qos.mbr['uplink'] ===
                                       undefined ? "unlimited" :
                                     pcc_rule.qos.mbr.uplink['value'] ===
-                                      undefined ?  "unlimited" :
+                                      undefined ? "unlimited" :
                                       pcc_rule.qos.mbr.uplink.value
                                   } {pcc_rule.qos.mbr['uplink'] ===
-                                       undefined ?  "unlimited" :
+                                       undefined ? "unlimited" :
+                                       pcc_rule.qos.mbr.uplink['value'] ===
+                                          undefined ?  "" :
                                        pcc_rule.qos.mbr.uplink['unit'] ===
                                           undefined ?  "bps" :
                                        pcc_rule.qos.mbr.uplink.unit === 0 ?
@@ -410,10 +420,12 @@ const View = ({ visible, disableOnClickOutside, profile, onEdit, onDelete, onHid
                                   {pcc_rule.qos.gbr['downlink'] ===
                                       undefined ? "unlimited" :
                                     pcc_rule.qos.gbr.downlink['value'] ===
-                                      undefined ?  "unlimited" :
+                                      undefined ? "unlimited" :
                                       pcc_rule.qos.gbr.downlink.value
                                   } {pcc_rule.qos.gbr['downlink'] ===
-                                       undefined ?  "unlimited" :
+                                       undefined ? "unlimited" :
+                                       pcc_rule.qos.gbr.downlink['value'] ===
+                                          undefined ?  "" :
                                        pcc_rule.qos.gbr.downlink['unit'] ===
                                           undefined ?  "bps" :
                                        pcc_rule.qos.gbr.downlink.unit === 0 ?
@@ -429,10 +441,12 @@ const View = ({ visible, disableOnClickOutside, profile, onEdit, onDelete, onHid
                                   } / {pcc_rule.qos.gbr['uplink'] ===
                                       undefined ? "unlimited" :
                                     pcc_rule.qos.gbr.uplink['value'] ===
-                                      undefined ?  "unlimited" :
+                                      undefined ? "unlimited" :
                                       pcc_rule.qos.gbr.uplink.value
                                   } {pcc_rule.qos.gbr['uplink'] ===
-                                       undefined ?  "unlimited" :
+                                       undefined ? "unlimited" :
+                                       pcc_rule.qos.gbr.uplink['value'] ===
+                                          undefined ?  "" :
                                        pcc_rule.qos.gbr.uplink['unit'] ===
                                           undefined ?  "bps" :
                                        pcc_rule.qos.gbr.uplink.unit === 0 ?

@@ -665,6 +665,21 @@ static void smf_gx_cca_cb(void *data, struct msg **msg)
                     hdr->avp_value->u32;
             }
 
+            /*
+             * Ch 7.3.40 Allocation-Retenion-Proirty in TS 29.272 V15.9.0
+             *
+             * If the Pre-emption-Capability AVP is not present in the
+             * Allocation-Retention-Priority AVP, the default value shall be
+             * PRE-EMPTION_CAPABILITY_DISABLED (1).
+             *
+             * If the Pre-emption-Vulnerability AVP is not present in the
+             * Allocation-Retention-Priority AVP, the default value shall be
+             * PRE-EMPTION_VULNERABILITY_ENABLED (0).
+             *
+             * However, to easily set up VoLTE service,
+             * enable Pre-emption Capability/Vulnerablility
+             * in Default Bearer
+             */
             ret = fd_avp_search_avp(
                     avpch1, ogs_diam_gx_pre_emption_capability, &avpch2);
             ogs_assert(ret == 0);
@@ -1201,6 +1216,21 @@ static int decode_pcc_rule_definition(
                     error++;
                 }
 
+                /*
+                 * Ch 7.3.40 Allocation-Retenion-Proirty in TS 29.272 V15.9.0
+                 *
+                 * If the Pre-emption-Capability AVP is not present in the
+                 * Allocation-Retention-Priority AVP, the default value shall be
+                 * PRE-EMPTION_CAPABILITY_DISABLED (1).
+                 *
+                 * If the Pre-emption-Vulnerability AVP is not present in the
+                 * Allocation-Retention-Priority AVP, the default value shall be
+                 * PRE-EMPTION_VULNERABILITY_ENABLED (0).
+                 *
+                 * However, to easily set up VoLTE service,
+                 * enable Pre-emption Capability/Vulnerablility
+                 * in Default Bearer
+                 */
                 ret = fd_avp_search_avp(avpch3,
                     ogs_diam_gx_pre_emption_capability, &avpch4);
                 ogs_assert(ret == 0);

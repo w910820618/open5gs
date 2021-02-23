@@ -46,22 +46,10 @@ const formData = {
         },
         "qos": {
           "qci": 9,
-        // Ch 7.3.40 Allocation-Retenion-Proirty in TS 29.272 V15.9.0
-        //
-        // If the Pre-emption-Capability AVP is not present
-        // in the Allocation-Retention-Priority AVP, the default value shall be
-        // PRE-EMPTION_CAPABILITY_DISABLED (1).
-        //
-        // If the Pre-emption-Vulnerability AVP is not present
-        // in the Allocation-Retention-Priority AVP, the default value shall be
-        // PRE-EMPTION_VULNERABILITY_ENABLED (0).
-        //
-        // However, to easily set up VoLTE service,
-        // disable Pre-emption Capability/Vulnerablility in Default Bearer
           "arp": {
             "priority_level": 8,
-            "pre_emption_capability": 1,
-            "pre_emption_vulnerability": 1
+            "pre_emption_capability": 0,
+            "pre_emption_vulnerability": 0
           }
         },
     }]

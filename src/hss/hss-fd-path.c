@@ -607,6 +607,21 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
                     MSG_BRW_LAST_CHILD, priority_level);
                 ogs_assert(ret == 0);
 
+                /*
+                 * Ch 7.3.40 Allocation-Retenion-Proirty in TS 29.272 V15.9.0
+                 *
+                 * If the Pre-emption-Capability AVP is not present in the
+                 * Allocation-Retention-Priority AVP, the default value shall be
+                 * PRE-EMPTION_CAPABILITY_DISABLED (1).
+                 *
+                 * If the Pre-emption-Vulnerability AVP is not present in the
+                 * Allocation-Retention-Priority AVP, the default value shall be
+                 * PRE-EMPTION_VULNERABILITY_ENABLED (0).
+                 *
+                 * However, to easily set up VoLTE service,
+                 * enable Pre-emption Capability/Vulnerablility
+                 * in Default Bearer
+                 */
                 ret = fd_msg_avp_new(ogs_diam_s6a_pre_emption_capability, 0, 
                         &pre_emption_capability);
                 ogs_assert(ret == 0);
