@@ -169,6 +169,7 @@ bool smf_npcf_smpolicycontrol_handle_create(
                         OpenAPI_preemption_capability_MAY_PREEMPT)
                         sess->pdn.qos.arp.pre_emption_capability =
                             OGS_PDN_PRE_EMPTION_CAPABILITY_ENABLED;
+                    ogs_assert(sess->pdn.qos.arp.pre_emption_capability);
 
                     if (AuthDefQos->arp->preempt_vuln ==
                         OpenAPI_preemption_vulnerability_NOT_PREEMPTABLE)
@@ -178,6 +179,7 @@ bool smf_npcf_smpolicycontrol_handle_create(
                         OpenAPI_preemption_vulnerability_PREEMPTABLE)
                         sess->pdn.qos.arp.pre_emption_vulnerability =
                             OGS_PDN_PRE_EMPTION_VULNERABILITY_ENABLED;
+                    ogs_assert(sess->pdn.qos.arp.pre_emption_vulnerability);
                 }
             }
         }
@@ -309,6 +311,7 @@ bool smf_npcf_smpolicycontrol_handle_create(
                     OpenAPI_preemption_capability_MAY_PREEMPT)
                     pcc_rule->qos.arp.pre_emption_capability =
                         OGS_PDN_PRE_EMPTION_CAPABILITY_ENABLED;
+                ogs_assert(pcc_rule->qos.arp.pre_emption_capability);
 
                 if (QosData->arp->preempt_vuln ==
                     OpenAPI_preemption_vulnerability_NOT_PREEMPTABLE)
@@ -318,6 +321,7 @@ bool smf_npcf_smpolicycontrol_handle_create(
                     OpenAPI_preemption_vulnerability_PREEMPTABLE)
                     pcc_rule->qos.arp.pre_emption_vulnerability =
                         OGS_PDN_PRE_EMPTION_VULNERABILITY_ENABLED;
+                ogs_assert(pcc_rule->qos.arp.pre_emption_vulnerability);
             }
 
             if (QosData->maxbr_ul)

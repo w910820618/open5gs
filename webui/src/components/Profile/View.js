@@ -291,8 +291,18 @@ const View = ({ visible, disableOnClickOutside, profile, onEdit, onDelete, onHid
                         <div className="medium_data">{pdn.type === 0 ? "IPv4" : (pdn.type === 1 ? "IPv6" : "IPv4v6")}</div>
                         <div className="small_data">{pdn.qos.qci}</div>
                         <div className="small_data">{pdn.qos.arp.priority_level}</div>
-                        <div className="medium_data">{pdn.qos.arp.pre_emption_capability === 1 ? "Enabled" : "Disabled"}</div>
-                        <div className="medium_data">{pdn.qos.arp.pre_emption_vulnerability === 1 ? "Enabled" : "Disabled"}</div>
+                        <div className="medium_data">
+                          {pdn.qos.arp.pre_emption_capability ===
+                              2 ? "Enabled" :
+                           pdn.qos.arp.pre_emption_capability ===
+                              1 ? "Disabled" : "Unknown"}
+                        </div>
+                        <div className="medium_data">
+                          {pdn.qos.arp.pre_emption_vulnerability ===
+                              2 ? "Enabled" :
+                           pdn.qos.arp.pre_emption_vulnerability ===
+                              1 ? "Disabled" : "Unknown"}
+                        </div>
                         {pdn['ambr'] === undefined ?
                           <div className="large_data">
                             unlimited/unlimited
@@ -360,8 +370,18 @@ const View = ({ visible, disableOnClickOutside, profile, onEdit, onDelete, onHid
                               <div className="medium_data"></div>
                               <div className="small_data">{pcc_rule.qos.qci}</div>
                               <div className="small_data">{pcc_rule.qos.arp.priority_level}</div>
-                              <div className="medium_data">{pcc_rule.qos.arp.pre_emption_capability === 1 ? "Enabled" : "Disabled"}</div>
-                              <div className="medium_data">{pcc_rule.qos.arp.pre_emption_vulnerability === 1 ? "Enabled" : "Disabled"}</div>
+                              <div className="medium_data">
+                                {pcc_rule.qos.arp.pre_emption_capability ===
+                                    2 ? "Enabled" :
+                                 pcc_rule.qos.arp.pre_emption_capability ===
+                                    1 ? "Disabled" : "Unknown"}
+                              </div>
+                              <div className="medium_data">
+                                {pcc_rule.qos.arp.pre_emption_vulnerability ===
+                                    2 ? "Enabled" :
+                                 pcc_rule.qos.arp.pre_emption_vulnerability ===
+                                    1 ? "Disabled" : "Unknown"}
+                              </div>
                               {pcc_rule.qos['mbr'] === undefined ?
                                 <div className="large_data">
                                   unlimited/unlimited

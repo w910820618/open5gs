@@ -292,11 +292,11 @@ typedef struct ogs_qos_s {
      * by the home network and thus applicable when a UE is roaming. */
         uint8_t     priority_level;
 
-#define OGS_PDN_PRE_EMPTION_CAPABILITY_ENABLED              0
 #define OGS_PDN_PRE_EMPTION_CAPABILITY_DISABLED             1
+#define OGS_PDN_PRE_EMPTION_CAPABILITY_ENABLED              2
         uint8_t     pre_emption_capability;
-#define OGS_PDN_PRE_EMPTION_VULNERABILITY_ENABLED           0
 #define OGS_PDN_PRE_EMPTION_VULNERABILITY_DISABLED          1
+#define OGS_PDN_PRE_EMPTION_VULNERABILITY_ENABLED           2
         uint8_t     pre_emption_vulnerability;
     } arp;
 

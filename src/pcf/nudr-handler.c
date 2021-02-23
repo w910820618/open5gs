@@ -313,16 +313,21 @@ bool pcf_nudr_dr_handle_query_sm_data(
                     OGS_PDN_PRE_EMPTION_CAPABILITY_ENABLED)
                 AuthDefQos.arp->preempt_cap =
                     OpenAPI_preemption_capability_MAY_PREEMPT;
-            else
+            else if (pdn->qos.arp.pre_emption_capability ==
+                    OGS_PDN_PRE_EMPTION_CAPABILITY_DISABLED)
                 AuthDefQos.arp->preempt_cap =
                     OpenAPI_preemption_capability_NOT_PREEMPT;
+            ogs_assert(AuthDefQos.arp->preempt_cap);
+
             if (pdn->qos.arp.pre_emption_vulnerability ==
                     OGS_PDN_PRE_EMPTION_CAPABILITY_ENABLED)
                 AuthDefQos.arp->preempt_vuln =
                     OpenAPI_preemption_vulnerability_PREEMPTABLE;
-            else
+            else if (pdn->qos.arp.pre_emption_vulnerability ==
+                    OGS_PDN_PRE_EMPTION_CAPABILITY_DISABLED)
                 AuthDefQos.arp->preempt_vuln =
                     OpenAPI_preemption_vulnerability_NOT_PREEMPTABLE;
+            ogs_assert(AuthDefQos.arp->preempt_vuln);
             AuthDefQos.arp->priority_level = pdn->qos.arp.priority_level;
 
             SessionRule->auth_def_qos = &AuthDefQos;
@@ -441,16 +446,21 @@ bool pcf_nudr_dr_handle_query_sm_data(
                     OGS_PDN_PRE_EMPTION_CAPABILITY_ENABLED)
                 QosData->arp->preempt_cap =
                     OpenAPI_preemption_capability_MAY_PREEMPT;
-            else
+            else if (pcc_rule->qos.arp.pre_emption_capability ==
+                    OGS_PDN_PRE_EMPTION_CAPABILITY_DISABLED)
                 QosData->arp->preempt_cap =
                     OpenAPI_preemption_capability_NOT_PREEMPT;
+            ogs_assert(pcc_rule->qos.arp.pre_emption_capability);
+
             if (pcc_rule->qos.arp.pre_emption_vulnerability ==
                     OGS_PDN_PRE_EMPTION_CAPABILITY_ENABLED)
                 QosData->arp->preempt_vuln =
                     OpenAPI_preemption_vulnerability_PREEMPTABLE;
-            else
+            else if (pcc_rule->qos.arp.pre_emption_vulnerability ==
+                    OGS_PDN_PRE_EMPTION_CAPABILITY_DISABLED)
                 QosData->arp->preempt_vuln =
                     OpenAPI_preemption_vulnerability_NOT_PREEMPTABLE;
+            ogs_assert(pcc_rule->qos.arp.pre_emption_vulnerability);
             QosData->arp->priority_level = pcc_rule->qos.arp.priority_level;
 
             if (pcc_rule->qos.mbr.uplink)

@@ -164,10 +164,6 @@ bool smf_nudm_sdm_handle_get(smf_sess_t *sess, ogs_sbi_stream_t *stream,
                 sess->pdn.qos.qci = _5gQoSProfile->_5qi;
                 sess->pdn.qos.arp.priority_level =
                     _5gQoSProfile->priority_level;
-                sess->pdn.qos.arp.pre_emption_capability =
-                    OGS_PDN_PRE_EMPTION_CAPABILITY_DISABLED;
-                sess->pdn.qos.arp.pre_emption_vulnerability =
-                    OGS_PDN_PRE_EMPTION_VULNERABILITY_DISABLED;
                 if (_5gQoSProfile->arp) {
                     sess->pdn.qos.arp.priority_level =
                             _5gQoSProfile->arp->priority_level;
@@ -175,11 +171,21 @@ bool smf_nudm_sdm_handle_get(smf_sess_t *sess, ogs_sbi_stream_t *stream,
                             OpenAPI_preemption_capability_MAY_PREEMPT)
                         sess->pdn.qos.arp.pre_emption_capability =
                             OGS_PDN_PRE_EMPTION_CAPABILITY_ENABLED;
+                    else if (_5gQoSProfile->arp->preempt_cap ==
+                            OpenAPI_preemption_capability_NOT_PREEMPT)
+                        sess->pdn.qos.arp.pre_emption_capability =
+                            OGS_PDN_PRE_EMPTION_CAPABILITY_DISABLED;
+                    ogs_assert(sess->pdn.qos.arp.pre_emption_capability);
+
                     if (_5gQoSProfile->arp->preempt_vuln ==
-                            OpenAPI_preemption_vulnerability_PREEMPTABLE) {
+                            OpenAPI_preemption_vulnerability_PREEMPTABLE)
                         sess->pdn.qos.arp.pre_emption_vulnerability =
                             OGS_PDN_PRE_EMPTION_VULNERABILITY_ENABLED;
-                    }
+                    else if (_5gQoSProfile->arp->preempt_vuln ==
+                            OpenAPI_preemption_vulnerability_NOT_PREEMPTABLE)
+                        sess->pdn.qos.arp.pre_emption_vulnerability =
+                            OGS_PDN_PRE_EMPTION_VULNERABILITY_DISABLED;
+                    ogs_assert(sess->pdn.qos.arp.pre_emption_vulnerability);
                 }
             }
 

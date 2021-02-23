@@ -165,18 +165,11 @@ ogs_pkbuf_t *ngap_build_pdu_session_resource_setup_request_transfer(
         allocationAndRetentionPriority->priorityLevelARP =
             qos_flow->qos.arp.priority_level;
         if (qos_flow->qos.arp.pre_emption_capability ==
-                OGS_PDN_PRE_EMPTION_CAPABILITY_DISABLED)
-            allocationAndRetentionPriority->pre_emptionCapability =
-                NGAP_Pre_emptionCapability_shall_not_trigger_pre_emption;
-        else
+                OGS_PDN_PRE_EMPTION_CAPABILITY_ENABLED)
             allocationAndRetentionPriority->pre_emptionCapability =
                 NGAP_Pre_emptionCapability_may_trigger_pre_emption;
-
         if (qos_flow->qos.arp.pre_emption_vulnerability ==
-                OGS_PDN_PRE_EMPTION_VULNERABILITY_DISABLED)
-            allocationAndRetentionPriority->pre_emptionVulnerability =
-                NGAP_Pre_emptionVulnerability_not_pre_emptable;
-        else
+                OGS_PDN_PRE_EMPTION_VULNERABILITY_ENABLED)
             allocationAndRetentionPriority->pre_emptionVulnerability =
                 NGAP_Pre_emptionVulnerability_pre_emptable;
 
@@ -261,18 +254,11 @@ ogs_pkbuf_t *ngap_build_qos_flow_resource_modify_request_transfer(
     allocationAndRetentionPriority->priorityLevelARP =
         qos_flow->qos.arp.priority_level;
     if (qos_flow->qos.arp.pre_emption_capability ==
-            OGS_PDN_PRE_EMPTION_CAPABILITY_DISABLED)
-        allocationAndRetentionPriority->pre_emptionCapability =
-            NGAP_Pre_emptionCapability_shall_not_trigger_pre_emption;
-    else
+            OGS_PDN_PRE_EMPTION_CAPABILITY_ENABLED)
         allocationAndRetentionPriority->pre_emptionCapability =
             NGAP_Pre_emptionCapability_may_trigger_pre_emption;
-
     if (qos_flow->qos.arp.pre_emption_vulnerability ==
-            OGS_PDN_PRE_EMPTION_VULNERABILITY_DISABLED)
-        allocationAndRetentionPriority->pre_emptionVulnerability =
-            NGAP_Pre_emptionVulnerability_not_pre_emptable;
-    else
+            OGS_PDN_PRE_EMPTION_VULNERABILITY_ENABLED)
         allocationAndRetentionPriority->pre_emptionVulnerability =
             NGAP_Pre_emptionVulnerability_pre_emptable;
 

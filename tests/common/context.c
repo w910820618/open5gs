@@ -1401,8 +1401,8 @@ bson_t *test_db_new_multiple_qos_flow(test_ue_t *test_ue)
                             "qci", BCON_INT32(1),
                             "arp", "{",
                                 "priority_level", BCON_INT32(2),
-                                "pre_emption_vulnerability", BCON_INT32(0),
-                                "pre_emption_capability", BCON_INT32(0),
+                                "pre_emption_vulnerability", BCON_INT32(2),
+                                "pre_emption_capability", BCON_INT32(2),
                             "}",
                             "mbr", "{",
                                 "downlink", "{",
@@ -1518,8 +1518,8 @@ bson_t *test_db_new_multiple_qos_flow(test_ue_t *test_ue)
                       "},"
                       "\"arp\" : {"
                         "\"priority_level\" : 3,"
-                        "\"pre_emption_vulnerability\" : 0,"
-                        "\"pre_emption_capability\" : 0 }"
+                        "\"pre_emption_vulnerability\" : 2,"
+                        "\"pre_emption_capability\" : 2 }"
                       "},"
                       "\"flow\" : ["
                         "{ \"direction\" : 2,"
@@ -1631,8 +1631,8 @@ bson_t *test_db_new_multiple_session(test_ue_t *test_ue)
                             "qci", BCON_INT32(1),
                             "arp", "{",
                                 "priority_level", BCON_INT32(3),
-                                "pre_emption_vulnerability", BCON_INT32(0),
-                                "pre_emption_capability", BCON_INT32(0),
+                                "pre_emption_vulnerability", BCON_INT32(2),
+                                "pre_emption_capability", BCON_INT32(2),
                             "}",
                             "mbr", "{",
                                 "downlink", "{",
@@ -1772,8 +1772,8 @@ bson_t *test_db_new_multiple_session(test_ue_t *test_ue)
                       "},"
                       "\"arp\" : {"
                         "\"priority_level\" : 3,"
-                        "\"pre_emption_vulnerability\" : 0,"
-                        "\"pre_emption_capability\" : 0 }"
+                        "\"pre_emption_vulnerability\" : 2,"
+                        "\"pre_emption_capability\" : 2 }"
                       "},"
                       "\"flow\" : ["
                         "{ \"direction\" : 2,"
@@ -1886,8 +1886,8 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                             "qci", BCON_INT32(1),
                             "arp", "{",
                                 "priority_level", BCON_INT32(3),
-                                "pre_emption_vulnerability", BCON_INT32(0),
-                                "pre_emption_capability", BCON_INT32(0),
+                                "pre_emption_vulnerability", BCON_INT32(2),
+                                "pre_emption_capability", BCON_INT32(2),
                             "}",
                             "mbr", "{",
                                 "downlink", "{",
@@ -1916,8 +1916,8 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                             "qci", BCON_INT32(2),
                             "arp", "{",
                                 "priority_level", BCON_INT32(4),
-                                "pre_emption_vulnerability", BCON_INT32(0),
-                                "pre_emption_capability", BCON_INT32(0),
+                                "pre_emption_vulnerability", BCON_INT32(2),
+                                "pre_emption_capability", BCON_INT32(2),
                             "}",
                             "mbr", "{",
                                 "downlink", "{",
@@ -2012,6 +2012,14 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                     "\"unit\" : 3"
                   "}"
                 "},"
+                "\"qos\" : { "
+                  "\"qci\" : 5, "
+                  "\"arp\" : { "
+                    "\"priority_level\" : 1,"
+                    "\"pre_emption_vulnerability\" : 1, "
+                    "\"pre_emption_capability\" : 1"
+                  "} "
+                "}, "
                 "\"pcc_rule\" : ["
                   "{"
                     "\"_id\" : { \"$oid\" : \"599eb929c850caabcbfdcd2d\" },"
@@ -2039,8 +2047,8 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                       "},"
                       "\"arp\" : {"
                         "\"priority_level\" : 2,"
-                        "\"pre_emption_vulnerability\" : 0,"
-                        "\"pre_emption_capability\" : 0 }"
+                        "\"pre_emption_vulnerability\" : 2,"
+                        "\"pre_emption_capability\" : 2 }"
                       "}"
                   "},"
                   "{"
@@ -2069,19 +2077,11 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                       "},"
                       "\"arp\" : {"
                         "\"priority_level\" : 4,"
-                        "\"pre_emption_vulnerability\" : 0,"
-                        "\"pre_emption_capability\" : 0 }"
+                        "\"pre_emption_vulnerability\" : 2,"
+                        "\"pre_emption_capability\" : 2 }"
                       "}"
                   "}"
                 "],"
-                "\"qos\" : { "
-                  "\"qci\" : 5, "
-                  "\"arp\" : { "
-                    "\"priority_level\" : 1,"
-                    "\"pre_emption_vulnerability\" : 1, "
-                    "\"pre_emption_capability\" : 1"
-                  "} "
-                "}, "
                 "\"type\" : 2"
               "}"
             "]"

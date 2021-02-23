@@ -179,18 +179,16 @@ const schema = {
                         "pre_emption_capability": {
                           "type": "number",
                           "title": "Capability*",
-                          "enum": [0, 1],
+                          "enum": [1, 2],
                           "enumNames": ["Disabled", "Enabled"],
-                          "default": 0,
-                          "required": true
+                          "default": 1
                         },
                         "pre_emption_vulnerability": {
                           "type": "number",
                           "title": "Vulnerability*",
-                          "enum": [0, 1],
+                          "enum": [1, 2],
                           "enumNames": ["Disabled", "Enabled"],
-                          "default": 0,
-                          "required": true
+                          "default": 1
                         },
                       }
                     }
@@ -337,16 +335,16 @@ const schema = {
                               "pre_emption_capability": {
                                 "type": "number",
                                 "title": "Capability*",
-                                "enum": [0, 1],
+                                "enum": [1, 2],
                                 "enumNames": ["Disabled", "Enabled"],
-                                "default": 1,
+                                "default": 2,
                               },
                               "pre_emption_vulnerability": {
                                 "type": "number",
                                 "title": "Vulnerability*",
-                                "enum": [0, 1],
+                                "enum": [1, 2],
                                 "enumNames": ["Disabled", "Enabled"],
-                                "default": 1,
+                                "default": 2,
                               },
                             }
                           },

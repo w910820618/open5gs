@@ -48,8 +48,8 @@ const formData = {
           "qci": 9,
           "arp": {
             "priority_level": 8,
-            "pre_emption_capability": 0,
-            "pre_emption_vulnerability": 0
+            "pre_emption_capability": 1,
+            "pre_emption_vulnerability": 1
           }
         },
     }]
