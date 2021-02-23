@@ -1825,8 +1825,14 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
     doc = BCON_NEW(
             "imsi", BCON_UTF8(test_ue->imsi),
             "ambr", "{",
-                "uplink", BCON_INT64(1024000),
-                "downlink", BCON_INT64(1024000),
+                "downlink", "{",
+                    "value", BCON_INT32(1),
+                    "unit", BCON_INT32(3),
+                "}",
+                "uplink", "{",
+                    "value", BCON_INT32(1),
+                    "unit", BCON_INT32(3),
+                "}",
             "}",
             "s_nssai", "[", "{",
                 "sst", BCON_INT32(1),
@@ -1835,8 +1841,14 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                     "apn", BCON_UTF8("internet"),
                     "type", BCON_INT32(2),
                     "ambr", "{",
-                        "uplink", BCON_INT64(1024000),
-                        "downlink", BCON_INT64(1024000),
+                        "downlink", "{",
+                            "value", BCON_INT32(1),
+                            "unit", BCON_INT32(3),
+                        "}",
+                        "uplink", "{",
+                            "value", BCON_INT32(1),
+                            "unit", BCON_INT32(3),
+                        "}",
                     "}",
                     "qos", "{",
                         "qci", BCON_INT32(9),
@@ -1851,8 +1863,14 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                     "apn", BCON_UTF8("ims"),
                     "type", BCON_INT32(2),
                     "ambr", "{",
-                        "uplink", BCON_INT64(1024000),
-                        "downlink", BCON_INT64(1024000),
+                        "downlink", "{",
+                            "value", BCON_INT32(1),
+                            "unit", BCON_INT32(3),
+                        "}",
+                        "uplink", "{",
+                            "value", BCON_INT32(1),
+                            "unit", BCON_INT32(3),
+                        "}",
                     "}",
                     "qos", "{",
                         "qci", BCON_INT32(5),
@@ -1872,12 +1890,24 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                                 "pre_emption_capability", BCON_INT32(0),
                             "}",
                             "mbr", "{",
-                                "downlink", BCON_INT64(64),
-                                "uplink", BCON_INT64(44),
+                                "downlink", "{",
+                                    "value", BCON_INT32(82),
+                                    "unit", BCON_INT32(1),
+                                "}",
+                                "uplink", "{",
+                                    "value", BCON_INT32(82),
+                                    "unit", BCON_INT32(1),
+                                "}",
                             "}",
                             "gbr", "{",
-                                "downlink", BCON_INT64(64),
-                                "uplink", BCON_INT64(44),
+                                "downlink", "{",
+                                    "value", BCON_INT32(82),
+                                    "unit", BCON_INT32(1),
+                                "}",
+                                "uplink", "{",
+                                    "value", BCON_INT32(82),
+                                    "unit", BCON_INT32(1),
+                                "}",
                             "}",
                         "}",
                       "}",
@@ -1890,12 +1920,24 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                                 "pre_emption_capability", BCON_INT32(0),
                             "}",
                             "mbr", "{",
-                                "downlink", BCON_INT64(802),
-                                "uplink", BCON_INT64(802),
+                                "downlink", "{",
+                                    "value", BCON_INT32(802),
+                                    "unit", BCON_INT32(1),
+                                "}",
+                                "uplink", "{",
+                                    "value", BCON_INT32(802),
+                                    "unit", BCON_INT32(1),
+                                "}",
                             "}",
                             "gbr", "{",
-                                "downlink", BCON_INT64(802),
-                                "uplink", BCON_INT64(802),
+                                "downlink", "{",
+                                    "value", BCON_INT32(802),
+                                    "unit", BCON_INT32(1),
+                                "}",
+                                "uplink", "{",
+                                    "value", BCON_INT32(802),
+                                    "unit", BCON_INT32(1),
+                                "}",
                             "}",
                         "}",
                       "}",
@@ -1920,7 +1962,16 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
       "{"
         "\"_id\" : { \"$oid\" : \"310014158b8861d7605378c6\" }, "
         "\"imsi\" : \"001010123456819\", "
-
+        "\"ambr\" : { "
+          "\"downlink\" : {"
+            "\"value\" : 1,"
+            "\"unit\" : 3"
+          "},"
+          "\"uplink\" : {"
+            "\"value\" : 1,"
+            "\"unit\" : 3"
+          "}"
+        "},"
         "\"s_nssai\" : ["
           "{"
             "\"sst\" : 1,"
@@ -1928,6 +1979,16 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
               "{"
                 "\"_id\" : { \"$oid\" : \"599eb929c850caabcbfdcd32\" },"
                 "\"apn\" : \"internet\","
+                "\"ambr\" : {"
+                  "\"downlink\" : {"
+                    "\"value\" : 1,"
+                    "\"unit\" : 3"
+                  "},"
+                  "\"uplink\" : {"
+                    "\"value\" : 1,"
+                    "\"unit\" : 3"
+                  "}"
+                "},"
                 "\"qos\" : {"
                   "\"qci\" : 9,"
                   "\"arp\" : {"
@@ -1941,18 +2002,40 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
               "{"
                 "\"_id\" : { \"$oid\" : \"310014158b8861d7605378c7\" }, "
                 "\"apn\" : \"ims\", "
+                "\"ambr\" : {"
+                  "\"downlink\" : {"
+                    "\"value\" : 1,"
+                    "\"unit\" : 3"
+                  "},"
+                  "\"uplink\" : {"
+                    "\"value\" : 1,"
+                    "\"unit\" : 3"
+                  "}"
+                "},"
                 "\"pcc_rule\" : ["
                   "{"
                     "\"_id\" : { \"$oid\" : \"599eb929c850caabcbfdcd2d\" },"
                     "\"qos\" : {"
                       "\"qci\" : 1,"
-                      "\"gbr\" : {"
-                        "\"downlink\" : { \"$numberLong\" : \"82\" },"
-                        "\"uplink\" : { \"$numberLong\" : \"82\" }"
-                      "},"
                       "\"mbr\" : {"
-                        "\"downlink\" : { \"$numberLong\" : \"82\" },"
-                        "\"uplink\" : { \"$numberLong\" : \"82\" }"
+                        "\"downlink\" : {"
+                          "\"value\" : 82,"
+                          "\"unit\" : 1"
+                        "},"
+                        "\"uplink\" : {"
+                          "\"value\" : 82,"
+                          "\"unit\" : 1"
+                        "}"
+                      "},"
+                      "\"gbr\" : {"
+                        "\"downlink\" : {"
+                          "\"value\" : 82,"
+                          "\"unit\" : 1"
+                        "},"
+                        "\"uplink\" : {"
+                          "\"value\" : 82,"
+                          "\"unit\" : 1"
+                        "}"
                       "},"
                       "\"arp\" : {"
                         "\"priority_level\" : 2,"
@@ -1964,13 +2047,25 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                     "\"_id\" : { \"$oid\" : \"599eb929c850caabcbfdcd4d\" },"
                     "\"qos\" : {"
                       "\"qci\" : 2,"
-                      "\"gbr\" : {"
-                        "\"downlink\" : { \"$numberLong\" : \"802\" },"
-                        "\"uplink\" : { \"$numberLong\" : \"802\" }"
-                      "},"
                       "\"mbr\" : {"
-                        "\"downlink\" : { \"$numberLong\" : \"802\" },"
-                        "\"uplink\" : { \"$numberLong\" : \"802\" }"
+                        "\"downlink\" : {"
+                          "\"value\" : 802,"
+                          "\"unit\" : 1"
+                        "},"
+                        "\"uplink\" : {"
+                          "\"value\" : 802,"
+                          "\"unit\" : 1"
+                        "}"
+                      "},"
+                      "\"gbr\" : {"
+                        "\"downlink\" : {"
+                          "\"value\" : 802,"
+                          "\"unit\" : 1"
+                        "},"
+                        "\"uplink\" : {"
+                          "\"value\" : 802,"
+                          "\"unit\" : 1"
+                        "}"
                       "},"
                       "\"arp\" : {"
                         "\"priority_level\" : 4,"
@@ -1979,10 +2074,6 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                       "}"
                   "}"
                 "],"
-                "\"ambr\" : {"
-                  "\"uplink\" : { \"$numberLong\" : \"1000000\" }, "
-                  "\"downlink\" : { \"$numberLong\" : \"1000000\" } "
-                "},"
                 "\"qos\" : { "
                   "\"qci\" : 5, "
                   "\"arp\" : { "
@@ -1996,10 +2087,6 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
             "]"
           "}"
         "],"
-        "\"ambr\" : { "
-          "\"uplink\" : { \"$numberLong\" : \"1000000\" }, "
-          "\"downlink\" : { \"$numberLong\" : \"1000000\" } "
-        "},"
         "\"subscribed_rau_tau_timer\" : 12,"
         "\"network_access_mode\" : 2, "
         "\"subscriber_status\" : 0, "
