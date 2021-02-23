@@ -413,7 +413,7 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
         ret = fd_msg_avp_add(avp, MSG_BRW_LAST_CHILD, avp_subscriber_status);
         ogs_assert(ret == 0);
 
-        ret = fd_msg_avp_new(ogs_diam_s6a_network_access_mode, 0, 
+        ret = fd_msg_avp_new(ogs_diam_s6a_network_access_mode, 0,
                     &avp_network_access_mode);
         ogs_assert(ret == 0);
         val.i32 = subscription_data.network_access_mode;
@@ -464,11 +464,11 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
             struct avp *context_identifier;
             struct avp *all_apn_configuration_included_indicator;
 
-            ret = fd_msg_avp_new(ogs_diam_s6a_apn_configuration_profile, 0, 
+            ret = fd_msg_avp_new(ogs_diam_s6a_apn_configuration_profile, 0,
                     &apn_configuration_profile);
             ogs_assert(ret == 0);
 
-            ret = fd_msg_avp_new(ogs_diam_s6a_context_identifier, 0, 
+            ret = fd_msg_avp_new(ogs_diam_s6a_context_identifier, 0,
                     &context_identifier);
             ogs_assert(ret == 0);
             val.i32 = 1; /* Context Identifier : 1 */
@@ -479,7 +479,7 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
             ogs_assert(ret == 0);
 
             ret = fd_msg_avp_new(
-                    ogs_diam_s6a_all_apn_configuration_included_indicator, 0, 
+                    ogs_diam_s6a_all_apn_configuration_included_indicator, 0,
                     &all_apn_configuration_included_indicator);
             ogs_assert(ret == 0);
             val.i32 = 0;
@@ -504,12 +504,12 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
                 ogs_assert(pdn);
                 pdn->context_identifier = i+1;
 
-                ret = fd_msg_avp_new(ogs_diam_s6a_apn_configuration, 0, 
+                ret = fd_msg_avp_new(ogs_diam_s6a_apn_configuration, 0,
                     &apn_configuration);
                 ogs_assert(ret == 0);
 
                 /* Set Context-Identifier */
-                ret = fd_msg_avp_new(ogs_diam_s6a_context_identifier, 0, 
+                ret = fd_msg_avp_new(ogs_diam_s6a_context_identifier, 0,
                         &context_identifier);
                 ogs_assert(ret == 0);
                 val.i32 = pdn->context_identifier;
@@ -564,7 +564,7 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
                 }
 
                 /* Set Service-Selection */
-                ret = fd_msg_avp_new(ogs_diam_s6a_service_selection, 0, 
+                ret = fd_msg_avp_new(ogs_diam_s6a_service_selection, 0,
                         &service_selection);
                 ogs_assert(ret == 0);
                 ogs_assert(pdn->name);
@@ -577,11 +577,11 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
                 ogs_assert(ret == 0);
 
                 /* Set the EPS Subscribed QoS Profile */
-                ret = fd_msg_avp_new(ogs_diam_s6a_eps_subscribed_qos_profile, 0, 
+                ret = fd_msg_avp_new(ogs_diam_s6a_eps_subscribed_qos_profile, 0,
                         &eps_subscribed_qos_profile);
                 ogs_assert(ret == 0);
 
-                ret = fd_msg_avp_new(ogs_diam_s6a_qos_class_identifier, 0, 
+                ret = fd_msg_avp_new(ogs_diam_s6a_qos_class_identifier, 0,
                         &qos_class_identifier);
                 ogs_assert(ret == 0);
                 val.i32 = pdn->qos.qci;
@@ -593,7 +593,7 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
 
                         /* Set Allocation retention priority */
                 ret = fd_msg_avp_new(
-                        ogs_diam_s6a_allocation_retention_priority, 0, 
+                        ogs_diam_s6a_allocation_retention_priority, 0,
                         &allocation_retention_priority);
                 ogs_assert(ret == 0);
 
@@ -607,35 +607,27 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
                     MSG_BRW_LAST_CHILD, priority_level);
                 ogs_assert(ret == 0);
 
-                /*
-                 * Ch 7.3.40 Allocation-Retenion-Proirty in TS 29.272 V15.9.0
-                 *
-                 * If the Pre-emption-Capability AVP is not present in the
-                 * Allocation-Retention-Priority AVP, the default value shall be
-                 * PRE-EMPTION_CAPABILITY_DISABLED (1).
-                 *
-                 * If the Pre-emption-Vulnerability AVP is not present in the
-                 * Allocation-Retention-Priority AVP, the default value shall be
-                 * PRE-EMPTION_VULNERABILITY_ENABLED (0).
-                 *
-                 * However, to easily set up VoLTE service,
-                 * enable Pre-emption Capability/Vulnerablility
-                 * in Default Bearer
-                 */
-                ret = fd_msg_avp_new(ogs_diam_s6a_pre_emption_capability, 0, 
+                ret = fd_msg_avp_new(ogs_diam_s6a_pre_emption_capability, 0,
                         &pre_emption_capability);
                 ogs_assert(ret == 0);
-                val.u32 = pdn->qos.arp.pre_emption_capability;
+                val.u32 = OGS_DIAM_PRE_EMPTION_DISABLED;
+                if (pdn->qos.arp.pre_emption_capability ==
+                        OGS_ARP_PRE_EMPTION_ENABLED)
+                    val.u32 = OGS_DIAM_PRE_EMPTION_ENABLED;
                 ret = fd_msg_avp_setvalue(pre_emption_capability, &val);
                 ogs_assert(ret == 0);
                 ret = fd_msg_avp_add(allocation_retention_priority, 
                     MSG_BRW_LAST_CHILD, pre_emption_capability);
                 ogs_assert(ret == 0);
 
-                ret = fd_msg_avp_new(ogs_diam_s6a_pre_emption_vulnerability, 0, 
+                ret = fd_msg_avp_new(
+                        ogs_diam_s6a_pre_emption_vulnerability, 0,
                         &pre_emption_vulnerability);
                 ogs_assert(ret == 0);
-                val.u32 = pdn->qos.arp.pre_emption_vulnerability;
+                val.u32 = OGS_DIAM_PRE_EMPTION_DISABLED;
+                if (pdn->qos.arp.pre_emption_vulnerability ==
+                        OGS_ARP_PRE_EMPTION_ENABLED)
+                    val.u32 = OGS_DIAM_PRE_EMPTION_ENABLED;
                 ret = fd_msg_avp_setvalue(pre_emption_vulnerability, &val);
                 ogs_assert(ret == 0);
                 ret = fd_msg_avp_add(allocation_retention_priority, 
@@ -694,7 +686,7 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
                 if (pdn->ambr.downlink || pdn->ambr.uplink) {
                     ret = fd_msg_avp_new(ogs_diam_s6a_ambr, 0, &avp_ambr);
                     ogs_assert(ret == 0);
-                    ret = fd_msg_avp_new(ogs_diam_s6a_max_bandwidth_ul, 0, 
+                    ret = fd_msg_avp_new(ogs_diam_s6a_max_bandwidth_ul, 0,
                                 &avp_max_bandwidth_ul);
                     ogs_assert(ret == 0);
                     val.u32 = pdn->ambr.uplink;
@@ -703,7 +695,7 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
                     ret = fd_msg_avp_add(avp_ambr, MSG_BRW_LAST_CHILD, 
                                 avp_max_bandwidth_ul);
                     ogs_assert(ret == 0);
-                    ret = fd_msg_avp_new(ogs_diam_s6a_max_bandwidth_dl, 0, 
+                    ret = fd_msg_avp_new(ogs_diam_s6a_max_bandwidth_dl, 0,
                                 &avp_max_bandwidth_dl);
                     ogs_assert(ret == 0);
                     val.u32 = pdn->ambr.downlink;

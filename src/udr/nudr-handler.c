@@ -547,21 +547,21 @@ bool udr_nudr_dr_handle_subscription_provisioned(
             ogs_assert(_5gQoSProfile->arp);
             _5gQoSProfile->arp->priority_level = pdn->qos.arp.priority_level;
             if (pdn->qos.arp.pre_emption_capability ==
-                    OGS_ARP_PRE_EMPTION_CAPABILITY_ENABLED)
+                    OGS_ARP_PRE_EMPTION_ENABLED)
                 _5gQoSProfile->arp->preempt_cap =
                         OpenAPI_preemption_capability_MAY_PREEMPT;
             else if (pdn->qos.arp.pre_emption_capability ==
-                    OGS_ARP_PRE_EMPTION_CAPABILITY_DISABLED)
+                    OGS_ARP_PRE_EMPTION_DISABLED)
                 _5gQoSProfile->arp->preempt_cap =
                         OpenAPI_preemption_capability_NOT_PREEMPT;
             ogs_assert(_5gQoSProfile->arp->preempt_cap);
 
             if (pdn->qos.arp.pre_emption_vulnerability ==
-                OGS_ARP_PRE_EMPTION_VULNERABILITY_ENABLED)
+                OGS_ARP_PRE_EMPTION_ENABLED)
                 _5gQoSProfile->arp->preempt_vuln =
                     OpenAPI_preemption_vulnerability_PREEMPTABLE;
             else if (pdn->qos.arp.pre_emption_vulnerability ==
-                OGS_ARP_PRE_EMPTION_VULNERABILITY_DISABLED)
+                OGS_ARP_PRE_EMPTION_DISABLED)
                 _5gQoSProfile->arp->preempt_vuln =
                     OpenAPI_preemption_vulnerability_NOT_PREEMPTABLE;
             ogs_assert(_5gQoSProfile->arp->preempt_vuln);

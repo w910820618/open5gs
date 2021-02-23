@@ -291,12 +291,27 @@ typedef struct ogs_qos_s {
      * Values 9 to 15 may be assigned to resources that are authorized 
      * by the home network and thus applicable when a UE is roaming. */
         uint8_t     priority_level;
+/*
+ * Ch 7.3.40 Allocation-Retenion-Proirty in TS 29.272 V15.9.0
+ *
+ * If the Pre-emption-Capability AVP is not present in the
+ * Allocation-Retention-Priority AVP, the default value shall be
+ * PRE-EMPTION_CAPABILITY_DISABLED (1).
+ *
+ * If the Pre-emption-Vulnerability AVP is not present in the
+ * Allocation-Retention-Priority AVP, the default value shall be
+ * PRE-EMPTION_VULNERABILITY_ENABLED (0).
+ *
+ * However, to easily set up VoLTE service,
+ * enable Pre-emption Capability/Vulnerablility
+ * in Default Bearer
+ */
+#define OGS_DIAM_PRE_EMPTION_DISABLED                       1
+#define OGS_DIAM_PRE_EMPTION_ENABLED                        0
 
-#define OGS_ARP_PRE_EMPTION_CAPABILITY_DISABLED             1
-#define OGS_ARP_PRE_EMPTION_CAPABILITY_ENABLED              2
+#define OGS_ARP_PRE_EMPTION_DISABLED                        1
+#define OGS_ARP_PRE_EMPTION_ENABLED                         2
         uint8_t     pre_emption_capability;
-#define OGS_ARP_PRE_EMPTION_VULNERABILITY_DISABLED          1
-#define OGS_ARP_PRE_EMPTION_VULNERABILITY_ENABLED           2
         uint8_t     pre_emption_vulnerability;
     } arp;
 

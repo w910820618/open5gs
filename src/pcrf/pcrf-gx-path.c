@@ -512,7 +512,10 @@ static int pcrf_gx_ccr_cb( struct msg **msg, struct avp *avp,
 
         ret = fd_msg_avp_new(ogs_diam_gx_pre_emption_capability, 0, &avpch2);
         ogs_assert(ret == 0);
-        val.u32 = gx_message.session_data.pdn.qos.arp.pre_emption_capability;
+        val.u32 = OGS_DIAM_PRE_EMPTION_DISABLED;
+        if (gx_message.session_data.pdn.qos.arp.pre_emption_capability ==
+                OGS_ARP_PRE_EMPTION_ENABLED)
+            val.u32 = OGS_DIAM_PRE_EMPTION_ENABLED;
         ret = fd_msg_avp_setvalue (avpch2, &val);
         ogs_assert(ret == 0);
         ret = fd_msg_avp_add (avpch1, MSG_BRW_LAST_CHILD, avpch2);
@@ -520,7 +523,10 @@ static int pcrf_gx_ccr_cb( struct msg **msg, struct avp *avp,
 
         ret = fd_msg_avp_new(ogs_diam_gx_pre_emption_vulnerability, 0, &avpch2);
         ogs_assert(ret == 0);
-        val.u32 = gx_message.session_data.pdn.qos.arp.pre_emption_vulnerability;
+        val.u32 = OGS_DIAM_PRE_EMPTION_DISABLED;
+        if (gx_message.session_data.pdn.qos.arp.pre_emption_vulnerability ==
+                OGS_ARP_PRE_EMPTION_ENABLED)
+            val.u32 = OGS_DIAM_PRE_EMPTION_ENABLED;
         ret = fd_msg_avp_setvalue (avpch2, &val);
         ogs_assert(ret == 0);
         ret = fd_msg_avp_add (avpch1, MSG_BRW_LAST_CHILD, avpch2);
@@ -1264,7 +1270,9 @@ static int encode_pcc_rule_definition(
 
     ret = fd_msg_avp_new(ogs_diam_gx_pre_emption_capability, 0, &avpch4);
     ogs_assert(ret == 0);
-    val.u32 = pcc_rule->qos.arp.pre_emption_capability;
+    val.u32 = OGS_DIAM_PRE_EMPTION_DISABLED;
+    if (pcc_rule->qos.arp.pre_emption_capability == OGS_ARP_PRE_EMPTION_ENABLED)
+        val.u32 = OGS_DIAM_PRE_EMPTION_ENABLED;
     ret = fd_msg_avp_setvalue (avpch4, &val);
     ogs_assert(ret == 0);
     ret = fd_msg_avp_add (avpch3, MSG_BRW_LAST_CHILD, avpch4);
@@ -1272,7 +1280,10 @@ static int encode_pcc_rule_definition(
 
     ret = fd_msg_avp_new(ogs_diam_gx_pre_emption_vulnerability, 0, &avpch4);
     ogs_assert(ret == 0);
-    val.u32 = pcc_rule->qos.arp.pre_emption_vulnerability;
+    val.u32 = OGS_DIAM_PRE_EMPTION_DISABLED;
+    if (pcc_rule->qos.arp.pre_emption_vulnerability ==
+            OGS_ARP_PRE_EMPTION_ENABLED)
+        val.u32 = OGS_DIAM_PRE_EMPTION_ENABLED;
     ret = fd_msg_avp_setvalue (avpch4, &val);
     ogs_assert(ret == 0);
     ret = fd_msg_avp_add (avpch3, MSG_BRW_LAST_CHILD, avpch4);

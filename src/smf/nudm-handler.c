@@ -170,21 +170,21 @@ bool smf_nudm_sdm_handle_get(smf_sess_t *sess, ogs_sbi_stream_t *stream,
                     if (_5gQoSProfile->arp->preempt_cap ==
                             OpenAPI_preemption_capability_MAY_PREEMPT)
                         sess->pdn.qos.arp.pre_emption_capability =
-                            OGS_ARP_PRE_EMPTION_CAPABILITY_ENABLED;
+                            OGS_ARP_PRE_EMPTION_ENABLED;
                     else if (_5gQoSProfile->arp->preempt_cap ==
                             OpenAPI_preemption_capability_NOT_PREEMPT)
                         sess->pdn.qos.arp.pre_emption_capability =
-                            OGS_ARP_PRE_EMPTION_CAPABILITY_DISABLED;
+                            OGS_ARP_PRE_EMPTION_DISABLED;
                     ogs_assert(sess->pdn.qos.arp.pre_emption_capability);
 
                     if (_5gQoSProfile->arp->preempt_vuln ==
                             OpenAPI_preemption_vulnerability_PREEMPTABLE)
                         sess->pdn.qos.arp.pre_emption_vulnerability =
-                            OGS_ARP_PRE_EMPTION_VULNERABILITY_ENABLED;
+                            OGS_ARP_PRE_EMPTION_ENABLED;
                     else if (_5gQoSProfile->arp->preempt_vuln ==
                             OpenAPI_preemption_vulnerability_NOT_PREEMPTABLE)
                         sess->pdn.qos.arp.pre_emption_vulnerability =
-                            OGS_ARP_PRE_EMPTION_VULNERABILITY_DISABLED;
+                            OGS_ARP_PRE_EMPTION_DISABLED;
                     ogs_assert(sess->pdn.qos.arp.pre_emption_vulnerability);
                 }
             }

@@ -688,6 +688,9 @@ static void smf_gx_cca_cb(void *data, struct msg **msg)
                 ogs_assert(ret == 0);
                 gx_message->session_data.pdn.qos.arp.pre_emption_capability =
                     hdr->avp_value->u32;
+            } else {
+                gx_message->session_data.pdn.qos.arp.pre_emption_capability =
+                    OGS_DIAM_PRE_EMPTION_DISABLED;
             }
 
             ret = fd_avp_search_avp(avpch1,
@@ -698,6 +701,9 @@ static void smf_gx_cca_cb(void *data, struct msg **msg)
                 ogs_assert(ret == 0);
                 gx_message->session_data.pdn.qos.arp.pre_emption_vulnerability =
                     hdr->avp_value->u32;
+            } else {
+                gx_message->session_data.pdn.qos.arp.pre_emption_vulnerability =
+                    OGS_DIAM_PRE_EMPTION_ENABLED;
             }
         }
     }
@@ -1240,8 +1246,8 @@ static int decode_pcc_rule_definition(
                     pcc_rule->qos.arp.pre_emption_capability =
                             hdr->avp_value->u32;
                 } else {
-                    ogs_error("no_Preemption-Capability");
-                    error++;
+                    pcc_rule->qos.arp.pre_emption_capability =
+                        OGS_DIAM_PRE_EMPTION_DISABLED;
                 }
 
                 ret = fd_avp_search_avp(avpch3,
@@ -1253,8 +1259,9 @@ static int decode_pcc_rule_definition(
                     pcc_rule->qos.arp.pre_emption_vulnerability =
                             hdr->avp_value->u32;
                 } else {
-                    ogs_error("no_Preemption-Vulnerability");
-                    error++;
+                    pcc_rule->qos.arp.pre_emption_vulnerability =
+                        OGS_DIAM_PRE_EMPTION_ENABLED;
+
                 }
             } else {
                 ogs_error("no_ARP");

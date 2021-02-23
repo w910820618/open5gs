@@ -39,26 +39,6 @@ extern "C" {
 #define OGS_DIAM_MISSING_AVP                         5004
 #define OGS_DIAM_INVALID_AVP_VALUE                   5005
 
-/*
- * Ch 7.3.40 Allocation-Retenion-Proirty in TS 29.272 V15.9.0
- *
- * If the Pre-emption-Capability AVP is not present in the
- * Allocation-Retention-Priority AVP, the default value shall be
- * PRE-EMPTION_CAPABILITY_DISABLED (1).
- *
- * If the Pre-emption-Vulnerability AVP is not present in the
- * Allocation-Retention-Priority AVP, the default value shall be
- * PRE-EMPTION_VULNERABILITY_ENABLED (0).
- *
- * However, to easily set up VoLTE service,
- * enable Pre-emption Capability/Vulnerablility
- * in Default Bearer
- */
-#define OGS_DIAM_PRE_EMPTION_CAPABILITY_DISABLED     1
-#define OGS_DIAM_PRE_EMPTION_CAPABILITY_ENABLED      0
-#define OGS_DIAM_PRE_EMPTION_VULNERABILITY_DISABLED  1
-#define OGS_DIAM_PRE_EMPTION_VULNERABILITY_ENABLED   0
-
 extern struct dict_object *ogs_diam_session_id;
 extern struct dict_object *ogs_diam_origin_host;
 extern struct dict_object *ogs_diam_origin_realm;
