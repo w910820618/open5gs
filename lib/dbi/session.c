@@ -29,8 +29,8 @@ int ogs_dbi_session_data(char *supi, ogs_s_nssai_t *s_nssai, char *dnn,
     bson_error_t error;
     const bson_t *document;
     bson_iter_t iter;
-    bson_iter_t child1_iter, child2_iter, child3_iter, child4_iter;
-    bson_iter_t child5_iter, child6_iter, child7_iter, child8_iter;
+    bson_iter_t child1_iter, child2_iter, child3_iter, child4_iter, child5_iter;
+    bson_iter_t child6_iter, child7_iter, child8_iter, child9_iter;
     const char *utf8 = NULL;
     uint32_t length = 0;
     bool found = false;
@@ -307,13 +307,62 @@ done:
                                     const char *child8_key =
                                         bson_iter_key(&child8_iter);
                                     if (!strcmp(child8_key, "downlink") &&
-                                        BSON_ITER_HOLDS_INT64(&child8_iter)) {
-                                        pcc_rule->qos.mbr.downlink =
-                                        bson_iter_int64(&child8_iter) * 1024;
+                                        BSON_ITER_HOLDS_DOCUMENT(
+                                            &child8_iter)) {
+                                        uint8_t unit = 0;
+                                        int n;
+
+                                        bson_iter_recurse(
+                                                &child8_iter, &child9_iter);
+                                        while (bson_iter_next(&child9_iter)) {
+                                            const char *child9_key =
+                                                bson_iter_key(&child9_iter);
+                                            if (!strcmp(child9_key, "value") &&
+                                                BSON_ITER_HOLDS_INT32(
+                                                    &child9_iter)) {
+                                                pcc_rule->qos.mbr.downlink =
+                                                    bson_iter_int32(
+                                                            &child9_iter);
+                                            } else if (!strcmp(
+                                                        child9_key, "unit") &&
+                                                BSON_ITER_HOLDS_INT32(
+                                                    &child9_iter)) {
+                                                unit = bson_iter_int32(
+                                                        &child9_iter);
+                                            }
+                                        }
+
+                                        for (n = 0; n < unit; n++)
+                                            pcc_rule->qos.mbr.downlink *= 1024;
+
                                     } else if (!strcmp(child8_key, "uplink") &&
-                                        BSON_ITER_HOLDS_INT64(&child8_iter)) {
-                                        pcc_rule->qos.mbr.uplink =
-                                        bson_iter_int64(&child8_iter) * 1024;
+                                        BSON_ITER_HOLDS_DOCUMENT(
+                                            &child8_iter)) {
+                                        uint8_t unit = 0;
+                                        int n;
+
+                                        bson_iter_recurse(
+                                                &child8_iter, &child9_iter);
+                                        while (bson_iter_next(&child9_iter)) {
+                                            const char *child9_key =
+                                                bson_iter_key(&child9_iter);
+                                            if (!strcmp(child9_key, "value") &&
+                                                BSON_ITER_HOLDS_INT32(
+                                                    &child9_iter)) {
+                                                pcc_rule->qos.mbr.uplink =
+                                                    bson_iter_int32(
+                                                            &child9_iter);
+                                            } else if (!strcmp(
+                                                        child9_key, "unit") &&
+                                                BSON_ITER_HOLDS_INT32(
+                                                    &child9_iter)) {
+                                                unit = bson_iter_int32(
+                                                        &child9_iter);
+                                            }
+                                        }
+
+                                        for (n = 0; n < unit; n++)
+                                            pcc_rule->qos.mbr.uplink *= 1024;
                                     }
                                 }
                             } else if (!strcmp(child7_key, "gbr") &&
@@ -323,13 +372,62 @@ done:
                                     const char *child8_key =
                                         bson_iter_key(&child8_iter);
                                     if (!strcmp(child8_key, "downlink") &&
-                                        BSON_ITER_HOLDS_INT64(&child8_iter)) {
-                                        pcc_rule->qos.gbr.downlink =
-                                        bson_iter_int64(&child8_iter) * 1024;
+                                        BSON_ITER_HOLDS_DOCUMENT(
+                                            &child8_iter)) {
+                                        uint8_t unit = 0;
+                                        int n;
+
+                                        bson_iter_recurse(
+                                                &child8_iter, &child9_iter);
+                                        while (bson_iter_next(&child9_iter)) {
+                                            const char *child9_key =
+                                                bson_iter_key(&child9_iter);
+                                            if (!strcmp(child9_key, "value") &&
+                                                BSON_ITER_HOLDS_INT32(
+                                                    &child9_iter)) {
+                                                pcc_rule->qos.gbr.downlink =
+                                                    bson_iter_int32(
+                                                            &child9_iter);
+                                            } else if (!strcmp(
+                                                        child9_key, "unit") &&
+                                                BSON_ITER_HOLDS_INT32(
+                                                    &child9_iter)) {
+                                                unit = bson_iter_int32(
+                                                        &child9_iter);
+                                            }
+                                        }
+
+                                        for (n = 0; n < unit; n++)
+                                            pcc_rule->qos.gbr.downlink *= 1024;
+
                                     } else if (!strcmp(child8_key, "uplink") &&
-                                        BSON_ITER_HOLDS_INT64(&child8_iter)) {
-                                        pcc_rule->qos.gbr.uplink =
-                                        bson_iter_int64(&child8_iter) * 1024;
+                                        BSON_ITER_HOLDS_DOCUMENT(
+                                            &child8_iter)) {
+                                        uint8_t unit = 0;
+                                        int n;
+
+                                        bson_iter_recurse(
+                                                &child8_iter, &child9_iter);
+                                        while (bson_iter_next(&child9_iter)) {
+                                            const char *child9_key =
+                                                bson_iter_key(&child9_iter);
+                                            if (!strcmp(child9_key, "value") &&
+                                                BSON_ITER_HOLDS_INT32(
+                                                    &child9_iter)) {
+                                                pcc_rule->qos.gbr.uplink =
+                                                    bson_iter_int32(
+                                                            &child9_iter);
+                                            } else if (!strcmp(
+                                                        child9_key, "unit") &&
+                                                BSON_ITER_HOLDS_INT32(
+                                                    &child9_iter)) {
+                                                unit = bson_iter_int32(
+                                                        &child9_iter);
+                                            }
+                                        }
+
+                                        for (n = 0; n < unit; n++)
+                                            pcc_rule->qos.gbr.uplink *= 1024;
                                     }
                                 }
                             }
