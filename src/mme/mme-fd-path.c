@@ -964,7 +964,7 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                                     hdr->avp_value->i32;
                             } else {
                                 pdn->qos.arp.pre_emption_capability =
-                                    OGS_PDN_PRE_EMPTION_CAPABILITY_DISABLED;
+                                    OGS_ARP_PRE_EMPTION_CAPABILITY_DISABLED;
                             }
 
                             ret = fd_avp_search_avp(avpch4,
@@ -978,7 +978,7 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                                     hdr->avp_value->i32;
                             } else {
                                 pdn->qos.arp.pre_emption_vulnerability =
-                                    OGS_PDN_PRE_EMPTION_VULNERABILITY_ENABLED;
+                                    OGS_ARP_PRE_EMPTION_VULNERABILITY_ENABLED;
                             }
 
                         } else {
