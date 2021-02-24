@@ -363,8 +363,8 @@ int ogs_dbi_subscription_data(char *supi,
                 slice_data = &subscription_data->slice[
                                 subscription_data->num_of_slice];
 
-                slice_data->sst = 0;
-                slice_data->sd.v = OGS_S_NSSAI_NO_SD_VALUE;
+                slice_data->s_nssai.sst = 0;
+                slice_data->s_nssai.sd.v = OGS_S_NSSAI_NO_SD_VALUE;
 
                 bson_iter_recurse(&child1_iter, &child2_iter);
                 while (bson_iter_next(&child2_iter)) {
@@ -372,12 +372,13 @@ int ogs_dbi_subscription_data(char *supi,
 
                     if (!strcmp(child2_key, "sst") &&
                         BSON_ITER_HOLDS_INT32(&child2_iter)) {
-                        slice_data->sst = bson_iter_int32(&child2_iter);
+                        slice_data->s_nssai.sst = bson_iter_int32(&child2_iter);
                     } else if (!strcmp(child2_key, "sd") &&
                         BSON_ITER_HOLDS_UTF8(&child2_iter)) {
                         utf8 = bson_iter_utf8(&child2_iter, &length);
                         ogs_assert(utf8);
-                        slice_data->sd = ogs_s_nssai_sd_from_string(utf8);
+                        slice_data->s_nssai.sd =
+                            ogs_s_nssai_sd_from_string(utf8);
                     } else if (!strcmp(child2_key, "pdn") &&
                         BSON_ITER_HOLDS_ARRAY(&child2_iter)) {
 

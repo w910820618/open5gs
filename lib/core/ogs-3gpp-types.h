@@ -492,8 +492,7 @@ int ogs_pco_parse(ogs_pco_t *pco, unsigned char *data, int data_len);
 int ogs_pco_build(unsigned char *data, int data_len, ogs_pco_t *pco);
 
 typedef struct ogs_slice_data_s {
-    uint8_t sst;
-    ogs_uint24_t sd;
+    ogs_s_nssai_t s_nssai;
 
     uint32_t context_identifier; /* for checking default APN */
 
