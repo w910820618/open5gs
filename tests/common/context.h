@@ -489,8 +489,8 @@ int test_db_insert_ue(test_ue_t *test_ue, bson_t *doc);
 int test_db_remove_ue(test_ue_t *test_ue);
 
 bson_t *test_db_new_simple(test_ue_t *test_ue);
-bson_t *test_db_new_multiple_qos_flow(test_ue_t *test_ue);
-bson_t *test_db_new_multiple_session(test_ue_t *test_ue);
+bson_t *test_db_new_qos_flow(test_ue_t *test_ue);
+bson_t *test_db_new_session(test_ue_t *test_ue);
 bson_t *test_db_new_ims(test_ue_t *test_ue);
 
 #ifdef __cplusplus

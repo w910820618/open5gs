@@ -93,7 +93,7 @@ static void test1_func(abts_case *tc, void *data)
     testngap_recv(test_ue, recvbuf);
 
     /********** Insert Subscriber in Database */
-    doc = test_db_new_multiple_session(test_ue);
+    doc = test_db_new_session(test_ue);
     ABTS_PTR_NOTNULL(tc, doc);
     ABTS_INT_EQUAL(tc, OGS_OK, test_db_insert_ue(test_ue, doc));
 
@@ -550,7 +550,7 @@ static void test2_func(abts_case *tc, void *data)
     testngap_recv(test_ue, recvbuf);
 
     /********** Insert Subscriber in Database */
-    doc = test_db_new_multiple_session(test_ue);
+    doc = test_db_new_session(test_ue);
     ABTS_PTR_NOTNULL(tc, doc);
     ABTS_INT_EQUAL(tc, OGS_OK, test_db_insert_ue(test_ue, doc));
 
@@ -969,7 +969,7 @@ static void test3_func(abts_case *tc, void *data)
     testngap_recv(test_ue, recvbuf);
 
     /********** Insert Subscriber in Database */
-    doc = test_db_new_multiple_session(test_ue);
+    doc = test_db_new_session(test_ue);
     ABTS_PTR_NOTNULL(tc, doc);
     ABTS_INT_EQUAL(tc, OGS_OK, test_db_insert_ue(test_ue, doc));
 
@@ -1374,7 +1374,7 @@ static void test4_func(abts_case *tc, void *data)
     testngap_recv(test_ue, recvbuf);
 
     /********** Insert Subscriber in Database */
-    doc = test_db_new_multiple_session(test_ue);
+    doc = test_db_new_session(test_ue);
     ABTS_PTR_NOTNULL(tc, doc);
     ABTS_INT_EQUAL(tc, OGS_OK, test_db_insert_ue(test_ue, doc));
 

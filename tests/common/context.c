@@ -1354,7 +1354,7 @@ bson_t *test_db_new_simple(test_ue_t *test_ue)
     return doc;
 }
 
-bson_t *test_db_new_multiple_qos_flow(test_ue_t *test_ue)
+bson_t *test_db_new_qos_flow(test_ue_t *test_ue)
 {
     bson_t *doc = NULL;
 
@@ -1561,7 +1561,7 @@ bson_t *test_db_new_multiple_qos_flow(test_ue_t *test_ue)
     return doc;
 }
 
-bson_t *test_db_new_multiple_session(test_ue_t *test_ue)
+bson_t *test_db_new_session(test_ue_t *test_ue)
 {
     bson_t *doc = NULL;
 

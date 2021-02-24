@@ -107,7 +107,7 @@ static void test1_func(abts_case *tc, void *data)
     tests1ap_recv(NULL, recvbuf);
 
     /********** Insert Subscriber in Database */
-    doc = test_db_new_multiple_qos_flow(test_ue);
+    doc = test_db_new_qos_flow(test_ue);
     ABTS_PTR_NOTNULL(tc, doc);
     ABTS_INT_EQUAL(tc, OGS_OK, test_db_insert_ue(test_ue, doc));
 
@@ -675,7 +675,7 @@ static void test2_func(abts_case *tc, void *data)
     tests1ap_recv(NULL, recvbuf);
 
     /********** Insert Subscriber in Database */
-    doc = test_db_new_multiple_qos_flow(test_ue);
+    doc = test_db_new_qos_flow(test_ue);
     ABTS_PTR_NOTNULL(tc, doc);
     ABTS_INT_EQUAL(tc, OGS_OK, test_db_insert_ue(test_ue, doc));
 
@@ -1001,7 +1001,7 @@ static void test3_func(abts_case *tc, void *data)
     tests1ap_recv(NULL, recvbuf);
 
     /********** Insert Subscriber in Database */
-    doc = test_db_new_multiple_qos_flow(test_ue);
+    doc = test_db_new_qos_flow(test_ue);
     ABTS_PTR_NOTNULL(tc, doc);
     ABTS_INT_EQUAL(tc, OGS_OK, test_db_insert_ue(test_ue, doc));
 
