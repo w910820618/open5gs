@@ -3,6 +3,12 @@ const Schema = mongoose.Schema;
 require('mongoose-long')(mongoose);
 
 const Subscriber = new Schema({
+
+  schema_version: {
+    $type: Number,
+    default: 1  // Current Schema Version
+  },
+
   imsi: { $type: String, unique: true, required: true },
 
   security: {

@@ -3,6 +3,12 @@ const Schema = mongoose.Schema;
 require('mongoose-long')(mongoose);
 
 const Profile = new Schema({
+
+  schema_version: {
+    $type: Number,
+    default: 1  // Current Schema Version
+  },
+
   title: { $type: String, required: true },
 
   security: {
