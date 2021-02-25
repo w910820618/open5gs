@@ -1169,12 +1169,7 @@ void amf_ue_remove(amf_ue_t *amf_ue)
         ogs_free(amf_ue->msisdn[i]);
     }
 
-    for (i = 0; i < amf_ue->num_of_subscribed_dnn; i++) {
-        ogs_assert(amf_ue->subscribed_dnn[i]);
-        ogs_free(amf_ue->subscribed_dnn[i]);
-    }
-
-    /* Clear Subscribed Info */
+    /* Clear SubscribedInfo */
     for (i = 0; i < amf_ue->num_of_slice; i++) {
         for (j = 0; j < amf_ue->slice[i].num_of_pdn; j++) {
             ogs_assert(amf_ue->slice[i].pdn[j].name);

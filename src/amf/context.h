@@ -351,10 +351,8 @@ struct amf_ue_s {
      * #define OGS_NAS_SECURITY_ALGORITHMS_128_NIA3    3 */
     uint8_t         selected_int_algorithm;
 
-    ogs_bitrate_t   ue_ambr; /* UE-AMBR */
-    int             num_of_subscribed_dnn;
-    char            *subscribed_dnn[OGS_MAX_NUM_OF_DNN];
-
+    /* SubscribedInfo */
+    ogs_bitrate_t   ue_ambr;
     int num_of_slice;
     ogs_slice_data_t slice[OGS_MAX_NUM_OF_SLICE];
 

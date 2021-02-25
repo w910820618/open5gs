@@ -37,8 +37,6 @@ int amf_nudm_sdm_handle_provisioned(
                 recvmsg->AccessAndMobilitySubscriptionData->gpsis;
             OpenAPI_ambr_rm_t *SubscribedUeAmbr =
                 recvmsg->AccessAndMobilitySubscriptionData->subscribed_ue_ambr;
-            OpenAPI_list_t *SubscribedDnnList =
-                recvmsg->AccessAndMobilitySubscriptionData->subscribed_dnn_list;
             OpenAPI_lnode_t *node = NULL;
 
             /* Clear MSISDN */
@@ -82,23 +80,6 @@ int amf_nudm_sdm_handle_provisioned(
                     ogs_sbi_bitrate_from_string(SubscribedUeAmbr->uplink);
                 amf_ue->ue_ambr.downlink =
                     ogs_sbi_bitrate_from_string(SubscribedUeAmbr->downlink);
-            }
-
-            /* Clear Subscribed-DNN */
-            for (i = 0; i < amf_ue->num_of_subscribed_dnn; i++) {
-                ogs_assert(amf_ue->subscribed_dnn[i]);
-                ogs_free(amf_ue->subscribed_dnn[i]);
-            }
-            amf_ue->num_of_subscribed_dnn = 0;
-
-            if (SubscribedDnnList) {
-                OpenAPI_list_for_each(SubscribedDnnList, node) {
-                    if (node->data) {
-                        amf_ue->subscribed_dnn[amf_ue->num_of_subscribed_dnn] =
-                            ogs_strdup(node->data);
-                        amf_ue->num_of_subscribed_dnn++;
-                    }
-                }
             }
         }
 
@@ -165,6 +146,11 @@ int amf_nudm_sdm_handle_provisioned(
                                 }
                             }
                         }
+
+#if 0
+                        /* FIXME */
+                        slice->default_indicator = true;
+#endif
 
                         amf_ue->num_of_slice++;
                     }
