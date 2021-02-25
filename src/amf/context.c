@@ -1790,6 +1790,43 @@ uint8_t amf_selected_enc_algorithm(amf_ue_t *amf_ue)
     return 0;
 }
 
+ogs_slice_data_t *amf_selected_slice(
+        amf_ue_t *amf_ue, ogs_nas_s_nssai_ie_t *nas_s_nssai_ie)
+{
+    int i = 0;
+    ogs_slice_data_t *slice = NULL;
+
+    ogs_assert(amf_ue);
+    ogs_assert(nas_s_nssai_ie);
+    ogs_assert(nas_s_nssai_ie->sst);
+
+    /* Compare Both SST & SD */
+    for (i = 0; i < amf_ue->num_of_slice; i++) {
+        slice = &amf_ue->slice[i];
+        if (nas_s_nssai_ie->sd.v != OGS_S_NSSAI_NO_SD_VALUE &&
+            slice->s_nssai.sd.v != OGS_S_NSSAI_NO_SD_VALUE) {
+            if (nas_s_nssai_ie->sst == slice->s_nssai.sst &&
+                    nas_s_nssai_ie->sd.v == slice->s_nssai.sd.v) {
+                return slice;
+            }
+        }
+    }
+
+    /* Compare Only SST if DefaultSingleNSSAI */
+    for (i = 0; i < amf_ue->num_of_slice; i++) {
+        slice = &amf_ue->slice[i];
+        if (nas_s_nssai_ie->sd.v == OGS_S_NSSAI_NO_SD_VALUE ||
+            slice->s_nssai.sd.v == OGS_S_NSSAI_NO_SD_VALUE) {
+            if (slice->default_indicator == true &&
+                nas_s_nssai_ie->sst == slice->s_nssai.sst) {
+                return slice;
+            }
+        }
+    }
+
+    return NULL;
+}
+
 static void stats_add_ran_ue(void)
 {
     num_of_ran_ue = num_of_ran_ue + 1;

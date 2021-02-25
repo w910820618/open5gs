@@ -669,6 +669,7 @@ int gmm_handle_security_mode_complete(amf_ue_t *amf_ue,
 int gmm_handle_ul_nas_transport(amf_ue_t *amf_ue,
         ogs_nas_5gs_ul_nas_transport_t *ul_nas_transport)
 {
+    ogs_slice_data_t *selected_slice = NULL;
     amf_sess_t *sess = NULL;
     amf_nsmf_pdusession_update_sm_context_param_t param;
 
@@ -676,7 +677,6 @@ int gmm_handle_ul_nas_transport(amf_ue_t *amf_ue,
     ogs_nas_payload_container_t *payload_container = NULL;
     ogs_nas_pdu_session_identity_2_t *pdu_session_id = NULL;
     ogs_nas_s_nssai_t *nas_s_nssai = NULL;
-    ogs_s_nssai_t *selected_s_nssai = NULL;
     ogs_nas_dnn_t *dnn = NULL;
     ogs_nas_5gsm_header_t *gsm_header = NULL;
 
@@ -769,30 +769,33 @@ int gmm_handle_ul_nas_transport(amf_ue_t *amf_ue,
 
             if (ul_nas_transport->presencemask &
                     OGS_NAS_5GS_UL_NAS_TRANSPORT_S_NSSAI_PRESENT) {
-                ogs_nas_s_nssai_ie_t s_nssai;
-                if (ogs_nas_parse_s_nssai(&s_nssai, nas_s_nssai) != 0) {
-                    selected_s_nssai = amf_find_s_nssai(
-                        &amf_ue->tai.plmn_id, (ogs_s_nssai_t *)&s_nssai);
+                ogs_nas_s_nssai_ie_t ie;
+                if (ogs_nas_parse_s_nssai(&ie, nas_s_nssai) != 0) {
+                    selected_slice = amf_selected_slice(amf_ue, &ie);
                 }
             }
 
-            if (!selected_s_nssai) {
-                if (amf_ue->num_of_requested_nssai) {
-                    selected_s_nssai =
-                        (ogs_s_nssai_t *)&amf_ue->requested_nssai[0];
+            if (!selected_slice) {
+                int i;
+                for (i = 0; i < amf_ue->num_of_requested_nssai; i++) {
+                    selected_slice = amf_selected_slice(
+                            amf_ue, &amf_ue->requested_nssai[i]);
+                    if (selected_slice) {
+                        break;
+                    }
                 }
             }
 
-            if (!selected_s_nssai) {
-                ogs_warn("No S_NSSAI : Set default S_NSSAI using AMF config");
-                selected_s_nssai =
-                    (ogs_s_nssai_t *)&amf_self()->plmn_support[0].s_nssai[0];
-                ogs_assert(selected_s_nssai);
+            if (!selected_slice) {
+                ogs_error("[%s] No S-NSSAI", amf_ue->supi);
+                nas_5gs_send_gmm_status(amf_ue,
+                    OGS_5GMM_CAUSE_INSUFFICIENT_RESOURCES_FOR_SPECIFIC_SLICE);
+                return OGS_ERROR;
             }
 
             /* Store S-NSSAI */
-            sess->s_nssai.sst = selected_s_nssai->sst;
-            sess->s_nssai.sd.v = selected_s_nssai->sd.v;
+            sess->s_nssai.sst = selected_slice->s_nssai.sst;
+            sess->s_nssai.sd.v = selected_slice->s_nssai.sd.v;
 
             if (ul_nas_transport->presencemask &
                     OGS_NAS_5GS_UL_NAS_TRANSPORT_DNN_PRESENT) {
@@ -802,14 +805,15 @@ int gmm_handle_ul_nas_transport(amf_ue_t *amf_ue,
             }
 
             if (!sess->dnn) {
-                if (amf_ue->num_of_subscribed_dnn) {
-                    sess->dnn = ogs_strdup(amf_ue->subscribed_dnn[0]);
+                if (selected_slice->num_of_pdn) {
+                    sess->dnn = ogs_strdup(selected_slice->pdn[0].name);
                 }
             }
 
             if (!sess->dnn) {
-                ogs_fatal("No DNN : Set default DNN using WebUI");
-                ogs_assert_if_reached();
+                ogs_error("[%s] No DNN", amf_ue->supi);
+                nas_5gs_send_gmm_status(amf_ue, OGS_5GMM_CAUSE_DNN_NOT_SUPPORTED_OR_NOT_SUBSCRIBED_IN_THE_SLICE);
+                return OGS_ERROR;
             }
 
             ogs_info("UE SUPI[%s] DNN[%s] S_NSSAI[SST:%d SD:0x%x]",

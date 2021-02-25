@@ -688,6 +688,9 @@ int amf_m_tmsi_free(amf_m_tmsi_t *tmsi);
 uint8_t amf_selected_int_algorithm(amf_ue_t *amf_ue);
 uint8_t amf_selected_enc_algorithm(amf_ue_t *amf_ue);
 
+ogs_slice_data_t *amf_selected_slice(
+        amf_ue_t *amf_ue, ogs_nas_s_nssai_ie_t *nas_s_nssai_ie);
+
 #ifdef __cplusplus
 }
 #endif
