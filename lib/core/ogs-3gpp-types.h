@@ -493,8 +493,9 @@ int ogs_pco_build(unsigned char *data, int data_len, ogs_pco_t *pco);
 
 typedef struct ogs_slice_data_s {
     ogs_s_nssai_t s_nssai;
+    bool default_indicator;
 
-    uint32_t context_identifier; /* for checking default APN */
+    uint32_t context_identifier; /* EPC for checking default APN */
 
     int num_of_pdn;
     ogs_pdn_t pdn[OGS_MAX_NUM_OF_SESS];

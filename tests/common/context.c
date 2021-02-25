@@ -1250,6 +1250,7 @@ bson_t *test_db_new_simple(test_ue_t *test_ue)
             "}",
             "s_nssai", "[", "{",
                 "sst", BCON_INT32(1),
+                "default_indicator", BCON_BOOL(true),
                 "pdn", "[", "{",
                     "apn", BCON_UTF8("internet"),
                     "type", BCON_INT32(2),
@@ -1307,6 +1308,7 @@ bson_t *test_db_new_simple(test_ue_t *test_ue)
         "\"s_nssai\" : ["
           "{"
             "\"sst\" : 1,"
+            "\"default_indicator\" : true,"
             "\"pdn\" : ["
               "{"
                 "\"apn\" : \"internet\", "
@@ -1375,6 +1377,7 @@ bson_t *test_db_new_qos_flow(test_ue_t *test_ue)
             "}",
             "s_nssai", "[", "{",
                 "sst", BCON_INT32(1),
+                "default_indicator", BCON_BOOL(true),
                 "pdn", "[", "{",
                     "apn", BCON_UTF8("internet"),
                     "type", BCON_INT32(2),
@@ -1468,6 +1471,7 @@ bson_t *test_db_new_qos_flow(test_ue_t *test_ue)
         "\"s_nssai\" : ["
           "{"
             "\"sst\" : 1,"
+            "\"default_indicator\" : true,"
             "\"pdn\" : ["
               "{"
                 "\"apn\" : \"internet\", "
@@ -1582,6 +1586,7 @@ bson_t *test_db_new_session(test_ue_t *test_ue)
             "}",
             "s_nssai", "[", "{",
                 "sst", BCON_INT32(1),
+                "default_indicator", BCON_BOOL(true),
                 "pdn", "[",
                   "{",
                     "apn", BCON_UTF8("internet"),
@@ -1699,6 +1704,7 @@ bson_t *test_db_new_session(test_ue_t *test_ue)
         "\"s_nssai\" : ["
           "{"
             "\"sst\" : 1,"
+            "\"default_indicator\" : true,"
             "\"pdn\" : ["
               "{"
                 "\"apn\" : \"internet\", "
@@ -1836,6 +1842,7 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
             "}",
             "s_nssai", "[", "{",
                 "sst", BCON_INT32(1),
+                "default_indicator", BCON_BOOL(true),
                 "pdn", "[",
                   "{",
                     "apn", BCON_UTF8("internet"),
@@ -1975,6 +1982,7 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
         "\"s_nssai\" : ["
           "{"
             "\"sst\" : 1,"
+            "\"default_indicator\" : true,"
             "\"pdn\" : ["
               "{"
                 "\"_id\" : { \"$oid\" : \"599eb929c850caabcbfdcd32\" },"

@@ -379,6 +379,10 @@ int ogs_dbi_subscription_data(char *supi,
                         ogs_assert(utf8);
                         slice_data->s_nssai.sd =
                             ogs_s_nssai_sd_from_string(utf8);
+                    } else if (!strcmp(child2_key, "default_indicator") &&
+                        BSON_ITER_HOLDS_BOOL(&child2_iter)) {
+                        slice_data->default_indicator =
+                            bson_iter_bool(&child2_iter);
                     } else if (!strcmp(child2_key, "pdn") &&
                         BSON_ITER_HOLDS_ARRAY(&child2_iter)) {
 
