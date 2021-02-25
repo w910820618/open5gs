@@ -24,7 +24,7 @@ ogs_pkbuf_t *testgmm_build_registration_request(
 {
     int i;
     uint16_t psimask = 0;
-    ogs_s_nssai_t *s_nssai = NULL;
+    ogs_nas_s_nssai_ie_t *s_nssai = NULL;
 
     ogs_nas_5gs_message_t message;
     ogs_pkbuf_t *pkbuf = NULL;

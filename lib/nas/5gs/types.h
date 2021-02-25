@@ -62,10 +62,20 @@ typedef struct ogs_nas_s_nssai_s {
     uint8_t buffer[OGS_NAS_S_NSSAI_SST_SD_AND_MAPPED_HPLMN_SST_SD_LEN];
 } __attribute__ ((packed)) ogs_nas_s_nssai_t;
 
+typedef struct ogs_nas_s_nssai_ie_s {
+    uint8_t sst;
+    ogs_uint24_t sd;
+    uint8_t mapped_hplmn_sst;
+    ogs_uint24_t mapped_hplmn_sd;
+} __attribute__ ((packed)) ogs_nas_s_nssai_ie_t;
+
 void ogs_nas_build_s_nssai(
-        ogs_nas_s_nssai_t *nas_s_nssai, ogs_s_nssai_t *s_nssai);
+        ogs_nas_s_nssai_t *nas_s_nssai, ogs_nas_s_nssai_ie_t *nas_s_nssai_ie);
+void ogs_nas_build_s_nssai2(
+        ogs_nas_s_nssai_t *nas_s_nssai,
+        ogs_s_nssai_t *s_nssai, ogs_s_nssai_t *mapped_hplmn);
 int ogs_nas_parse_s_nssai(
-        ogs_s_nssai_t *s_nssai, ogs_nas_s_nssai_t *nas_s_nssai);
+        ogs_nas_s_nssai_ie_t *nas_s_nssai_ie, ogs_nas_s_nssai_t *nas_s_nssai);
 /* 9.11.3.1 5GMM capability
  * O TLV 3-15 */
 typedef struct ogs_nas_5gmm_capability_s {
@@ -443,8 +453,9 @@ typedef struct ogs_nas_nssai_s {
 } __attribute__ ((packed)) ogs_nas_nssai_t;
 
 void ogs_nas_build_nssai(ogs_nas_nssai_t *nas_nssai,
-        ogs_s_nssai_t *s_nssai, int num_of_s_nssai);
-int ogs_nas_parse_nssai(ogs_s_nssai_t *s_nssai, ogs_nas_nssai_t *nas_nssai);
+        ogs_nas_s_nssai_ie_t *nas_s_nssai_ie, int num_of_nas_s_nssai_ie);
+int ogs_nas_parse_nssai(
+        ogs_nas_s_nssai_ie_t *nas_s_nssai_ie, ogs_nas_nssai_t *nas_nssai);
 
 /* 9.11.3.37A NSSAI inclusion mode
  * O TV 1 */

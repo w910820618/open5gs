@@ -259,7 +259,8 @@ typedef struct smf_sess_s {
     } integrity_protection;
 
     /* S_NSSAI */
-    ogs_s_nssai_t   s_nssai;
+    ogs_s_nssai_t s_nssai;
+    ogs_s_nssai_t mapped_hplmn;
 
     /* PDN Configuration */
     ogs_pdn_t pdn;

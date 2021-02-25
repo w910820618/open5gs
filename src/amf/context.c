@@ -583,7 +583,7 @@ int amf_context_parse_config(void)
                                 ogs_yaml_iter_recurse(&plmn_support_iter,
                                         &s_nssai_array);
                                 do {
-                                    ogs_s_nssai_t *s_nssai = NULL;
+                                    ogs_nas_s_nssai_ie_t *s_nssai = NULL;
                                     const char *sst = NULL, *sd = NULL;
                                     ogs_assert(
                                         self.plmn_support[
@@ -1497,8 +1497,8 @@ amf_sess_t *amf_sess_add(amf_ue_t *amf_ue, uint8_t psi)
 
     sess->s_nssai.sst = 0;
     sess->s_nssai.sd.v = OGS_S_NSSAI_NO_SD_VALUE;
-    sess->s_nssai.mapped_hplmn_sst = 0;
-    sess->s_nssai.mapped_hplmn_sd.v = OGS_S_NSSAI_NO_SD_VALUE;
+    sess->mapped_hplmn.sst = 0;
+    sess->mapped_hplmn.sd.v = OGS_S_NSSAI_NO_SD_VALUE;
 
     ogs_list_add(&amf_ue->sess_list, sess);
 
@@ -1685,7 +1685,7 @@ ogs_s_nssai_t *amf_find_s_nssai(
                     continue;
             }
 
-            return &amf_self()->plmn_support[i].s_nssai[j];
+            return (ogs_s_nssai_t *)&amf_self()->plmn_support[i].s_nssai[j];
         }
     }
 

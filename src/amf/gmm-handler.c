@@ -231,7 +231,8 @@ int gmm_handle_registration_update(amf_ue_t *amf_ue,
 
         for (i = 0; i < amf_ue->num_of_requested_nssai; i++) {
             if (amf_find_s_nssai(
-                    &amf_ue->tai.plmn_id, &amf_ue->requested_nssai[i]))
+                    &amf_ue->tai.plmn_id,
+                    (ogs_s_nssai_t *)&amf_ue->requested_nssai[i]))
                 break;
         }
 
@@ -768,26 +769,30 @@ int gmm_handle_ul_nas_transport(amf_ue_t *amf_ue,
 
             if (ul_nas_transport->presencemask &
                     OGS_NAS_5GS_UL_NAS_TRANSPORT_S_NSSAI_PRESENT) {
-                ogs_s_nssai_t s_nssai;
+                ogs_nas_s_nssai_ie_t s_nssai;
                 if (ogs_nas_parse_s_nssai(&s_nssai, nas_s_nssai) != 0) {
-                    selected_s_nssai =
-                        amf_find_s_nssai(&amf_ue->tai.plmn_id, &s_nssai);
+                    selected_s_nssai = amf_find_s_nssai(
+                        &amf_ue->tai.plmn_id, (ogs_s_nssai_t *)&s_nssai);
                 }
             }
 
             if (!selected_s_nssai) {
                 if (amf_ue->num_of_requested_nssai) {
-                    selected_s_nssai = &amf_ue->requested_nssai[0];
+                    selected_s_nssai =
+                        (ogs_s_nssai_t *)&amf_ue->requested_nssai[0];
                 }
             }
 
             if (!selected_s_nssai) {
                 ogs_warn("No S_NSSAI : Set default S_NSSAI using AMF config");
-                selected_s_nssai = &amf_self()->plmn_support[0].s_nssai[0];
+                selected_s_nssai =
+                    (ogs_s_nssai_t *)&amf_self()->plmn_support[0].s_nssai[0];
                 ogs_assert(selected_s_nssai);
             }
 
-            memcpy(&sess->s_nssai, selected_s_nssai, sizeof(ogs_s_nssai_t));
+            /* Store S-NSSAI */
+            sess->s_nssai.sst = selected_s_nssai->sst;
+            sess->s_nssai.sd.v = selected_s_nssai->sd.v;
 
             if (ul_nas_transport->presencemask &
                     OGS_NAS_5GS_UL_NAS_TRANSPORT_DNN_PRESENT) {

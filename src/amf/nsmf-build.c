@@ -74,10 +74,10 @@ ogs_sbi_request_t *amf_nsmf_pdusession_build_create_sm_context(
     SmContextCreateData.s_nssai = &sNssai;
 
     memset(&hplmnSnssai, 0, sizeof(hplmnSnssai));
-    if (sess->s_nssai.mapped_hplmn_sst) {
-        hplmnSnssai.sst = sess->s_nssai.mapped_hplmn_sst;
+    if (sess->mapped_hplmn.sst) {
+        hplmnSnssai.sst = sess->mapped_hplmn.sst;
         hplmnSnssai.sd = ogs_s_nssai_sd_to_string(
-                sess->s_nssai.mapped_hplmn_sd);
+                sess->mapped_hplmn.sd);
         SmContextCreateData.hplmn_snssai = &hplmnSnssai;
     }
 

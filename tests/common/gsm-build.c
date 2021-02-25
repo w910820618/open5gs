@@ -40,7 +40,7 @@ ogs_pkbuf_t *testgsm_build_pdu_session_establishment_request(
         "\x83\x06\x00\x00\x00\x00\x00\x0c\x00\x00\x0d\x00\x00\x02\x00\x00"
         "\x0a\x00\x00\x10\x00";
 
-    ogs_s_nssai_t *s_nssai = NULL;
+    ogs_nas_s_nssai_ie_t *s_nssai = NULL;
 
     test_ue_t *test_ue = NULL;
     ogs_pkbuf_t *pkbuf = NULL;

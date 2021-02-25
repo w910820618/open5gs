@@ -441,7 +441,7 @@ int test_context_parse_config(void)
                                 ogs_yaml_iter_recurse(&plmn_support_iter,
                                         &s_nssai_array);
                                 do {
-                                    ogs_s_nssai_t *s_nssai = NULL;
+                                    ogs_nas_s_nssai_ie_t *s_nssai = NULL;
                                     const char *sst = NULL, *sd = NULL;
                                     ogs_assert(
                                         self.plmn_support[
