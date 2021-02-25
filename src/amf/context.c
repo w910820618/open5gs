@@ -1170,14 +1170,7 @@ void amf_ue_remove(amf_ue_t *amf_ue)
     }
 
     /* Clear SubscribedInfo */
-    for (i = 0; i < amf_ue->num_of_slice; i++) {
-        for (j = 0; j < amf_ue->slice[i].num_of_pdn; j++) {
-            ogs_assert(amf_ue->slice[i].pdn[j].name);
-            ogs_free(amf_ue->slice[i].pdn[j].name);
-        }
-        amf_ue->slice[i].num_of_pdn = 0;
-    }
-    amf_ue->num_of_slice = 0;
+    amf_clear_subscribed_info(amf_ue);
 
     if (amf_ue->policy_association_id)
         ogs_free(amf_ue->policy_association_id);
@@ -1785,23 +1778,22 @@ uint8_t amf_selected_enc_algorithm(amf_ue_t *amf_ue)
     return 0;
 }
 
-ogs_slice_data_t *amf_selected_slice(
-        amf_ue_t *amf_ue, ogs_nas_s_nssai_ie_t *nas_s_nssai_ie)
+ogs_slice_data_t *amf_find_slice(amf_ue_t *amf_ue, ogs_s_nssai_t *s_nssai)
 {
     int i = 0;
     ogs_slice_data_t *slice = NULL;
 
     ogs_assert(amf_ue);
-    ogs_assert(nas_s_nssai_ie);
-    ogs_assert(nas_s_nssai_ie->sst);
+    ogs_assert(s_nssai);
+    ogs_assert(s_nssai->sst);
 
     /* Compare Both SST & SD */
     for (i = 0; i < amf_ue->num_of_slice; i++) {
         slice = &amf_ue->slice[i];
-        if (nas_s_nssai_ie->sd.v != OGS_S_NSSAI_NO_SD_VALUE &&
+        if (s_nssai->sd.v != OGS_S_NSSAI_NO_SD_VALUE &&
             slice->s_nssai.sd.v != OGS_S_NSSAI_NO_SD_VALUE) {
-            if (nas_s_nssai_ie->sst == slice->s_nssai.sst &&
-                    nas_s_nssai_ie->sd.v == slice->s_nssai.sd.v) {
+            if (s_nssai->sst == slice->s_nssai.sst &&
+                    s_nssai->sd.v == slice->s_nssai.sd.v) {
                 return slice;
             }
         }
@@ -1810,16 +1802,32 @@ ogs_slice_data_t *amf_selected_slice(
     /* Compare Only SST if DefaultSingleNSSAI */
     for (i = 0; i < amf_ue->num_of_slice; i++) {
         slice = &amf_ue->slice[i];
-        if (nas_s_nssai_ie->sd.v == OGS_S_NSSAI_NO_SD_VALUE ||
+        if (s_nssai->sd.v == OGS_S_NSSAI_NO_SD_VALUE ||
             slice->s_nssai.sd.v == OGS_S_NSSAI_NO_SD_VALUE) {
             if (slice->default_indicator == true &&
-                nas_s_nssai_ie->sst == slice->s_nssai.sst) {
+                s_nssai->sst == slice->s_nssai.sst) {
                 return slice;
             }
         }
     }
 
     return NULL;
+}
+
+void amf_clear_subscribed_info(amf_ue_t *amf_ue)
+{
+    int i, j;
+
+    ogs_assert(amf_ue);
+
+    for (i = 0; i < amf_ue->num_of_slice; i++) {
+        for (j = 0; j < amf_ue->slice[i].num_of_pdn; j++) {
+            ogs_assert(amf_ue->slice[i].pdn[j].name);
+            ogs_free(amf_ue->slice[i].pdn[j].name);
+        }
+        amf_ue->slice[i].num_of_pdn = 0;
+    }
+    amf_ue->num_of_slice = 0;
 }
 
 static void stats_add_ran_ue(void)

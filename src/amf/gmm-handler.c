@@ -771,15 +771,16 @@ int gmm_handle_ul_nas_transport(amf_ue_t *amf_ue,
                     OGS_NAS_5GS_UL_NAS_TRANSPORT_S_NSSAI_PRESENT) {
                 ogs_nas_s_nssai_ie_t ie;
                 if (ogs_nas_parse_s_nssai(&ie, nas_s_nssai) != 0) {
-                    selected_slice = amf_selected_slice(amf_ue, &ie);
+                    selected_slice = amf_find_slice(amf_ue,
+                            (ogs_s_nssai_t *)&ie);
                 }
             }
 
             if (!selected_slice) {
                 int i;
                 for (i = 0; i < amf_ue->num_of_requested_nssai; i++) {
-                    selected_slice = amf_selected_slice(
-                            amf_ue, &amf_ue->requested_nssai[i]);
+                    selected_slice = amf_find_slice(amf_ue,
+                            (ogs_s_nssai_t *)&amf_ue->requested_nssai[i]);
                     if (selected_slice) {
                         break;
                     }
