@@ -355,6 +355,9 @@ struct amf_ue_s {
     int             num_of_subscribed_dnn;
     char            *subscribed_dnn[OGS_MAX_NUM_OF_DNN];
 
+    int num_of_slice;
+    ogs_slice_data_t slice[OGS_MAX_NUM_OF_SLICE];
+
     uint64_t        am_policy_control_features; /* SBI Features */
 
 #define CM_CONNECTED(__aMF) \

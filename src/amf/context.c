@@ -1135,7 +1135,7 @@ amf_ue_t *amf_ue_add(ran_ue_t *ran_ue)
 
 void amf_ue_remove(amf_ue_t *amf_ue)
 {
-    int i;
+    int i, j;
 
     ogs_assert(amf_ue);
 
@@ -1173,6 +1173,16 @@ void amf_ue_remove(amf_ue_t *amf_ue)
         ogs_assert(amf_ue->subscribed_dnn[i]);
         ogs_free(amf_ue->subscribed_dnn[i]);
     }
+
+    /* Clear Subscribed Info */
+    for (i = 0; i < amf_ue->num_of_slice; i++) {
+        for (j = 0; j < amf_ue->slice[i].num_of_pdn; j++) {
+            ogs_assert(amf_ue->slice[i].pdn[j].name);
+            ogs_free(amf_ue->slice[i].pdn[j].name);
+        }
+        amf_ue->slice[i].num_of_pdn = 0;
+    }
+    amf_ue->num_of_slice = 0;
 
     if (amf_ue->policy_association_id)
         ogs_free(amf_ue->policy_association_id);

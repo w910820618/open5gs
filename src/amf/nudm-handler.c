@@ -25,7 +25,7 @@
 int amf_nudm_sdm_handle_provisioned(
         amf_ue_t *amf_ue, ogs_sbi_message_t *recvmsg)
 {
-    int i;
+    int i, j;
 
     ogs_assert(amf_ue);
     ogs_assert(recvmsg);
@@ -108,6 +108,67 @@ int amf_nudm_sdm_handle_provisioned(
         break;
 
     CASE(OGS_SBI_RESOURCE_NAME_SMF_SELECT_DATA)
+        if (recvmsg->SmfSelectionSubscriptionData) {
+            OpenAPI_list_t *SubscribedSnssaiInfoList = NULL;
+            OpenAPI_map_t *SubscribedSnssaiInfoMap = NULL;
+            OpenAPI_snssai_info_t *SubscribedSnssaiInfo = NULL;
+
+            OpenAPI_list_t *DnnInfoList = NULL;
+            OpenAPI_dnn_info_t *DnnInfo = NULL;
+
+            OpenAPI_lnode_t *node = NULL, *node2 = NULL;
+
+            SubscribedSnssaiInfoList = recvmsg->
+                SmfSelectionSubscriptionData->subscribed_snssai_infos;
+            if (SubscribedSnssaiInfoList) {
+
+                /* Clear Subscribed Info */
+                for (i = 0; i < amf_ue->num_of_slice; i++) {
+                    for (j = 0; j < amf_ue->slice[i].num_of_pdn; j++) {
+                        ogs_assert(amf_ue->slice[i].pdn[j].name);
+                        ogs_free(amf_ue->slice[i].pdn[j].name);
+                    }
+                    amf_ue->slice[i].num_of_pdn = 0;
+                }
+                amf_ue->num_of_slice = 0;
+
+                OpenAPI_list_for_each(SubscribedSnssaiInfoList, node) {
+                    SubscribedSnssaiInfoMap = node->data;
+                    if (SubscribedSnssaiInfoMap &&
+                            SubscribedSnssaiInfoMap->key) {
+                        ogs_slice_data_t *slice =
+                            &amf_ue->slice[amf_ue->num_of_slice];
+
+                        bool rc = ogs_sbi_s_nssai_from_string(
+                                &slice->s_nssai, SubscribedSnssaiInfoMap->key);
+                        if (rc == false) {
+                            ogs_error("Invalid S-NSSAI format [%s]",
+                                SubscribedSnssaiInfoMap->key);
+                            continue;
+                        }
+
+                        SubscribedSnssaiInfo = SubscribedSnssaiInfoMap->value;
+                        if (SubscribedSnssaiInfo) {
+                            DnnInfoList = SubscribedSnssaiInfo->dnn_infos;
+                            if (DnnInfoList) {
+                                OpenAPI_list_for_each(DnnInfoList, node2) {
+                                    DnnInfo = node2->data;
+                                    if (DnnInfo) {
+                                        ogs_pdn_t *pdn =
+                                            &slice->pdn[slice->num_of_pdn];
+                                        pdn->name = ogs_strdup(DnnInfo->dnn);
+                                        ogs_assert(pdn->name);
+                                        slice->num_of_pdn++;
+                                    }
+                                }
+                            }
+                        }
+
+                        amf_ue->num_of_slice++;
+                    }
+                }
+            }
+        }
         amf_ue_sbi_discover_and_send(OpenAPI_nf_type_UDM, amf_ue,
             (char *)OGS_SBI_RESOURCE_NAME_UE_CONTEXT_IN_SMF_DATA,
             amf_nudm_sdm_build_get);
