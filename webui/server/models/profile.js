@@ -26,6 +26,7 @@ const Profile = new Schema({
   s_nssai: [{
     sst: { $type: Number, default: 1, required: true },
     sd: String,
+    default_indicator: { $type: Boolean, default: true },
     pdn: [{
       apn: { $type: String, required: true },
       type: {

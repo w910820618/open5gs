@@ -46,6 +46,7 @@ const Subscriber = new Schema({
   s_nssai: [{
     sst: { $type: Number, default: 1, required: true },
     sd: String,
+    default_indicator: { $type: Boolean, default: true },
     pdn: [{
       apn: { $type: String, required: true },
       type: {
@@ -59,7 +60,7 @@ const Subscriber = new Schema({
             $type: Number, default: 1 // Capability Disabled
           },
           pre_emption_vulnerability: {
-            $type : Number, default: 0 // Vulnerability Disabled
+            $type : Number, default: 1 // Vulnerability Disabled
           }
         }
       },
@@ -88,7 +89,7 @@ const Subscriber = new Schema({
               $type: Number, default: 1 // Capability Disabled
             },
             pre_emption_vulnerability: {
-              $type : Number, default: 0 // Vulnerability Disabled
+              $type : Number, default: 1 // Vulnerability Disabled
             }
           },
           mbr: {
