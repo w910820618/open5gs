@@ -189,9 +189,6 @@ int amf_nudm_sdm_handle_provisioned(
                                         ogs_assert(pdn->name);
                                         pdn->default_dnn_indicator =
                                             DnnInfo->default_dnn_indicator;
-                                        ogs_fatal("%s, %d",
-                                                pdn->name,
-                                        pdn->default_dnn_indicator);
                                         slice->num_of_pdn++;
                                     }
                                 }

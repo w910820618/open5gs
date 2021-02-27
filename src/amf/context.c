@@ -1135,7 +1135,7 @@ amf_ue_t *amf_ue_add(ran_ue_t *ran_ue)
 
 void amf_ue_remove(amf_ue_t *amf_ue)
 {
-    int i, j;
+    int i;
 
     ogs_assert(amf_ue);
 
