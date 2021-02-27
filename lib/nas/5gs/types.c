@@ -105,6 +105,12 @@ void ogs_nas_build_s_nssai(
     if (nas_s_nssai_ie->sst)
         nas_s_nssai->buffer[pos++] = nas_s_nssai_ie->sst;
 
+    /* FIXME :
+     * If the SST encoded in octet 3 is not associated with a valid SD value,
+     * and the sender needs to include a mapped HPLMN SST (octet 7) and
+     * a mapped HPLMN SD (octets 8 to 10), then the sender shall set
+     * the SD value (octets 4 to 6) to "no SD value associated with the SST".
+     */
     if (nas_s_nssai_ie->sd.v != OGS_S_NSSAI_NO_SD_VALUE) {
         v = ogs_htobe24(nas_s_nssai_ie->sd);
         memcpy(nas_s_nssai->buffer+pos, &v, 3);
