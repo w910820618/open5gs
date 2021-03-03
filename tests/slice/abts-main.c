@@ -57,7 +57,7 @@ int main(int argc, const char *const argv[])
     abts_suite *suite = NULL;
 
     atexit(terminate);
-    test_app_run(argc, argv, "minimal.yaml", initialize);
+    test_app_run(argc, argv, "slice.yaml", initialize);
 
     for (i = 0; alltests[i].func; i++)
         suite = alltests[i].func(suite);
