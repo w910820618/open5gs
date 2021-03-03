@@ -19,12 +19,12 @@
 
 #include "test-app.h"
 
-abts_suite *test_minimal(abts_suite *suite);
+abts_suite *test_nssai(abts_suite *suite);
 
 const struct testlist {
     abts_suite *(*func)(abts_suite *suite);
 } alltests[] = {
-    {test_minimal},
+    {test_nssai},
     {NULL},
 };
 

@@ -235,7 +235,7 @@ static void test1_func(abts_case *tc, void *data)
     testgnb_ngap_close(ngap);
 }
 
-abts_suite *test_minimal(abts_suite *suite)
+abts_suite *test_nssai(abts_suite *suite)
 {
     suite = ADD_SUITE(suite)
 
