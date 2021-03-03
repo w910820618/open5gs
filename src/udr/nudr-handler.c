@@ -321,7 +321,7 @@ static OpenAPI_pdu_session_type_e pdu_session_type_from_dbi(uint8_t pdn_type)
 bool udr_nudr_dr_handle_subscription_provisioned(
         ogs_sbi_stream_t *stream, ogs_sbi_message_t *recvmsg)
 {
-    int rv, i, j, status = 0;
+    int rv, status = 0;
     char *strerror = NULL;
 
     ogs_sbi_message_t sendmsg;
@@ -365,6 +365,8 @@ bool udr_nudr_dr_handle_subscription_provisioned(
 
     SWITCH(recvmsg->h.resource.component[4])
     CASE(OGS_SBI_RESOURCE_NAME_AM_DATA)
+        int i;
+
         OpenAPI_access_and_mobility_subscription_data_t
             AccessAndMobilitySubscriptionData;
         OpenAPI_list_t *GpsiList = NULL;
@@ -486,6 +488,8 @@ bool udr_nudr_dr_handle_subscription_provisioned(
         break;
 
     CASE(OGS_SBI_RESOURCE_NAME_SMF_SELECTION_SUBSCRIPTION_DATA)
+        int i, j;
+
         OpenAPI_smf_selection_subscription_data_t SmfSelectionSubscriptionData;
 
         OpenAPI_list_t *SubscribedSnssaiInfoList = NULL;
@@ -583,6 +587,8 @@ bool udr_nudr_dr_handle_subscription_provisioned(
         break;
 
     CASE(OGS_SBI_RESOURCE_NAME_SM_DATA)
+        int i;
+
         OpenAPI_session_management_subscription_data_t
             SessionManagementSubscriptionData;
         OpenAPI_snssai_t singleNSSAI;
@@ -598,13 +604,22 @@ bool udr_nudr_dr_handle_subscription_provisioned(
         OpenAPI_lnode_t *node = NULL, *node2 = NULL;
 
         if (!recvmsg->param.single_nssai_presence) {
-            strerror = ogs_msprintf("[%s] Cannot find S_NSSAI", supi);
+            strerror = ogs_msprintf("[%s] No S_NSSAI", supi);
+            status = OGS_SBI_HTTP_STATUS_BAD_REQUEST;
+            goto cleanup;
+        };
+
+        slice_data = ogs_subscription_find_slice(
+                &subscription_data, &recvmsg->param.single_nssai);
+
+        if (!slice_data) {
+            strerror = ogs_msprintf("[%s] Cannot find S_NSSAI[SST:%d SD:0x%x]",
+                    supi,
+                    recvmsg->param.single_nssai.sst,
+                    recvmsg->param.single_nssai.sd.v);
             status = OGS_SBI_HTTP_STATUS_BAD_REQUEST;
             goto cleanup;
         }
-
-        ogs_assert(subscription_data.num_of_slice == 1);
-        slice_data = &subscription_data.slice[0];
 
         singleNSSAI.sst = recvmsg->param.single_nssai.sst;
         singleNSSAI.sd = ogs_s_nssai_sd_to_string(
@@ -899,9 +914,6 @@ bool udr_nudr_dr_handle_policy_data(
                 goto cleanup;
             }
 
-            ogs_assert(subscription_data.num_of_slice == 1);
-            slice_data = &subscription_data.slice[0];
-
             SWITCH(recvmsg->h.resource.component[3])
             CASE(OGS_SBI_RESOURCE_NAME_AM_DATA)
                 OpenAPI_am_policy_data_t AmPolicyData;
@@ -944,6 +956,8 @@ bool udr_nudr_dr_handle_policy_data(
 
                 SmPolicyDnnDataList = OpenAPI_list_create();
                 ogs_assert(SmPolicyDnnDataList);
+
+                slice_data = &subscription_data.slice[0];
 
                 for (i = 0; i < slice_data->num_of_pdn; i++) {
                     ogs_pdn_t *pdn = &slice_data->pdn[i];
