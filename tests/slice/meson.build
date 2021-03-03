@@ -15,12 +15,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-test5gc_minimal_sources = files('''
+test5gc_slice_sources = files('''
     abts-main.c
     minimal-test.c
 '''.split())
 
-test5gc_minimal_exe = executable('minimal',
-    sources : test5gc_minimal_sources,
+test5gc_slice_exe = executable('slice',
+    sources : test5gc_slice_sources,
     c_args : testunit_core_cc_flags,
     dependencies : libtest5gc_dep)
+
+test('slice',
+    test5gc_slice_exe,
+    is_parallel : false,
+    suite: '5gc')
