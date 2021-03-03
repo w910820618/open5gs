@@ -169,7 +169,9 @@ int amf_nudm_sdm_handle_provisioned(
                             continue;
                         }
 
-                        slice = amf_find_slice(amf_ue, &s_nssai);
+                        slice = ogs_slice_find_by_s_nssai(
+                                    amf_ue->slice, amf_ue->num_of_slice,
+                                    &s_nssai);
                         if (!slice) {
                             ogs_error("Cannt find S-NSSAI[SST:%d SD:0x%x]",
                                     s_nssai.sst, s_nssai.sd.v);

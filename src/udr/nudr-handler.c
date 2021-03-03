@@ -609,8 +609,9 @@ bool udr_nudr_dr_handle_subscription_provisioned(
             goto cleanup;
         };
 
-        slice_data = ogs_subscription_find_slice(
-                &subscription_data, &recvmsg->param.single_nssai);
+        slice_data = ogs_slice_find_by_s_nssai(
+                subscription_data.slice, subscription_data.num_of_slice,
+                &recvmsg->param.single_nssai);
 
         if (!slice_data) {
             strerror = ogs_msprintf("[%s] Cannot find S_NSSAI[SST:%d SD:0x%x]",

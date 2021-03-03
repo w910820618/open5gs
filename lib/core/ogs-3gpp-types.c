@@ -473,36 +473,34 @@ char *ogs_ipv6_to_string(uint8_t *addr6)
     return (char *)OGS_INET6_NTOP(addr6, buf);
 }
 
-ogs_slice_data_t *ogs_subscription_find_slice(
-        ogs_subscription_data_t *subscription_data, ogs_s_nssai_t *s_nssai)
+ogs_slice_data_t *ogs_slice_find_by_s_nssai(
+        ogs_slice_data_t *slice_data, int num_of_slice_data,
+        ogs_s_nssai_t *s_nssai)
 {
     int i;
-    ogs_slice_data_t *slice = NULL;
 
-    ogs_assert(subscription_data);
+    ogs_assert(slice_data);
+    ogs_assert(num_of_slice_data);
     ogs_assert(s_nssai);
 
     /* Compare Both SST & SD */
-    for (i = 0; i < subscription_data->num_of_slice; i++) {
-        slice = &subscription_data->slice[i];
-
+    for (i = 0; i < num_of_slice_data; i++) {
         if (s_nssai->sd.v != OGS_S_NSSAI_NO_SD_VALUE &&
-            slice->s_nssai.sd.v != OGS_S_NSSAI_NO_SD_VALUE) {
-            if (s_nssai->sst == slice->s_nssai.sst &&
-                    s_nssai->sd.v == slice->s_nssai.sd.v) {
-                return slice;
+            slice_data[i].s_nssai.sd.v != OGS_S_NSSAI_NO_SD_VALUE) {
+            if (s_nssai->sst == slice_data[i].s_nssai.sst &&
+                    s_nssai->sd.v == slice_data[i].s_nssai.sd.v) {
+                return slice_data + i;
             }
         }
     }
 
     /* Compare Only SST if DefaultSingleNSSAI */
-    for (i = 0; i < subscription_data->num_of_slice; i++) {
-        slice = &subscription_data->slice[i];
+    for (i = 0; i < num_of_slice_data; i++) {
         if (s_nssai->sd.v == OGS_S_NSSAI_NO_SD_VALUE ||
-            slice->s_nssai.sd.v == OGS_S_NSSAI_NO_SD_VALUE) {
-            if (slice->default_indicator == true &&
-                s_nssai->sst == slice->s_nssai.sst) {
-                return slice;
+            slice_data[i].s_nssai.sd.v == OGS_S_NSSAI_NO_SD_VALUE) {
+            if (slice_data[i].default_indicator == true &&
+                s_nssai->sst == slice_data[i].s_nssai.sst) {
+                return slice_data + i;
             }
         }
     }
