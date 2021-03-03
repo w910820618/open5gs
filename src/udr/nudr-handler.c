@@ -622,9 +622,8 @@ bool udr_nudr_dr_handle_subscription_provisioned(
             goto cleanup;
         }
 
-        singleNSSAI.sst = recvmsg->param.single_nssai.sst;
-        singleNSSAI.sd = ogs_s_nssai_sd_to_string(
-                            recvmsg->param.single_nssai.sd);
+        singleNSSAI.sst = slice_data->s_nssai.sst;
+        singleNSSAI.sd = ogs_s_nssai_sd_to_string(slice_data->s_nssai.sd);
 
         dnnConfigurationList = OpenAPI_list_create();
 
@@ -945,15 +944,29 @@ bool udr_nudr_dr_handle_policy_data(
                 OpenAPI_sm_policy_dnn_data_t *SmPolicyDnnData = NULL;
 
                 if (!recvmsg->param.snssai_presence) {
-                    strerror = ogs_msprintf("[%s] Cannot find S_NSSAI", supi);
+                    strerror = ogs_msprintf("[%s] No S_NSSAI", supi);
+                    status = OGS_SBI_HTTP_STATUS_BAD_REQUEST;
+                    goto cleanup;
+                }
+
+                slice_data = ogs_slice_find_by_s_nssai(
+                        subscription_data.slice, subscription_data.num_of_slice,
+                        &recvmsg->param.snssai);
+
+                if (!slice_data) {
+                    strerror = ogs_msprintf(
+                            "[%s] Cannot find S_NSSAI[SST:%d SD:0x%x]",
+                            supi,
+                            recvmsg->param.single_nssai.sst,
+                            recvmsg->param.single_nssai.sd.v);
                     status = OGS_SBI_HTTP_STATUS_BAD_REQUEST;
                     goto cleanup;
                 }
 
                 sNSSAI = ogs_calloc(1, sizeof(*sNSSAI));
                 ogs_assert(sNSSAI);
-                sNSSAI->sst = recvmsg->param.snssai.sst;
-                sNSSAI->sd = ogs_s_nssai_sd_to_string(recvmsg->param.snssai.sd);
+                sNSSAI->sst = slice_data->s_nssai.sst;
+                sNSSAI->sd = ogs_s_nssai_sd_to_string(slice_data->s_nssai.sd);
 
                 SmPolicyDnnDataList = OpenAPI_list_create();
                 ogs_assert(SmPolicyDnnDataList);
