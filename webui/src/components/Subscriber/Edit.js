@@ -102,14 +102,14 @@ const schema = {
         }
       }
     },
-    "s_nssai": {
+    "slice": {
       "type": "array",
-      "title": "S-NSSAI Configurations",
+      "title": "Slice Configurations",
       "minItems": 1,
       "maxItems": 8,
       "messages": {
-        "minItems": "At least 1 S-NSSAI is required",
-        "maxItems": "8 S-NSSAI are supported"
+        "minItems": "At least 1 Slice is required",
+        "maxItems": "8 Slices are supported"
       },
       "items": {
         "type": "object",
@@ -130,19 +130,19 @@ const schema = {
               "pattern": "Only hexadecimal digits are allowed"
             }
           },
-          "pdn": {
+          "session": {
             "type": "array",
-            "title": "DNN/APN Configurations",
+            "title": "Session Configurations",
             "minItems": 1,
             "maxItems": 4,
             "messages": {
-              "minItems": "At least 1 DNN/APN is required",
-              "maxItems": "4 DNN/APNs are supported"
+              "minItems": "At least 1 Session is required",
+              "maxItems": "4 Sessions are supported"
             },
             "items": {
               "type": "object",
               "properties": {
-                "apn": {
+                "name": {
                   "type": "string",
                   "title": "DNN/APN*",
                   "required": true
@@ -158,7 +158,7 @@ const schema = {
                   "type": "object",
                   "title": "",
                   "properties": {
-                    "qci": {
+                    "index": {
                       "type": "number",
                       "title": "QoS Class Identifier (QCI)*",
                       "enum": [ 1, 2, 3, 4, 65, 66, 67, 75, 71, 72, 73, 74, 76, 5, 6, 7, 8, 9, 69, 70, 79, 80, 82, 83, 84, 85, 86 ],
@@ -314,7 +314,7 @@ const schema = {
                         "type": "object",
                         "title": "",
                         "properties": {
-                          "qci": {
+                          "index": {
                             "type": "number",
                             "title": "QoS Class Identifier (QCI)*",
                             "enum": [ 1, 2, 3, 4, 65, 66, 67, 75, 71, 72, 73, 74, 76, 5, 6, 7, 8, 9, 69, 70, 79, 80, 82, 83, 84, 85, 86 ],
@@ -480,7 +480,7 @@ const uiSchema = {
       },
     }
   },
-  "s_nssai": {
+  "slice": {
     classNames: "col-xs-12",
     "items": {
       "sst": {
@@ -491,10 +491,10 @@ const uiSchema = {
       "sd": {
         classNames: "col-xs-8",
       },
-      "pdn": {
+      "session": {
         classNames: "col-xs-12",
         "items": {
-          "apn": {
+          "name": {
             classNames: "col-xs-8",
           },
           "type": {
@@ -502,7 +502,7 @@ const uiSchema = {
           },
           "qos": {
             classNames: "col-xs-12",
-            "qci": {
+            "index": {
             },
             "arp": {
               "priority_level": {
@@ -565,7 +565,7 @@ const uiSchema = {
                 },
               },
               "qos": {
-                "qci": {
+                "index": {
                 },
                 "arp": {
                   "priority_level": {

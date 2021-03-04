@@ -163,7 +163,7 @@ const View = ({ visible, disableOnClickOutside, profile, onEdit, onDelete, onHid
   const title = (profile || {}).title;
   const security = ((profile || {}).security || {});
   const ambr = ((profile || {}).ambr || {});
-  const s_nssai_list = ((profile || {}).s_nssai || []);
+  const slice_list = ((profile || {}).slice || []);
 
   return (
     <div>
@@ -263,14 +263,14 @@ const View = ({ visible, disableOnClickOutside, profile, onEdit, onDelete, onHid
               </div>
             </Profile>
             <Pdn>
-              {s_nssai_list.map((s_nssai, index) =>
+              {slice_list.map((slice, index) =>
                 <div key={index}>
-                  {s_nssai.sd === undefined ?
+                  {slice.sd === undefined ?
                     <div className="header">
-                      S-NSSAI - SST:{s_nssai.sst}
+                      S-NSSAI - SST:{slice.sst}
                     </div> :
                     <div className="header">
-                      S-NSSAI - SST:{s_nssai.sst} SD:{s_nssai.sd}
+                      S-NSSAI - SST:{slice.sst} SD:{slice.sd}
                     </div>
                   }
                   <div className="body" style={{color:oc.gray[5]}}>
@@ -283,92 +283,92 @@ const View = ({ visible, disableOnClickOutside, profile, onEdit, onDelete, onHid
                     <div className="large_data">MBR DL/UL</div>
                     <div className="large_data">GBR DL/UL</div>
                   </div>
-                  {s_nssai['pdn'] !== undefined &&
-                      s_nssai.pdn.map(pdn =>
-                    <div key={pdn.apn}>
+                  {slice['session'] !== undefined &&
+                      slice.session.map(session =>
+                    <div key={session.name}>
                       <div className="body">
-                        <div className="medium_data">{pdn.apn}</div>
-                        <div className="medium_data">{pdn.type === 0 ? "IPv4" : (pdn.type === 1 ? "IPv6" : "IPv4v6")}</div>
-                        <div className="small_data">{pdn.qos.qci}</div>
-                        <div className="small_data">{pdn.qos.arp.priority_level}</div>
+                        <div className="medium_data">{session.name}</div>
+                        <div className="medium_data">{session.type === 0 ? "IPv4" : (session.type === 1 ? "IPv6" : "IPv4v6")}</div>
+                        <div className="small_data">{session.qos.index}</div>
+                        <div className="small_data">{session.qos.arp.priority_level}</div>
                         <div className="medium_data">
-                          {pdn.qos.arp.pre_emption_capability ===
+                          {session.qos.arp.pre_emption_capability ===
                               2 ? "Enabled" :
-                           pdn.qos.arp.pre_emption_capability ===
+                           session.qos.arp.pre_emption_capability ===
                               1 ? "Disabled" : "Unknown"}
                         </div>
                         <div className="medium_data">
-                          {pdn.qos.arp.pre_emption_vulnerability ===
+                          {session.qos.arp.pre_emption_vulnerability ===
                               2 ? "Enabled" :
-                           pdn.qos.arp.pre_emption_vulnerability ===
+                           session.qos.arp.pre_emption_vulnerability ===
                               1 ? "Disabled" : "Unknown"}
                         </div>
-                        {pdn['ambr'] === undefined ?
+                        {session['ambr'] === undefined ?
                           <div className="large_data">
                             unlimited/unlimited
                           </div> :
                           <div className="large_data">
-                            {pdn.ambr['downlink'] === undefined ? "unlimited" :
-                              pdn.ambr.downlink['value'] === undefined ?
-                                "unlimited" : pdn.ambr.downlink.value
-                            } {pdn.ambr['downlink'] === undefined ?
+                            {session.ambr['downlink'] === undefined ? "unlimited" :
+                              session.ambr.downlink['value'] === undefined ?
+                                "unlimited" : session.ambr.downlink.value
+                            } {session.ambr['downlink'] === undefined ?
                                 "unlimited" :
-                                  pdn.ambr.downlink['value'] ===
+                                  session.ambr.downlink['value'] ===
                                     undefined ?  "" :
-                                  pdn.ambr.downlink['unit'] ===
+                                  session.ambr.downlink['unit'] ===
                                     undefined ?  "bps" :
-                                    pdn.ambr.downlink.unit === 0 ? "bps" :
-                                    pdn.ambr.downlink.unit === 1 ? "Kbps" :
-                                    pdn.ambr.downlink.unit === 2 ? "Mbps" :
-                                    pdn.ambr.downlink.unit === 3 ? "Gbps" :
-                                    pdn.ambr.downlink.unit === 4 ? "Tbps" :
+                                    session.ambr.downlink.unit === 0 ? "bps" :
+                                    session.ambr.downlink.unit === 1 ? "Kbps" :
+                                    session.ambr.downlink.unit === 2 ? "Mbps" :
+                                    session.ambr.downlink.unit === 3 ? "Gbps" :
+                                    session.ambr.downlink.unit === 4 ? "Tbps" :
                                         "Unknown Unit"
-                            } / {pdn.ambr['uplink'] ===
+                            } / {session.ambr['uplink'] ===
                                     undefined ? "unlimited" :
-                              pdn.ambr.uplink['value'] === undefined ?
-                                "unlimited" : pdn.ambr.uplink.value
-                            } {pdn.ambr['uplink'] === undefined ?
+                              session.ambr.uplink['value'] === undefined ?
+                                "unlimited" : session.ambr.uplink.value
+                            } {session.ambr['uplink'] === undefined ?
                                 "unlimited" :
-                                  pdn.ambr.uplink['value'] ===
+                                  session.ambr.uplink['value'] ===
                                     undefined ?  "" :
-                                  pdn.ambr.uplink['unit'] ===
+                                  session.ambr.uplink['unit'] ===
                                     undefined ?  "bps" :
-                                    pdn.ambr.uplink.unit === 0 ? "bps" :
-                                    pdn.ambr.uplink.unit === 1 ? "Kbps" :
-                                    pdn.ambr.uplink.unit === 2 ? "Mbps" :
-                                    pdn.ambr.uplink.unit === 3 ? "Gbps" :
-                                    pdn.ambr.uplink.unit === 4 ? "Tbps" :
+                                    session.ambr.uplink.unit === 0 ? "bps" :
+                                    session.ambr.uplink.unit === 1 ? "Kbps" :
+                                    session.ambr.uplink.unit === 2 ? "Mbps" :
+                                    session.ambr.uplink.unit === 3 ? "Gbps" :
+                                    session.ambr.uplink.unit === 4 ? "Tbps" :
                                         "Unknown Unit"
                             }
                           </div>
                         }
                         <div className="large_data"></div>
                       </div>
-                      {pdn['ue'] !== undefined &&
+                      {session['ue'] !== undefined &&
                         <div className="body">
                           <div className="medium_data"></div>
                           <div className="medium_data" style={{color:oc.gray[5]}}>{"UE IPv4"} </div>
-                          <div className="large_data">{(pdn.ue || {}).addr}</div>
+                          <div className="large_data">{(session.ue || {}).addr}</div>
                           <div className="medium_data" style={{color:oc.gray[5]}}>{"UE IPv6"} </div>
-                          <div className="large_data">{(pdn.ue || {}).addr6}</div>
+                          <div className="large_data">{(session.ue || {}).addr6}</div>
                         </div>
                       }
-                      {pdn['pgw'] !== undefined &&
+                      {session['pgw'] !== undefined &&
                         <div className="body">
                           <div className="medium_data"></div>
                           <div className="medium_data" style={{color:oc.gray[5]}}>{"PGW IPv4"} </div>
-                          <div className="large_data">{(pdn.pgw || {}).addr}</div>
+                          <div className="large_data">{(session.pgw || {}).addr}</div>
                           <div className="medium_data" style={{color:oc.gray[5]}}>{"PGW IPv6"} </div>
-                          <div className="large_data">{(pdn.pgw || {}).addr6}</div>
+                          <div className="large_data">{(session.pgw || {}).addr6}</div>
                         </div>
                       }
-                      {pdn['pcc_rule'] !== undefined &&
-                        pdn.pcc_rule.map((pcc_rule, index) =>
+                      {session['pcc_rule'] !== undefined &&
+                        session.pcc_rule.map((pcc_rule, index) =>
                           <div key={index}>
                             <div className="body">
                               <div className="medium_data"></div>
                               <div className="medium_data"></div>
-                              <div className="small_data">{pcc_rule.qos.qci}</div>
+                              <div className="small_data">{pcc_rule.qos.index}</div>
                               <div className="small_data">{pcc_rule.qos.arp.priority_level}</div>
                               <div className="medium_data">
                                 {pcc_rule.qos.arp.pre_emption_capability ===

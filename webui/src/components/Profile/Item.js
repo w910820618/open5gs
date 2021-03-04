@@ -82,7 +82,7 @@ const Profile = styled.div`
     color: ${oc.gray[6]};
     width: 240px;
   }
-  .apn {
+  .name {
     font-size: 1.1rem;
     color: ${oc.gray[6]};
     width: 120px;
@@ -166,7 +166,7 @@ class Item extends Component {
     const {
       _id,
       title,
-      s_nssai,
+      slice,
       ambr
     } = profile;
 

@@ -29,10 +29,10 @@ const formData = {
       "unit": 3
     }
   },
-  "s_nssai": [{
+  "slice": [{
     "sst": 1,
-    "pdn": [{
-        "apn": "internet",
+    "session": [{
+        "name": "internet",
         "type": 2,
         "ambr": {
           "downlink": {
@@ -45,7 +45,7 @@ const formData = {
           }
         },
         "qos": {
-          "qci": 9,
+          "index": 9,
           "arp": {
             "priority_level": 8,
             "pre_emption_capability": 1,
@@ -168,20 +168,20 @@ class Document extends Component {
   validate = (formData, errors) => {
     const { profiles, action, status } = this.props;
 
-    for (let i = 0; i < formData.s_nssai.length; i++) {
-      let apns = formData.s_nssai[i].pdn.map(pdn => { return pdn.apn } )
+    for (let i = 0; i < formData.slice.length; i++) {
+      let names = formData.slice[i].session.map(session => { return session.name } )
       let duplicates = {};
-      for (let j = 0; j < apns.length; j++) {
-        if (duplicates.hasOwnProperty(apns[j])) {
-          duplicates[apns[j]].push(j);
-        } else if (apns.lastIndexOf(apns[j]) !== j) {
-          duplicates[apns[j]] = [j];
+      for (let j = 0; j < names.length; j++) {
+        if (duplicates.hasOwnProperty(names[j])) {
+          duplicates[names[j]].push(j);
+        } else if (names.lastIndexOf(names[j]) !== j) {
+          duplicates[names[j]] = [j];
         }
       }
 
       for (let key in duplicates) {
         duplicates[key].forEach(index => 
-          errors.s_nssai[i].pdn[index].apn.addError(`'${key}' is duplicated`));
+          errors.slice[i].session[index].name.addError(`'${key}' is duplicated`));
       }
     }
 

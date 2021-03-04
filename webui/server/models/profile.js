@@ -23,17 +23,17 @@ const Profile = new Schema({
     uplink: { value: Number, unit: Number }
   },
 
-  s_nssai: [{
+  slice: [{
     sst: { $type: Number, default: 1, required: true },
     sd: String,
     default_indicator: { $type: Boolean, default: true },
-    pdn: [{
-      apn: { $type: String, required: true },
+    session: [{
+      name: { $type: String, required: true },
       type: {
         $type: Number, default: 2 // IPv4, IPv6 and dualstack IPv4v6
       },
       qos: {
-        qci: Number,
+        index: Number,
         arp: {
           priority_level: Number,
           pre_emption_capability: {
@@ -62,7 +62,7 @@ const Profile = new Schema({
           description: String
         }],
         qos: {
-          qci: Number,
+          index: Number,
           arp: {
             priority_level: Number,
             pre_emption_capability: {
