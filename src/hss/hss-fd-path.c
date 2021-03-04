@@ -277,6 +277,7 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
     union avp_value val;
 
     char imsi_bcd[OGS_MAX_IMSI_BCD_LEN+1];
+    ogs_s_nssai_t s_nssai;
 
     int rv;
     uint32_t result_code = 0;
@@ -351,6 +352,12 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
         struct avp *avp_subscriber_status, *avp_network_access_mode;
         struct avp *avp_ambr, *avp_max_bandwidth_ul, *avp_max_bandwidth_dl;
         struct avp *avp_rau_tau_timer;
+
+        /* Set the APN Configuration Profile */
+        struct avp *apn_configuration_profile;
+        struct avp *context_identifier;
+        struct avp *all_apn_configuration_included_indicator;
+
         int i;
 
         /* Set the Subscription Data */
@@ -456,268 +463,272 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
         ret = fd_msg_avp_add(avp, MSG_BRW_LAST_CHILD, avp_rau_tau_timer);
         ogs_assert(ret == 0);
 
-        ogs_assert(subscription_data.num_of_slice == 1);
-        slice_data = &subscription_data.slice[0];
-        if (slice_data->num_of_pdn) {
-            /* Set the APN Configuration Profile */
-            struct avp *apn_configuration_profile;
-            struct avp *context_identifier;
-            struct avp *all_apn_configuration_included_indicator;
+        /* For EPC, we'll use SST:1 */
+        s_nssai.sst = 1;
+        s_nssai.sd.v = OGS_S_NSSAI_NO_SD_VALUE;
 
-            ret = fd_msg_avp_new(ogs_diam_s6a_apn_configuration_profile, 0,
-                    &apn_configuration_profile);
+        slice_data = ogs_slice_find_by_s_nssai(
+                subscription_data.slice, subscription_data.num_of_slice,
+                &s_nssai);
+        if (!slice_data) {
+            ogs_error("[%s] Cannot find S-NSSAI", imsi_bcd);
+            result_code = OGS_DIAM_S6A_ERROR_UNKNOWN_EPS_SUBSCRIPTION;
+            goto out;
+        }
+
+        if (!slice_data->num_of_pdn) {
+            ogs_error("[%s] No PDN", imsi_bcd);
+            result_code = OGS_DIAM_S6A_ERROR_UNKNOWN_EPS_SUBSCRIPTION;
+            goto out;
+        }
+
+        ret = fd_msg_avp_new(ogs_diam_s6a_apn_configuration_profile, 0,
+                &apn_configuration_profile);
+        ogs_assert(ret == 0);
+
+        ret = fd_msg_avp_new(ogs_diam_s6a_context_identifier, 0,
+                &context_identifier);
+        ogs_assert(ret == 0);
+        val.i32 = 1; /* Context Identifier : 1 */
+        ret = fd_msg_avp_setvalue(context_identifier, &val);
+        ogs_assert(ret == 0);
+        ret = fd_msg_avp_add(apn_configuration_profile,
+                MSG_BRW_LAST_CHILD, context_identifier);
+        ogs_assert(ret == 0);
+
+        ret = fd_msg_avp_new(
+                ogs_diam_s6a_all_apn_configuration_included_indicator, 0,
+                &all_apn_configuration_included_indicator);
+        ogs_assert(ret == 0);
+        val.i32 = 0;
+        ret = fd_msg_avp_setvalue(
+                all_apn_configuration_included_indicator, &val);
+        ogs_assert(ret == 0);
+        ret = fd_msg_avp_add(apn_configuration_profile, MSG_BRW_LAST_CHILD,
+                all_apn_configuration_included_indicator);
+        ogs_assert(ret == 0);
+
+        for (i = 0; i < slice_data->num_of_pdn; i++) {
+            /* Set the APN Configuration */
+            struct avp *apn_configuration, *context_identifier, *pdn_type;
+            struct avp *served_party_ip_address, *service_selection;
+            struct avp *eps_subscribed_qos_profile, *qos_class_identifier;
+            struct avp *allocation_retention_priority, *priority_level;
+            struct avp *pre_emption_capability, *pre_emption_vulnerability;
+            struct avp *mip6_agent_info, *mip_home_agent_address;
+
+            ogs_pdn_t *pdn = &slice_data->pdn[i];
+            ogs_assert(pdn);
+            pdn->context_identifier = i+1;
+
+            ret = fd_msg_avp_new(ogs_diam_s6a_apn_configuration, 0,
+                &apn_configuration);
             ogs_assert(ret == 0);
 
+            /* Set Context-Identifier */
             ret = fd_msg_avp_new(ogs_diam_s6a_context_identifier, 0,
                     &context_identifier);
             ogs_assert(ret == 0);
-            val.i32 = 1; /* Context Identifier : 1 */
+            val.i32 = pdn->context_identifier;
             ret = fd_msg_avp_setvalue(context_identifier, &val);
             ogs_assert(ret == 0);
-            ret = fd_msg_avp_add(apn_configuration_profile, 
+            ret = fd_msg_avp_add(apn_configuration,
                     MSG_BRW_LAST_CHILD, context_identifier);
             ogs_assert(ret == 0);
 
-            ret = fd_msg_avp_new(
-                    ogs_diam_s6a_all_apn_configuration_included_indicator, 0,
-                    &all_apn_configuration_included_indicator);
+            /* Set PDN-Type */
+            ret = fd_msg_avp_new(ogs_diam_s6a_pdn_type, 0, &pdn_type);
             ogs_assert(ret == 0);
-            val.i32 = 0;
-            ret = fd_msg_avp_setvalue(
-                    all_apn_configuration_included_indicator, &val);
+            val.i32 = pdn->pdn_type;
+            ret = fd_msg_avp_setvalue(pdn_type, &val);
             ogs_assert(ret == 0);
-            ret = fd_msg_avp_add(apn_configuration_profile, 
-                    MSG_BRW_LAST_CHILD, 
-                    all_apn_configuration_included_indicator);
+            ret = fd_msg_avp_add(apn_configuration,
+                    MSG_BRW_LAST_CHILD, pdn_type);
             ogs_assert(ret == 0);
 
-            for (i = 0; i < slice_data->num_of_pdn; i++) {
-                /* Set the APN Configuration */
-                struct avp *apn_configuration, *context_identifier, *pdn_type;
-                struct avp *served_party_ip_address, *service_selection;
-                struct avp *eps_subscribed_qos_profile, *qos_class_identifier;
-                struct avp *allocation_retention_priority, *priority_level;
-                struct avp *pre_emption_capability, *pre_emption_vulnerability;
-                struct avp *mip6_agent_info, *mip_home_agent_address;
-
-                ogs_pdn_t *pdn = &slice_data->pdn[i];
-                ogs_assert(pdn);
-                pdn->context_identifier = i+1;
-
-                ret = fd_msg_avp_new(ogs_diam_s6a_apn_configuration, 0,
-                    &apn_configuration);
+            /* Set Served-Party-IP-Address */
+            if ((pdn->pdn_type == OGS_DIAM_PDN_TYPE_IPV4 ||
+                 pdn->pdn_type == OGS_DIAM_PDN_TYPE_IPV4V6) &&
+                pdn->ue_ip.ipv4) {
+                ret = fd_msg_avp_new(ogs_diam_s6a_served_party_ip_address,
+                        0, &served_party_ip_address);
                 ogs_assert(ret == 0);
-
-                /* Set Context-Identifier */
-                ret = fd_msg_avp_new(ogs_diam_s6a_context_identifier, 0,
-                        &context_identifier);
+                sin.sin_family = AF_INET;
+                sin.sin_addr.s_addr = pdn->ue_ip.addr;
+                ret = fd_msg_avp_value_encode(&sin, served_party_ip_address);
                 ogs_assert(ret == 0);
-                val.i32 = pdn->context_identifier;
-                ret = fd_msg_avp_setvalue(context_identifier, &val);
-                ogs_assert(ret == 0);
-                ret = fd_msg_avp_add(apn_configuration, 
-                        MSG_BRW_LAST_CHILD, context_identifier);
-                ogs_assert(ret == 0);
-
-                /* Set PDN-Type */
-                ret = fd_msg_avp_new(ogs_diam_s6a_pdn_type, 0, &pdn_type);
-                ogs_assert(ret == 0);
-                val.i32 = pdn->pdn_type;
-                ret = fd_msg_avp_setvalue(pdn_type, &val);
-                ogs_assert(ret == 0);
-                ret = fd_msg_avp_add(apn_configuration, 
-                        MSG_BRW_LAST_CHILD, pdn_type);
-                ogs_assert(ret == 0);
-
-                /* Set Served-Party-IP-Address */
-                if ((pdn->pdn_type == OGS_DIAM_PDN_TYPE_IPV4 ||
-                     pdn->pdn_type == OGS_DIAM_PDN_TYPE_IPV4V6) &&
-                    pdn->ue_ip.ipv4) {
-                    ret = fd_msg_avp_new(ogs_diam_s6a_served_party_ip_address,
-                            0, &served_party_ip_address);
-                    ogs_assert(ret == 0);
-                    sin.sin_family = AF_INET;
-                    sin.sin_addr.s_addr = pdn->ue_ip.addr;
-                    ret = fd_msg_avp_value_encode(
-                            &sin, served_party_ip_address);
-                    ogs_assert(ret == 0);
-                    ret = fd_msg_avp_add(apn_configuration, MSG_BRW_LAST_CHILD,
-                            served_party_ip_address);
-                    ogs_assert(ret == 0);
-                }
-
-                if ((pdn->pdn_type == OGS_DIAM_PDN_TYPE_IPV6 ||
-                     pdn->pdn_type == OGS_DIAM_PDN_TYPE_IPV4V6) &&
-                    pdn->ue_ip.ipv6) {
-                    ret = fd_msg_avp_new(ogs_diam_s6a_served_party_ip_address,
-                            0, &served_party_ip_address);
-                    ogs_assert(ret == 0);
-                    sin6.sin6_family = AF_INET6;
-                    memcpy(sin6.sin6_addr.s6_addr,
-                            pdn->ue_ip.addr6, OGS_IPV6_LEN);
-                    ret = fd_msg_avp_value_encode(
-                            &sin6, served_party_ip_address);
-                    ogs_assert(ret == 0);
-                    ret = fd_msg_avp_add(apn_configuration, MSG_BRW_LAST_CHILD,
-                            served_party_ip_address);
-                    ogs_assert(ret == 0);
-                }
-
-                /* Set Service-Selection */
-                ret = fd_msg_avp_new(ogs_diam_s6a_service_selection, 0,
-                        &service_selection);
-                ogs_assert(ret == 0);
-                ogs_assert(pdn->name);
-                val.os.data = (uint8_t *)pdn->name;
-                val.os.len = strlen(pdn->name);
-                ret = fd_msg_avp_setvalue(service_selection, &val);
-                ogs_assert(ret == 0);
-                ret = fd_msg_avp_add(apn_configuration, 
-                        MSG_BRW_LAST_CHILD, service_selection);
-                ogs_assert(ret == 0);
-
-                /* Set the EPS Subscribed QoS Profile */
-                ret = fd_msg_avp_new(ogs_diam_s6a_eps_subscribed_qos_profile, 0,
-                        &eps_subscribed_qos_profile);
-                ogs_assert(ret == 0);
-
-                ret = fd_msg_avp_new(ogs_diam_s6a_qos_class_identifier, 0,
-                        &qos_class_identifier);
-                ogs_assert(ret == 0);
-                val.i32 = pdn->qos.qci;
-                ret = fd_msg_avp_setvalue(qos_class_identifier, &val);
-                ogs_assert(ret == 0);
-                ret = fd_msg_avp_add(eps_subscribed_qos_profile, 
-                        MSG_BRW_LAST_CHILD, qos_class_identifier);
-                ogs_assert(ret == 0);
-
-                        /* Set Allocation retention priority */
-                ret = fd_msg_avp_new(
-                        ogs_diam_s6a_allocation_retention_priority, 0,
-                        &allocation_retention_priority);
-                ogs_assert(ret == 0);
-
-                ret = fd_msg_avp_new(
-                        ogs_diam_s6a_priority_level, 0, &priority_level);
-                ogs_assert(ret == 0);
-                val.u32 = pdn->qos.arp.priority_level;
-                ret = fd_msg_avp_setvalue(priority_level, &val);
-                ogs_assert(ret == 0);
-                ret = fd_msg_avp_add(allocation_retention_priority, 
-                    MSG_BRW_LAST_CHILD, priority_level);
-                ogs_assert(ret == 0);
-
-                ret = fd_msg_avp_new(ogs_diam_s6a_pre_emption_capability, 0,
-                        &pre_emption_capability);
-                ogs_assert(ret == 0);
-                val.u32 = OGS_DIAM_PRE_EMPTION_DISABLED;
-                if (pdn->qos.arp.pre_emption_capability ==
-                        OGS_ARP_PRE_EMPTION_ENABLED)
-                    val.u32 = OGS_DIAM_PRE_EMPTION_ENABLED;
-                ret = fd_msg_avp_setvalue(pre_emption_capability, &val);
-                ogs_assert(ret == 0);
-                ret = fd_msg_avp_add(allocation_retention_priority, 
-                    MSG_BRW_LAST_CHILD, pre_emption_capability);
-                ogs_assert(ret == 0);
-
-                ret = fd_msg_avp_new(
-                        ogs_diam_s6a_pre_emption_vulnerability, 0,
-                        &pre_emption_vulnerability);
-                ogs_assert(ret == 0);
-                val.u32 = OGS_DIAM_PRE_EMPTION_DISABLED;
-                if (pdn->qos.arp.pre_emption_vulnerability ==
-                        OGS_ARP_PRE_EMPTION_ENABLED)
-                    val.u32 = OGS_DIAM_PRE_EMPTION_ENABLED;
-                ret = fd_msg_avp_setvalue(pre_emption_vulnerability, &val);
-                ogs_assert(ret == 0);
-                ret = fd_msg_avp_add(allocation_retention_priority, 
-                    MSG_BRW_LAST_CHILD, pre_emption_vulnerability);
-                ogs_assert(ret == 0);
-
-                ret = fd_msg_avp_add(eps_subscribed_qos_profile, 
-                    MSG_BRW_LAST_CHILD, allocation_retention_priority);
-                ogs_assert(ret == 0);
-
-                ret = fd_msg_avp_add(apn_configuration, 
-                    MSG_BRW_LAST_CHILD, eps_subscribed_qos_profile);
-                ogs_assert(ret == 0);
-
-                /* Set MIP6-Agent-Info */
-                if (pdn->pgw_ip.ipv4 || pdn->pgw_ip.ipv6) {
-                    ret = fd_msg_avp_new(ogs_diam_mip6_agent_info, 0,
-                                &mip6_agent_info);
-                    ogs_assert(ret == 0);
-
-                    if (pdn->pgw_ip.ipv4) {
-                        ret = fd_msg_avp_new(ogs_diam_mip_home_agent_address, 0,
-                                    &mip_home_agent_address);
-                        ogs_assert(ret == 0);
-                        sin.sin_family = AF_INET;
-                        sin.sin_addr.s_addr = pdn->pgw_ip.addr;
-                        ret = fd_msg_avp_value_encode (
-                                    &sin, mip_home_agent_address );
-                        ogs_assert(ret == 0);
-                        ret = fd_msg_avp_add(mip6_agent_info,
-                                MSG_BRW_LAST_CHILD, mip_home_agent_address);
-                        ogs_assert(ret == 0);
-                    }
-
-                    if (pdn->pgw_ip.ipv6) {
-                        ret = fd_msg_avp_new(ogs_diam_mip_home_agent_address, 0,
-                                    &mip_home_agent_address);
-                        ogs_assert(ret == 0);
-                        sin6.sin6_family = AF_INET6;
-                        memcpy(sin6.sin6_addr.s6_addr, pdn->pgw_ip.addr6,
-                                sizeof pdn->pgw_ip.addr6);
-                        ret = fd_msg_avp_value_encode (
-                                    &sin6, mip_home_agent_address );
-                        ogs_assert(ret == 0);
-                        ret = fd_msg_avp_add(mip6_agent_info,
-                                MSG_BRW_LAST_CHILD, mip_home_agent_address);
-                        ogs_assert(ret == 0);
-                    }
-
-                    ret = fd_msg_avp_add(apn_configuration, 
-                            MSG_BRW_LAST_CHILD, mip6_agent_info);
-                    ogs_assert(ret == 0);
-                }
-
-                /* Set AMBR */
-                if (pdn->ambr.downlink || pdn->ambr.uplink) {
-                    ret = fd_msg_avp_new(ogs_diam_s6a_ambr, 0, &avp_ambr);
-                    ogs_assert(ret == 0);
-                    ret = fd_msg_avp_new(ogs_diam_s6a_max_bandwidth_ul, 0,
-                                &avp_max_bandwidth_ul);
-                    ogs_assert(ret == 0);
-                    val.u32 = pdn->ambr.uplink;
-                    ret = fd_msg_avp_setvalue(avp_max_bandwidth_ul, &val);
-                    ogs_assert(ret == 0);
-                    ret = fd_msg_avp_add(avp_ambr, MSG_BRW_LAST_CHILD, 
-                                avp_max_bandwidth_ul);
-                    ogs_assert(ret == 0);
-                    ret = fd_msg_avp_new(ogs_diam_s6a_max_bandwidth_dl, 0,
-                                &avp_max_bandwidth_dl);
-                    ogs_assert(ret == 0);
-                    val.u32 = pdn->ambr.downlink;
-                    ret = fd_msg_avp_setvalue(avp_max_bandwidth_dl, &val);
-                    ogs_assert(ret == 0);
-                    ret = fd_msg_avp_add(avp_ambr, MSG_BRW_LAST_CHILD, 
-                                avp_max_bandwidth_dl);
-                    ogs_assert(ret == 0);
-
-                    ret = fd_msg_avp_add(apn_configuration, 
-                            MSG_BRW_LAST_CHILD, avp_ambr);
-                    ogs_assert(ret == 0);
-                }
-
-                ret = fd_msg_avp_add(apn_configuration_profile, 
-                        MSG_BRW_LAST_CHILD, apn_configuration);
+                ret = fd_msg_avp_add(apn_configuration, MSG_BRW_LAST_CHILD,
+                        served_party_ip_address);
                 ogs_assert(ret == 0);
             }
-            ret = fd_msg_avp_add(avp, MSG_BRW_LAST_CHILD, 
-                    apn_configuration_profile);
+
+            if ((pdn->pdn_type == OGS_DIAM_PDN_TYPE_IPV6 ||
+                 pdn->pdn_type == OGS_DIAM_PDN_TYPE_IPV4V6) &&
+                pdn->ue_ip.ipv6) {
+                ret = fd_msg_avp_new(ogs_diam_s6a_served_party_ip_address,
+                        0, &served_party_ip_address);
+                ogs_assert(ret == 0);
+                sin6.sin6_family = AF_INET6;
+                memcpy(sin6.sin6_addr.s6_addr, pdn->ue_ip.addr6, OGS_IPV6_LEN);
+                ret = fd_msg_avp_value_encode(&sin6, served_party_ip_address);
+                ogs_assert(ret == 0);
+                ret = fd_msg_avp_add(apn_configuration, MSG_BRW_LAST_CHILD,
+                        served_party_ip_address);
+                ogs_assert(ret == 0);
+            }
+
+            /* Set Service-Selection */
+            ret = fd_msg_avp_new(ogs_diam_s6a_service_selection, 0,
+                    &service_selection);
+            ogs_assert(ret == 0);
+            ogs_assert(pdn->name);
+            val.os.data = (uint8_t *)pdn->name;
+            val.os.len = strlen(pdn->name);
+            ret = fd_msg_avp_setvalue(service_selection, &val);
+            ogs_assert(ret == 0);
+            ret = fd_msg_avp_add(apn_configuration,
+                    MSG_BRW_LAST_CHILD, service_selection);
+            ogs_assert(ret == 0);
+
+            /* Set the EPS Subscribed QoS Profile */
+            ret = fd_msg_avp_new(ogs_diam_s6a_eps_subscribed_qos_profile, 0,
+                    &eps_subscribed_qos_profile);
+            ogs_assert(ret == 0);
+
+            ret = fd_msg_avp_new(ogs_diam_s6a_qos_class_identifier, 0,
+                    &qos_class_identifier);
+            ogs_assert(ret == 0);
+            val.i32 = pdn->qos.qci;
+            ret = fd_msg_avp_setvalue(qos_class_identifier, &val);
+            ogs_assert(ret == 0);
+            ret = fd_msg_avp_add(eps_subscribed_qos_profile, 
+                    MSG_BRW_LAST_CHILD, qos_class_identifier);
+            ogs_assert(ret == 0);
+
+                    /* Set Allocation retention priority */
+            ret = fd_msg_avp_new(ogs_diam_s6a_allocation_retention_priority, 0,
+                    &allocation_retention_priority);
+            ogs_assert(ret == 0);
+
+            ret = fd_msg_avp_new(
+                    ogs_diam_s6a_priority_level, 0, &priority_level);
+            ogs_assert(ret == 0);
+            val.u32 = pdn->qos.arp.priority_level;
+            ret = fd_msg_avp_setvalue(priority_level, &val);
+            ogs_assert(ret == 0);
+            ret = fd_msg_avp_add(allocation_retention_priority,
+                MSG_BRW_LAST_CHILD, priority_level);
+            ogs_assert(ret == 0);
+
+            ret = fd_msg_avp_new(ogs_diam_s6a_pre_emption_capability, 0,
+                    &pre_emption_capability);
+            ogs_assert(ret == 0);
+            val.u32 = OGS_DIAM_PRE_EMPTION_DISABLED;
+            if (pdn->qos.arp.pre_emption_capability ==
+                    OGS_ARP_PRE_EMPTION_ENABLED)
+                val.u32 = OGS_DIAM_PRE_EMPTION_ENABLED;
+            ret = fd_msg_avp_setvalue(pre_emption_capability, &val);
+            ogs_assert(ret == 0);
+            ret = fd_msg_avp_add(allocation_retention_priority,
+                MSG_BRW_LAST_CHILD, pre_emption_capability);
+            ogs_assert(ret == 0);
+
+            ret = fd_msg_avp_new(ogs_diam_s6a_pre_emption_vulnerability, 0,
+                    &pre_emption_vulnerability);
+            ogs_assert(ret == 0);
+            val.u32 = OGS_DIAM_PRE_EMPTION_DISABLED;
+            if (pdn->qos.arp.pre_emption_vulnerability ==
+                    OGS_ARP_PRE_EMPTION_ENABLED)
+                val.u32 = OGS_DIAM_PRE_EMPTION_ENABLED;
+            ret = fd_msg_avp_setvalue(pre_emption_vulnerability, &val);
+            ogs_assert(ret == 0);
+            ret = fd_msg_avp_add(allocation_retention_priority,
+                MSG_BRW_LAST_CHILD, pre_emption_vulnerability);
+            ogs_assert(ret == 0);
+
+            ret = fd_msg_avp_add(eps_subscribed_qos_profile,
+                MSG_BRW_LAST_CHILD, allocation_retention_priority);
+            ogs_assert(ret == 0);
+
+            ret = fd_msg_avp_add(apn_configuration,
+                MSG_BRW_LAST_CHILD, eps_subscribed_qos_profile);
+            ogs_assert(ret == 0);
+
+            /* Set MIP6-Agent-Info */
+            if (pdn->pgw_ip.ipv4 || pdn->pgw_ip.ipv6) {
+                ret = fd_msg_avp_new(ogs_diam_mip6_agent_info, 0,
+                            &mip6_agent_info);
+                ogs_assert(ret == 0);
+
+                if (pdn->pgw_ip.ipv4) {
+                    ret = fd_msg_avp_new(ogs_diam_mip_home_agent_address, 0,
+                                &mip_home_agent_address);
+                    ogs_assert(ret == 0);
+                    sin.sin_family = AF_INET;
+                    sin.sin_addr.s_addr = pdn->pgw_ip.addr;
+                    ret = fd_msg_avp_value_encode (
+                                &sin, mip_home_agent_address );
+                    ogs_assert(ret == 0);
+                    ret = fd_msg_avp_add(mip6_agent_info,
+                            MSG_BRW_LAST_CHILD, mip_home_agent_address);
+                    ogs_assert(ret == 0);
+                }
+
+                if (pdn->pgw_ip.ipv6) {
+                    ret = fd_msg_avp_new(ogs_diam_mip_home_agent_address, 0,
+                                &mip_home_agent_address);
+                    ogs_assert(ret == 0);
+                    sin6.sin6_family = AF_INET6;
+                    memcpy(sin6.sin6_addr.s6_addr, pdn->pgw_ip.addr6,
+                            sizeof pdn->pgw_ip.addr6);
+                    ret = fd_msg_avp_value_encode (
+                                &sin6, mip_home_agent_address );
+                    ogs_assert(ret == 0);
+                    ret = fd_msg_avp_add(mip6_agent_info,
+                            MSG_BRW_LAST_CHILD, mip_home_agent_address);
+                    ogs_assert(ret == 0);
+                }
+
+                ret = fd_msg_avp_add(apn_configuration, 
+                        MSG_BRW_LAST_CHILD, mip6_agent_info);
+                ogs_assert(ret == 0);
+            }
+
+            /* Set AMBR */
+            if (pdn->ambr.downlink || pdn->ambr.uplink) {
+                ret = fd_msg_avp_new(ogs_diam_s6a_ambr, 0, &avp_ambr);
+                ogs_assert(ret == 0);
+                ret = fd_msg_avp_new(ogs_diam_s6a_max_bandwidth_ul, 0,
+                            &avp_max_bandwidth_ul);
+                ogs_assert(ret == 0);
+                val.u32 = pdn->ambr.uplink;
+                ret = fd_msg_avp_setvalue(avp_max_bandwidth_ul, &val);
+                ogs_assert(ret == 0);
+                ret = fd_msg_avp_add(avp_ambr, MSG_BRW_LAST_CHILD,
+                            avp_max_bandwidth_ul);
+                ogs_assert(ret == 0);
+                ret = fd_msg_avp_new(ogs_diam_s6a_max_bandwidth_dl, 0,
+                            &avp_max_bandwidth_dl);
+                ogs_assert(ret == 0);
+                val.u32 = pdn->ambr.downlink;
+                ret = fd_msg_avp_setvalue(avp_max_bandwidth_dl, &val);
+                ogs_assert(ret == 0);
+                ret = fd_msg_avp_add(avp_ambr, MSG_BRW_LAST_CHILD,
+                            avp_max_bandwidth_dl);
+                ogs_assert(ret == 0);
+
+                ret = fd_msg_avp_add(apn_configuration, 
+                        MSG_BRW_LAST_CHILD, avp_ambr);
+                ogs_assert(ret == 0);
+            }
+
+            ret = fd_msg_avp_add(apn_configuration_profile,
+                    MSG_BRW_LAST_CHILD, apn_configuration);
             ogs_assert(ret == 0);
         }
+        ret = fd_msg_avp_add(avp, MSG_BRW_LAST_CHILD,
+                apn_configuration_profile);
+        ogs_assert(ret == 0);
 
         ret = fd_msg_avp_add(ans, MSG_BRW_LAST_CHILD, avp);
         ogs_assert(ret == 0);
