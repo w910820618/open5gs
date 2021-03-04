@@ -181,25 +181,25 @@ ogs_pkbuf_t *mme_s11_build_create_session_request(
     /* If we started with both addrs (IPV4V6) but the above code 
      * (pdn_type & sess->request_type) truncates us down to just one,
      * we need to change position of addresses in struct. */
-    if (req->pdn_type.u8 == OGS_GTP_PDN_TYPE_IPV4 &&
-            session->session_type == OGS_DIAM_PDN_TYPE_IPV4V6) {
+    if (req->pdn_type.u8 == OGS_PDU_SESSION_TYPE_IPV4 &&
+        session->session_type == OGS_DIAM_PDN_TYPE_IPV4V6) {
 	    uint32_t addr = session->paa.both.addr;
 	    session->paa.addr = addr;
     }
-    if (req->pdn_type.u8 == OGS_GTP_PDN_TYPE_IPV6 &&
-            session->session_type == OGS_DIAM_PDN_TYPE_IPV4V6) {
+    if (req->pdn_type.u8 == OGS_PDU_SESSION_TYPE_IPV6 &&
+        session->session_type == OGS_DIAM_PDN_TYPE_IPV4V6) {
 	    uint8_t addr[16];
 	    memcpy(&addr, session->paa.both.addr6, OGS_IPV6_LEN);
 	    memcpy(session->paa.addr6, &addr, OGS_IPV6_LEN);
     }
 
-    session->paa.pdn_type = req->pdn_type.u8;
+    session->paa.session_type = req->pdn_type.u8;
     req->pdn_address_allocation.data = &session->paa;
-    if (req->pdn_type.u8 == OGS_GTP_PDN_TYPE_IPV4)
+    if (req->pdn_type.u8 == OGS_PDU_SESSION_TYPE_IPV4)
         req->pdn_address_allocation.len = OGS_PAA_IPV4_LEN;
-    else if (req->pdn_type.u8 == OGS_GTP_PDN_TYPE_IPV6)
+    else if (req->pdn_type.u8 == OGS_PDU_SESSION_TYPE_IPV6)
         req->pdn_address_allocation.len = OGS_PAA_IPV6_LEN;
-    else if (req->pdn_type.u8 == OGS_GTP_PDN_TYPE_IPV4V6)
+    else if (req->pdn_type.u8 == OGS_PDU_SESSION_TYPE_IPV4V6)
         req->pdn_address_allocation.len = OGS_PAA_IPV4V6_LEN;
     else
         ogs_assert_if_reached();

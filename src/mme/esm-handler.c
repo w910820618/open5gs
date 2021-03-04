@@ -155,7 +155,7 @@ int esm_handle_information_response(mme_sess_t *sess,
         ogs_debug("    APN[%s]", sess->session->name);
 
         if (SESSION_CONTEXT_IS_AVAILABLE(mme_ue) &&
-            OGS_GTP_PDN_TYPE_IS_VALID(sess->session->paa.pdn_type)) {
+            OGS_PDU_SESSION_TYPE_IS_VALID(sess->session->paa.session_type)) {
             mme_csmap_t *csmap = mme_csmap_find_by_tai(&mme_ue->tai);
             mme_ue->csmap = csmap;
 

@@ -159,8 +159,8 @@ void mme_s11_handle_create_session_response(
         memcpy(&paa, rsp->pdn_address_allocation.data,
                 rsp->pdn_address_allocation.len);
 
-        if (!OGS_GTP_PDN_TYPE_IS_VALID(paa.pdn_type)) {
-            ogs_error("Unknown PDN Type[%u]", paa.pdn_type);
+        if (!OGS_PDU_SESSION_TYPE_IS_VALID(paa.session_type)) {
+            ogs_error("Unknown PDN Type[%u]", paa.session_type);
             cause_value = OGS_GTP_CAUSE_MANDATORY_IE_INCORRECT;
         }
     }
@@ -234,15 +234,17 @@ void mme_s11_handle_create_session_response(
         mme_ue->csmap = csmap;
 
         if (csmap) {
-            ogs_assert(OGS_GTP_PDN_TYPE_IS_VALID(session->paa.pdn_type));
+            ogs_assert(OGS_PDU_SESSION_TYPE_IS_VALID(
+                        session->paa.session_type));
             sgsap_send_location_update_request(mme_ue);
         } else {
-            ogs_assert(OGS_GTP_PDN_TYPE_IS_VALID(session->paa.pdn_type));
+            ogs_assert(OGS_PDU_SESSION_TYPE_IS_VALID(
+                        session->paa.session_type));
             nas_eps_send_attach_accept(mme_ue);
         }
 
     } else {
-        ogs_assert(OGS_GTP_PDN_TYPE_IS_VALID(session->paa.pdn_type));
+        ogs_assert(OGS_PDU_SESSION_TYPE_IS_VALID(session->paa.session_type));
         nas_eps_send_activate_default_bearer_context_request(bearer);
     }
 }

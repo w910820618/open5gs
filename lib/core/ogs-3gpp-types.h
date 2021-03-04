@@ -218,26 +218,17 @@ char *ogs_ipv6_to_string(uint8_t *addr6);
 typedef struct ogs_paa_s {
 ED2(uint8_t spare:5;,
 /* 8.34 PDN Type  */
-#define OGS_GTP_PDN_TYPE_IPV4                   OGS_PDU_SESSION_TYPE_IPV4
-#define OGS_GTP_PDN_TYPE_IPV6                   OGS_PDU_SESSION_TYPE_IPV6
-#define OGS_GTP_PDN_TYPE_IPV4V6                 OGS_PDU_SESSION_TYPE_IPV4V6
-#define OGS_GTP_PDN_TYPE_NON_IP                 OGS_PDU_SESSION_TYPE_NONIP
-#define OGS_PFCP_PDN_TYPE_IPV4                  OGS_PDU_SESSION_TYPE_IPV4
-#define OGS_PFCP_PDN_TYPE_IPV6                  OGS_PDU_SESSION_TYPE_IPV6
-#define OGS_PFCP_PDN_TYPE_IPV4V6                OGS_PDU_SESSION_TYPE_IPV4V6
-#define OGS_PFCP_PDN_TYPE_NONIP                 OGS_PDU_SESSION_TYPE_NONIP
+#define OGS_PDU_SESSION_TYPE_IS_VALID(x) \
+        ((x) == OGS_PDU_SESSION_TYPE_IPV4 || \
+         (x) == OGS_PDU_SESSION_TYPE_IPV6 || \
+         (x) == OGS_PDU_SESSION_TYPE_IPV4V6) \
 
-#define OGS_GTP_PDN_TYPE_IS_VALID(x) \
-        ((x) == OGS_GTP_PDN_TYPE_IPV4 || \
-         (x) == OGS_GTP_PDN_TYPE_IPV6 || \
-         (x) == OGS_GTP_PDN_TYPE_IPV4V6) \
-
-    uint8_t pdn_type:3;)
+    uint8_t session_type:3;)
     union {
-        /* GTP_PDN_TYPE_IPV4 */
+        /* PDU_SESSION_TYPE_IPV4 */
         uint32_t addr;      
 
-        /* GTP_PDN_TYPE_IPV6 */
+        /* PDU_SESSION_TYPE_IPV6 */
         struct {
             /* the IPv6 Prefix Length */
             uint8_t len;
@@ -245,7 +236,7 @@ ED2(uint8_t spare:5;,
             uint8_t addr6[OGS_IPV6_LEN];
         };
 
-        /* GTP_PDN_TYPE_BOTH */
+        /* PDU_SESSION_TYPE_IPV4V6 */
         struct {
             struct {
                 /* the IPv6 Prefix Length */

@@ -236,7 +236,7 @@ void sgwc_s11_handle_create_session_request(
 
     /* Set PDN Type */
     sess->session.session_type = req->pdn_type.u8;
-    sess->session.paa.pdn_type = req->pdn_type.u8;
+    sess->session.paa.session_type = req->pdn_type.u8;
 
     /* Remove all previous bearer */
     sgwc_bearer_remove_all(sess);
