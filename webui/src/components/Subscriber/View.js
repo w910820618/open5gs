@@ -266,16 +266,16 @@ const View = ({ visible, disableOnClickOutside, subscriber, onEdit, onDelete, on
                 <div key={index}>
                   {slice.sd === undefined ?
                     <div className="header">
-                      S-NSSAI - SST:{slice.sst}
+                      SST:{slice.sst}
                     </div> :
                     <div className="header">
-                      S-NSSAI - SST:{slice.sst} SD:{slice.sd}
+                      SST:{slice.sst} SD:{slice.sd}
                     </div>
                   }
                   <div className="body" style={{color:oc.gray[5]}}>
-                    <div className="medium_data">APN</div>
+                    <div className="medium_data">DNN/APN</div>
                     <div className="medium_data">Type</div>
-                    <div className="small_data">QCI</div>
+                    <div className="small_data">5QI/QCI</div>
                     <div className="small_data">ARP</div>
                     <div className="medium_data">Capability</div>
                     <div className="medium_data">Vulnerablility</div>

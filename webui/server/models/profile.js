@@ -28,12 +28,12 @@ const Profile = new Schema({
     sd: String,
     default_indicator: { $type: Boolean, default: true },
     session: [{
-      name: { $type: String, required: true },
+      name: { $type: String, required: true }, // DNN or APN
       type: {
-        $type: Number, default: 2 // IPv4, IPv6 and dualstack IPv4v6
+        $type: Number, default: 2 // PDU Session Type - IPv4v6(3)
       },
       qos: {
-        index: Number,
+        index: Number, // 5QI or QCI
         arp: {
           priority_level: Number,
           pre_emption_capability: {

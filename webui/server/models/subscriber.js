@@ -20,24 +20,6 @@ const Subscriber = new Schema({
     sqn: Schema.Types.Long
   },
 
-  access_restriction_data: { 
-    $type: Number, 
-    default: 32 // Handover to Non-3GPP Access Not Allowed
-  },
-  subscriber_status: { 
-    $type: Number,
-    default: 0  // Service Granted
-  },
-  network_access_mode: {
-    $type: Number,
-    default: 2 // Only Packet
-  },
-
-  subscribed_rau_tau_timer: {
-    $type: Number,
-    default: 12 // minites
-  },
-
   ambr: {
     downlink: { value: Number, unit: Number },
     uplink: { value: Number, unit: Number }
@@ -48,12 +30,12 @@ const Subscriber = new Schema({
     sd: String,
     default_indicator: { $type: Boolean, default: true },
     session: [{
-      name: { $type: String, required: true },
+      name: { $type: String, required: true }, // DNN or APN
       type: {
-        $type: Number, default: 2 // IPv4, IPv6 and dualstack IPv4v6
+        $type: Number, default: 2 // PDU Session Type : IPv4v6(3)
       },
       qos: {
-        index: Number, // QCI or 5QI
+        index: Number, // 5QI or QCI
         arp: {
           priority_level: Number,
           pre_emption_capability: {
@@ -103,7 +85,26 @@ const Subscriber = new Schema({
         },
       }]
     }]
-  }]
+  }],
+
+  access_restriction_data: {
+    $type: Number,
+    default: 32 // Handover to Non-3GPP Access Not Allowed
+  },
+  subscriber_status: {
+    $type: Number,
+    default: 0  // Service Granted
+  },
+  network_access_mode: {
+    $type: Number,
+    default: 2 // Only Packet
+  },
+
+  subscribed_rau_tau_timer: {
+    $type: Number,
+    default: 12 // minites
+  }
+
 }, { typeKey: '$type' });
 
 module.exports = mongoose.model('Subscriber', Subscriber);

@@ -160,7 +160,7 @@ const schema = {
                   "properties": {
                     "index": {
                       "type": "number",
-                      "title": "QoS Class Identifier (QCI)*",
+                      "title": "5QI/QCI*",
                       "enum": [ 1, 2, 3, 4, 65, 66, 67, 75, 71, 72, 73, 74, 76, 5, 6, 7, 8, 9, 69, 70, 79, 80, 82, 83, 84, 85, 86 ],
                       "default": 5,
                     },
@@ -171,10 +171,8 @@ const schema = {
                         "priority_level": {
                           "type": "number",
                           "title": "ARP Priority Level (1-15)*",
+                          "enum": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
                           "default": 1,
-                          "minimum": 1,
-                          "maximum": 15,
-                          "required": true
                         },
                         "pre_emption_capability": {
                           "type": "number",
@@ -316,7 +314,7 @@ const schema = {
                         "properties": {
                           "index": {
                             "type": "number",
-                            "title": "QoS Class Identifier (QCI)*",
+                            "title": "5QI/QCI*",
                             "enum": [ 1, 2, 3, 4, 65, 66, 67, 75, 71, 72, 73, 74, 76, 5, 6, 7, 8, 9, 69, 70, 79, 80, 82, 83, 84, 85, 86 ],
                             "default": 1,
                           },
@@ -327,10 +325,8 @@ const schema = {
                               "priority_level": {
                                 "type": "number",
                                 "title": "ARP Priority Level (1-15)*",
+                                "enum": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
                                 "default": 2,
-                                "minimum": 1,
-                                "maximum": 15,
-                                "required": true
                               },
                               "pre_emption_capability": {
                                 "type": "number",
