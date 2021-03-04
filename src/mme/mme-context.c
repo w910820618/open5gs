@@ -2286,7 +2286,7 @@ void mme_ue_remove(mme_ue_t *mme_ue)
     mme_ue_deassociate(mme_ue);
 
     mme_sess_remove_all(mme_ue);
-    mme_pdn_remove_all(mme_ue);
+    mme_session_remove_all(mme_ue);
 
     mme_ebi_pool_final(mme_ue);
 
@@ -3076,7 +3076,7 @@ mme_bearer_t *mme_bearer_cycle(mme_bearer_t *bearer)
     return ogs_pool_cycle(&mme_bearer_pool, bearer);
 }
 
-void mme_pdn_remove_all(mme_ue_t *mme_ue)
+void mme_session_remove_all(mme_ue_t *mme_ue)
 {
     int i;
 
@@ -3090,7 +3090,7 @@ void mme_pdn_remove_all(mme_ue_t *mme_ue)
     mme_ue->num_of_session = 0;
 }
 
-ogs_session_t *mme_pdn_find_by_apn(mme_ue_t *mme_ue, char *apn)
+ogs_session_t *mme_session_find_by_apn(mme_ue_t *mme_ue, char *apn)
 {
     ogs_session_t *session = NULL;
     int i = 0;
@@ -3108,7 +3108,7 @@ ogs_session_t *mme_pdn_find_by_apn(mme_ue_t *mme_ue, char *apn)
     return NULL;
 }
 
-ogs_session_t *mme_default_pdn(mme_ue_t *mme_ue)
+ogs_session_t *mme_default_session(mme_ue_t *mme_ue)
 {
     ogs_session_t *session = NULL;
     int i = 0;

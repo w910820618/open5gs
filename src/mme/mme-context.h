@@ -794,9 +794,9 @@ mme_bearer_t *mme_bearer_first(mme_sess_t *sess);
 mme_bearer_t *mme_bearer_next(mme_bearer_t *bearer);
 mme_bearer_t *mme_bearer_cycle(mme_bearer_t *bearer);
 
-void mme_pdn_remove_all(mme_ue_t *mme_ue);
-ogs_session_t *mme_pdn_find_by_apn(mme_ue_t *mme_ue, char *apn);
-ogs_session_t *mme_default_pdn(mme_ue_t *mme_ue);
+void mme_session_remove_all(mme_ue_t *mme_ue);
+ogs_session_t *mme_session_find_by_apn(mme_ue_t *mme_ue, char *apn);
+ogs_session_t *mme_default_session(mme_ue_t *mme_ue);
 
 int mme_find_served_tai(ogs_eps_tai_t *tai);
 

@@ -64,7 +64,7 @@ void mme_s6a_handle_ula(mme_ue_t *mme_ue,
 
     memcpy(&mme_ue->ambr, &subscription_data->ambr, sizeof(ogs_bitrate_t));
 
-    mme_pdn_remove_all(mme_ue);
+    mme_session_remove_all(mme_ue);
 
     mme_ue->num_of_session = slice_data->num_of_session;
     mme_ue->context_identifier = slice_data->context_identifier;
