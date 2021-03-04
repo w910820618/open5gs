@@ -501,6 +501,10 @@ typedef struct ogs_slice_data_s {
     ogs_pdn_t pdn[OGS_MAX_NUM_OF_SESS];
 } ogs_slice_data_t;
 
+ogs_slice_data_t *ogs_slice_find_by_s_nssai(
+        ogs_slice_data_t *slice_data, int num_of_slice_data,
+        ogs_s_nssai_t *s_nssai);
+
 typedef struct ogs_subscription_data_s {
 #define OGS_ACCESS_RESTRICTION_UTRAN_NOT_ALLOWED                (1)
 #define OGS_ACCESS_RESTRICTION_GERAN_NOT_ALLOWED                (1<<1)
@@ -535,9 +539,6 @@ typedef struct ogs_subscription_data_s {
     } msisdn[OGS_MAX_NUM_OF_MSISDN];
 } ogs_subscription_data_t;
 
-ogs_slice_data_t *ogs_slice_find_by_s_nssai(
-        ogs_slice_data_t *slice_data, int num_of_slice_data,
-        ogs_s_nssai_t *s_nssai);
 void ogs_subscription_data_free(ogs_subscription_data_t *subscription_data);
 
 typedef struct ogs_session_data_s {
