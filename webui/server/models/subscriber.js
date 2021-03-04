@@ -32,7 +32,7 @@ const Subscriber = new Schema({
     session: [{
       name: { $type: String, required: true }, // DNN or APN
       type: {
-        $type: Number, default: 2 // PDU Session Type : IPv4v6(3)
+        $type: Number, default: 3 // PDU Session Type : IPv4v6(3)
       },
       qos: {
         index: Number, // 5QI or QCI
