@@ -780,19 +780,6 @@ int gmm_handle_ul_nas_transport(amf_ue_t *amf_ue,
             }
 
             if (!selected_slice) {
-                int i;
-                for (i = 0; i < amf_ue->requested_nssai.num_of_s_nssai; i++) {
-                    selected_slice = ogs_slice_find_by_s_nssai(
-                        amf_ue->slice, amf_ue->num_of_slice,
-                        (ogs_s_nssai_t *)&amf_ue->requested_nssai.s_nssai[i]);
-
-                    if (selected_slice) {
-                        break;
-                    }
-                }
-            }
-
-            if (!selected_slice) {
                 ogs_error("[%s] No S-NSSAI", amf_ue->supi);
                 nas_5gs_send_gmm_status(amf_ue,
                     OGS_5GMM_CAUSE_INSUFFICIENT_RESOURCES_FOR_SPECIFIC_SLICE);

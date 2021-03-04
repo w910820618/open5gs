@@ -635,7 +635,9 @@ ogs_pkbuf_t *testgmm_build_ul_nas_transport(test_sess_t *test_sess,
         ul_nas_transport->presencemask |=
                 OGS_NAS_5GS_UL_NAS_TRANSPORT_S_NSSAI_PRESENT;
         ogs_nas_build_s_nssai(
-                nas_s_nssai, &test_ue->allowed_nssai.s_nssai[0]);
+                nas_s_nssai,
+                &test_ue->allowed_nssai.
+                    s_nssai[test_ue->allowed_nssai.num_of_s_nssai-1]);
     }
 
     if (test_sess->ul_nas_transport_param.dnn) {
