@@ -164,21 +164,21 @@ bool smf_npcf_smpolicycontrol_handle_create(
                     if (AuthDefQos->arp->preempt_cap ==
                         OpenAPI_preemption_capability_NOT_PREEMPT)
                         sess->session.qos.arp.pre_emption_capability =
-                            OGS_ARP_PRE_EMPTION_DISABLED;
+                            OGS_5GC_PRE_EMPTION_DISABLED;
                     else if (AuthDefQos->arp->preempt_cap ==
                         OpenAPI_preemption_capability_MAY_PREEMPT)
                         sess->session.qos.arp.pre_emption_capability =
-                            OGS_ARP_PRE_EMPTION_ENABLED;
+                            OGS_5GC_PRE_EMPTION_ENABLED;
                     ogs_assert(sess->session.qos.arp.pre_emption_capability);
 
                     if (AuthDefQos->arp->preempt_vuln ==
                         OpenAPI_preemption_vulnerability_NOT_PREEMPTABLE)
                         sess->session.qos.arp.pre_emption_vulnerability =
-                            OGS_ARP_PRE_EMPTION_DISABLED;
+                            OGS_5GC_PRE_EMPTION_DISABLED;
                     else if (AuthDefQos->arp->preempt_vuln ==
                         OpenAPI_preemption_vulnerability_PREEMPTABLE)
                         sess->session.qos.arp.pre_emption_vulnerability =
-                            OGS_ARP_PRE_EMPTION_ENABLED;
+                            OGS_5GC_PRE_EMPTION_ENABLED;
                     ogs_assert(sess->session.qos.arp.pre_emption_vulnerability);
                 }
             }
@@ -306,21 +306,21 @@ bool smf_npcf_smpolicycontrol_handle_create(
                 if (QosData->arp->preempt_cap ==
                     OpenAPI_preemption_capability_NOT_PREEMPT)
                     pcc_rule->qos.arp.pre_emption_capability =
-                        OGS_ARP_PRE_EMPTION_DISABLED;
+                        OGS_5GC_PRE_EMPTION_DISABLED;
                 else if (QosData->arp->preempt_cap ==
                     OpenAPI_preemption_capability_MAY_PREEMPT)
                     pcc_rule->qos.arp.pre_emption_capability =
-                        OGS_ARP_PRE_EMPTION_ENABLED;
+                        OGS_5GC_PRE_EMPTION_ENABLED;
                 ogs_assert(pcc_rule->qos.arp.pre_emption_capability);
 
                 if (QosData->arp->preempt_vuln ==
                     OpenAPI_preemption_vulnerability_NOT_PREEMPTABLE)
                     pcc_rule->qos.arp.pre_emption_vulnerability =
-                        OGS_ARP_PRE_EMPTION_DISABLED;
+                        OGS_5GC_PRE_EMPTION_DISABLED;
                 else if (QosData->arp->preempt_vuln ==
                     OpenAPI_preemption_vulnerability_PREEMPTABLE)
                     pcc_rule->qos.arp.pre_emption_vulnerability =
-                        OGS_ARP_PRE_EMPTION_ENABLED;
+                        OGS_5GC_PRE_EMPTION_ENABLED;
                 ogs_assert(pcc_rule->qos.arp.pre_emption_vulnerability);
             }
 

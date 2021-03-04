@@ -624,10 +624,10 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
             ret = fd_msg_avp_new(ogs_diam_s6a_pre_emption_capability, 0,
                     &pre_emption_capability);
             ogs_assert(ret == 0);
-            val.u32 = OGS_DIAM_PRE_EMPTION_DISABLED;
+            val.u32 = OGS_EPC_PRE_EMPTION_DISABLED;
             if (session->qos.arp.pre_emption_capability ==
-                    OGS_ARP_PRE_EMPTION_ENABLED)
-                val.u32 = OGS_DIAM_PRE_EMPTION_ENABLED;
+                    OGS_5GC_PRE_EMPTION_ENABLED)
+                val.u32 = OGS_EPC_PRE_EMPTION_ENABLED;
             ret = fd_msg_avp_setvalue(pre_emption_capability, &val);
             ogs_assert(ret == 0);
             ret = fd_msg_avp_add(allocation_retention_priority,
@@ -637,10 +637,10 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
             ret = fd_msg_avp_new(ogs_diam_s6a_pre_emption_vulnerability, 0,
                     &pre_emption_vulnerability);
             ogs_assert(ret == 0);
-            val.u32 = OGS_DIAM_PRE_EMPTION_DISABLED;
+            val.u32 = OGS_EPC_PRE_EMPTION_DISABLED;
             if (session->qos.arp.pre_emption_vulnerability ==
-                    OGS_ARP_PRE_EMPTION_ENABLED)
-                val.u32 = OGS_DIAM_PRE_EMPTION_ENABLED;
+                    OGS_5GC_PRE_EMPTION_ENABLED)
+                val.u32 = OGS_EPC_PRE_EMPTION_ENABLED;
             ret = fd_msg_avp_setvalue(pre_emption_vulnerability, &val);
             ogs_assert(ret == 0);
             ret = fd_msg_avp_add(allocation_retention_priority,

@@ -165,11 +165,11 @@ ogs_pkbuf_t *ngap_build_pdu_session_resource_setup_request_transfer(
         allocationAndRetentionPriority->priorityLevelARP =
             qos_flow->qos.arp.priority_level;
         if (qos_flow->qos.arp.pre_emption_capability ==
-                OGS_ARP_PRE_EMPTION_ENABLED)
+                OGS_5GC_PRE_EMPTION_ENABLED)
             allocationAndRetentionPriority->pre_emptionCapability =
                 NGAP_Pre_emptionCapability_may_trigger_pre_emption;
         if (qos_flow->qos.arp.pre_emption_vulnerability ==
-                OGS_ARP_PRE_EMPTION_ENABLED)
+                OGS_5GC_PRE_EMPTION_ENABLED)
             allocationAndRetentionPriority->pre_emptionVulnerability =
                 NGAP_Pre_emptionVulnerability_pre_emptable;
 
@@ -254,11 +254,11 @@ ogs_pkbuf_t *ngap_build_qos_flow_resource_modify_request_transfer(
     allocationAndRetentionPriority->priorityLevelARP =
         qos_flow->qos.arp.priority_level;
     if (qos_flow->qos.arp.pre_emption_capability ==
-            OGS_ARP_PRE_EMPTION_ENABLED)
+            OGS_5GC_PRE_EMPTION_ENABLED)
         allocationAndRetentionPriority->pre_emptionCapability =
             NGAP_Pre_emptionCapability_may_trigger_pre_emption;
     if (qos_flow->qos.arp.pre_emption_vulnerability ==
-            OGS_ARP_PRE_EMPTION_ENABLED)
+            OGS_5GC_PRE_EMPTION_ENABLED)
         allocationAndRetentionPriority->pre_emptionVulnerability =
             NGAP_Pre_emptionVulnerability_pre_emptable;
 

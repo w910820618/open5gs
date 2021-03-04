@@ -285,11 +285,11 @@ typedef struct ogs_qos_s {
  * enable Pre-emption Capability/Vulnerablility
  * in Default Bearer
  */
-#define OGS_DIAM_PRE_EMPTION_DISABLED                       1
-#define OGS_DIAM_PRE_EMPTION_ENABLED                        0
+#define OGS_EPC_PRE_EMPTION_DISABLED                        1
+#define OGS_EPC_PRE_EMPTION_ENABLED                         0
 
-#define OGS_ARP_PRE_EMPTION_DISABLED                        1
-#define OGS_ARP_PRE_EMPTION_ENABLED                         2
+#define OGS_5GC_PRE_EMPTION_DISABLED                        1
+#define OGS_5GC_PRE_EMPTION_ENABLED                         2
         uint8_t     pre_emption_capability;
         uint8_t     pre_emption_vulnerability;
     } arp;

@@ -87,17 +87,17 @@ ogs_sbi_request_t *smf_npcf_smpolicycontrol_build_create(
 
     memset(&Arp, 0, sizeof(Arp));
     if (sess->session.qos.arp.pre_emption_capability ==
-            OGS_ARP_PRE_EMPTION_ENABLED)
+            OGS_5GC_PRE_EMPTION_ENABLED)
         Arp.preempt_cap = OpenAPI_preemption_capability_MAY_PREEMPT;
     else if (sess->session.qos.arp.pre_emption_capability ==
-            OGS_ARP_PRE_EMPTION_DISABLED)
+            OGS_5GC_PRE_EMPTION_DISABLED)
         Arp.preempt_cap = OpenAPI_preemption_capability_NOT_PREEMPT;
     ogs_assert(Arp.preempt_cap);
     if (sess->session.qos.arp.pre_emption_vulnerability ==
-            OGS_ARP_PRE_EMPTION_ENABLED)
+            OGS_5GC_PRE_EMPTION_ENABLED)
         Arp.preempt_vuln = OpenAPI_preemption_vulnerability_PREEMPTABLE;
     else if (sess->session.qos.arp.pre_emption_vulnerability ==
-            OGS_ARP_PRE_EMPTION_DISABLED)
+            OGS_5GC_PRE_EMPTION_DISABLED)
         Arp.preempt_vuln = OpenAPI_preemption_vulnerability_NOT_PREEMPTABLE;
     ogs_assert(Arp.preempt_vuln);
     Arp.priority_level = sess->session.qos.arp.priority_level;

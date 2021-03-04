@@ -693,7 +693,7 @@ static void smf_gx_cca_cb(void *data, struct msg **msg)
             } else {
                 gx_message->session_data.
                     session.qos.arp.pre_emption_capability =
-                        OGS_DIAM_PRE_EMPTION_DISABLED;
+                        OGS_EPC_PRE_EMPTION_DISABLED;
             }
 
             ret = fd_avp_search_avp(avpch1,
@@ -708,7 +708,7 @@ static void smf_gx_cca_cb(void *data, struct msg **msg)
             } else {
                 gx_message->session_data.
                     session.qos.arp.pre_emption_vulnerability =
-                        OGS_DIAM_PRE_EMPTION_ENABLED;
+                        OGS_EPC_PRE_EMPTION_ENABLED;
             }
         }
     }
@@ -1252,7 +1252,7 @@ static int decode_pcc_rule_definition(
                             hdr->avp_value->u32;
                 } else {
                     pcc_rule->qos.arp.pre_emption_capability =
-                        OGS_DIAM_PRE_EMPTION_DISABLED;
+                        OGS_EPC_PRE_EMPTION_DISABLED;
                 }
 
                 ret = fd_avp_search_avp(avpch3,
@@ -1265,7 +1265,7 @@ static int decode_pcc_rule_definition(
                             hdr->avp_value->u32;
                 } else {
                     pcc_rule->qos.arp.pre_emption_vulnerability =
-                        OGS_DIAM_PRE_EMPTION_ENABLED;
+                        OGS_EPC_PRE_EMPTION_ENABLED;
 
                 }
             } else {
