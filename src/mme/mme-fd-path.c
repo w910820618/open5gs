@@ -1012,14 +1012,14 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                                 ogs_assert(ret == 0);
                                 if (addr.ogs_sa_family == AF_INET)
                                 {
-                                    session->pgw_ip.ipv4 = 1;
-                                    session->pgw_ip.addr =
+                                    session->smf_ip.ipv4 = 1;
+                                    session->smf_ip.addr =
                                         addr.sin.sin_addr.s_addr;
                                 }
                                 else if (addr.ogs_sa_family == AF_INET6)
                                 {
-                                    session->pgw_ip.ipv6 = 1;
-                                    memcpy(session->pgw_ip.addr6,
+                                    session->smf_ip.ipv6 = 1;
+                                    memcpy(session->smf_ip.addr6,
                                         addr.sin6.sin6_addr.s6_addr,
                                         OGS_IPV6_LEN);
                                 }

@@ -54,7 +54,7 @@ const Subscriber = new Schema({
         addr: String,
         addr6: String
       },
-      pgw: {
+      smf: {
         addr: String,
         addr6: String
       },

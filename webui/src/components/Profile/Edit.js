@@ -246,18 +246,18 @@ const schema = {
                     },
                   }
                 },
-                "pgw": {
+                "smf": {
                   "type": "object",
                   "title": "",
                   "properties": {
                     "addr": {
                       "type": "string",
-                      "title": "PGW IPv4 Address",
+                      "title": "SMF IPv4 Address",
                       "format" : "ipv4"
                     },
                     "addr6": {
                       "type": "string",
-                      "title": "PGW IPv6 Address",
+                      "title": "SMF IPv6 Address",
                       "format" : "ipv6"
                     },
                   }
@@ -532,7 +532,7 @@ const uiSchema = {
               classNames: "col-xs-6"
             },
           },
-          "pgw" : {
+          "smf" : {
             classNames: "col-xs-12",
             "addr" : {
               classNames: "col-xs-6"

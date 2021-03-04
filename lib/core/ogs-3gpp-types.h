@@ -414,7 +414,7 @@ typedef struct ogs_session_s {
 
     ogs_paa_t paa;
     ogs_ip_t ue_ip;
-    ogs_ip_t pgw_ip;
+    ogs_ip_t smf_ip;
 } ogs_session_t;
 
 int ogs_fqdn_build(char *dst, char *src, int len);

@@ -85,7 +85,7 @@ void mme_s6a_handle_ula(mme_ue_t *mme_ue,
         memcpy(&mme_ue->session[i].ambr, &slice_data->session[i].ambr,
                 sizeof(mme_ue->session[i].ambr));
 
-        memcpy(&mme_ue->session[i].pgw_ip, &slice_data->session[i].pgw_ip,
-                sizeof(mme_ue->session[i].pgw_ip));
+        memcpy(&mme_ue->session[i].smf_ip, &slice_data->session[i].smf_ip,
+                sizeof(mme_ue->session[i].smf_ip));
     }
 }

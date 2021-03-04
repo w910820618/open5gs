@@ -656,17 +656,17 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
             ogs_assert(ret == 0);
 
             /* Set MIP6-Agent-Info */
-            if (session->pgw_ip.ipv4 || session->pgw_ip.ipv6) {
+            if (session->smf_ip.ipv4 || session->smf_ip.ipv6) {
                 ret = fd_msg_avp_new(ogs_diam_mip6_agent_info, 0,
                             &mip6_agent_info);
                 ogs_assert(ret == 0);
 
-                if (session->pgw_ip.ipv4) {
+                if (session->smf_ip.ipv4) {
                     ret = fd_msg_avp_new(ogs_diam_mip_home_agent_address, 0,
                                 &mip_home_agent_address);
                     ogs_assert(ret == 0);
                     sin.sin_family = AF_INET;
-                    sin.sin_addr.s_addr = session->pgw_ip.addr;
+                    sin.sin_addr.s_addr = session->smf_ip.addr;
                     ret = fd_msg_avp_value_encode (
                                 &sin, mip_home_agent_address );
                     ogs_assert(ret == 0);
@@ -675,13 +675,13 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
                     ogs_assert(ret == 0);
                 }
 
-                if (session->pgw_ip.ipv6) {
+                if (session->smf_ip.ipv6) {
                     ret = fd_msg_avp_new(ogs_diam_mip_home_agent_address, 0,
                                 &mip_home_agent_address);
                     ogs_assert(ret == 0);
                     sin6.sin6_family = AF_INET6;
-                    memcpy(sin6.sin6_addr.s6_addr, session->pgw_ip.addr6,
-                            sizeof session->pgw_ip.addr6);
+                    memcpy(sin6.sin6_addr.s6_addr, session->smf_ip.addr6,
+                            sizeof session->smf_ip.addr6);
                     ret = fd_msg_avp_value_encode (
                                 &sin6, mip_home_agent_address );
                     ogs_assert(ret == 0);
