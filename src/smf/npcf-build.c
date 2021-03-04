@@ -52,8 +52,8 @@ ogs_sbi_request_t *smf_npcf_smpolicycontrol_build_create(
     SmPolicyContextData.supi = smf_ue->supi;
     ogs_assert(sess->psi);
     SmPolicyContextData.pdu_session_id = sess->psi;
-    ogs_assert(sess->pdn.pdn_type);
-    SmPolicyContextData.pdu_session_type = sess->pdn.pdn_type;
+    ogs_assert(sess->pdn.session_type);
+    SmPolicyContextData.pdu_session_type = sess->pdn.session_type;
     ogs_assert(sess->pdn.name);
     SmPolicyContextData.dnn = sess->pdn.name;
 

@@ -933,7 +933,7 @@ void smf_sess_set_ue_ip(smf_sess_t *sess)
     smf_ue = sess->smf_ue;
     ogs_assert(smf_ue);
 
-    if (sess->pdn.pdn_type == OGS_PDU_SESSION_TYPE_IPV4V6) {
+    if (sess->pdn.session_type == OGS_PDU_SESSION_TYPE_IPV4V6) {
 
         /*
          * This is the case when the HSS is set to IPv4v6 and
@@ -955,13 +955,13 @@ void smf_sess_set_ue_ip(smf_sess_t *sess)
         subnet6 = ogs_pfcp_find_subnet_by_dnn(AF_INET6, sess->pdn.name);
 
         if (subnet != NULL && subnet6 == NULL)
-            sess->pdn.pdn_type = OGS_PDU_SESSION_TYPE_IPV4;
+            sess->pdn.session_type = OGS_PDU_SESSION_TYPE_IPV4;
         else if (subnet == NULL && subnet6 != NULL)
-            sess->pdn.pdn_type = OGS_PDU_SESSION_TYPE_IPV6;
+            sess->pdn.session_type = OGS_PDU_SESSION_TYPE_IPV6;
     }
 
-    sess->pdn.paa.pdn_type = sess->pdn.pdn_type;
-    ogs_assert(sess->pdn.pdn_type);
+    sess->pdn.paa.pdn_type = sess->pdn.session_type;
+    ogs_assert(sess->pdn.session_type);
 
     if (sess->ipv4) {
         ogs_hash_set(smf_self()->ipv4_hash,
@@ -974,14 +974,14 @@ void smf_sess_set_ue_ip(smf_sess_t *sess)
         ogs_pfcp_ue_ip_free(sess->ipv6);
     }
 
-    if (sess->pdn.pdn_type == OGS_PDU_SESSION_TYPE_IPV4) {
+    if (sess->pdn.session_type == OGS_PDU_SESSION_TYPE_IPV4) {
         sess->ipv4 = ogs_pfcp_ue_ip_alloc(
                 AF_INET, sess->pdn.name, (uint8_t *)&sess->pdn.ue_ip.addr);
         ogs_assert(sess->ipv4);
         sess->pdn.paa.addr = sess->ipv4->addr[0];
         ogs_hash_set(smf_self()->ipv4_hash,
                 sess->ipv4->addr, OGS_IPV4_LEN, sess);
-    } else if (sess->pdn.pdn_type == OGS_PDU_SESSION_TYPE_IPV6) {
+    } else if (sess->pdn.session_type == OGS_PDU_SESSION_TYPE_IPV6) {
         sess->ipv6 = ogs_pfcp_ue_ip_alloc(
                 AF_INET6, sess->pdn.name, sess->pdn.ue_ip.addr6);
         ogs_assert(sess->ipv6);
@@ -993,7 +993,7 @@ void smf_sess_set_ue_ip(smf_sess_t *sess)
         memcpy(sess->pdn.paa.addr6, sess->ipv6->addr, OGS_IPV6_LEN);
         ogs_hash_set(smf_self()->ipv6_hash,
                 sess->ipv6->addr, OGS_IPV6_LEN, sess);
-    } else if (sess->pdn.pdn_type == OGS_PDU_SESSION_TYPE_IPV4V6) {
+    } else if (sess->pdn.session_type == OGS_PDU_SESSION_TYPE_IPV4V6) {
         sess->ipv4 = ogs_pfcp_ue_ip_alloc(
                 AF_INET, sess->pdn.name, (uint8_t *)&sess->pdn.ue_ip.addr);
         ogs_assert(sess->ipv4);
@@ -1012,7 +1012,7 @@ void smf_sess_set_ue_ip(smf_sess_t *sess)
         ogs_hash_set(smf_self()->ipv6_hash,
                 sess->ipv6->addr, OGS_IPV6_LEN, sess);
     } else {
-        ogs_fatal("Invalid sess->pdn.pdn_type[%d]", sess->pdn.pdn_type);
+        ogs_fatal("Invalid sess->pdn.session_type[%d]", sess->pdn.session_type);
         ogs_assert_if_reached();
     }
 }
@@ -1327,13 +1327,13 @@ smf_bearer_t *smf_qos_flow_add(smf_sess_t *sess)
         ul_pdr->apn = ogs_strdup(sess->pdn.name);
 
     ul_pdr->outer_header_removal_len = 1;
-    if (sess->pdn.pdn_type == OGS_GTP_PDN_TYPE_IPV4) {
+    if (sess->pdn.session_type == OGS_GTP_PDN_TYPE_IPV4) {
         ul_pdr->outer_header_removal.description =
             OGS_PFCP_OUTER_HEADER_REMOVAL_GTPU_UDP_IPV4;
-    } else if (sess->pdn.pdn_type == OGS_GTP_PDN_TYPE_IPV6) {
+    } else if (sess->pdn.session_type == OGS_GTP_PDN_TYPE_IPV6) {
         ul_pdr->outer_header_removal.description =
             OGS_PFCP_OUTER_HEADER_REMOVAL_GTPU_UDP_IPV6;
-    } else if (sess->pdn.pdn_type == OGS_GTP_PDN_TYPE_IPV4V6) {
+    } else if (sess->pdn.session_type == OGS_GTP_PDN_TYPE_IPV4V6) {
         ul_pdr->outer_header_removal.description =
             OGS_PFCP_OUTER_HEADER_REMOVAL_GTPU_UDP_IP;
     } else
@@ -1398,13 +1398,13 @@ void smf_sess_create_indirect_data_forwarding(smf_sess_t *sess)
         pdr->src_if = OGS_PFCP_INTERFACE_ACCESS;
 
         pdr->outer_header_removal_len = 1;
-        if (sess->pdn.pdn_type == OGS_GTP_PDN_TYPE_IPV4) {
+        if (sess->pdn.session_type == OGS_GTP_PDN_TYPE_IPV4) {
             pdr->outer_header_removal.description =
                 OGS_PFCP_OUTER_HEADER_REMOVAL_GTPU_UDP_IPV4;
-        } else if (sess->pdn.pdn_type == OGS_GTP_PDN_TYPE_IPV6) {
+        } else if (sess->pdn.session_type == OGS_GTP_PDN_TYPE_IPV6) {
             pdr->outer_header_removal.description =
                 OGS_PFCP_OUTER_HEADER_REMOVAL_GTPU_UDP_IPV6;
-        } else if (sess->pdn.pdn_type == OGS_GTP_PDN_TYPE_IPV4V6) {
+        } else if (sess->pdn.session_type == OGS_GTP_PDN_TYPE_IPV4V6) {
             pdr->outer_header_removal.description =
                 OGS_PFCP_OUTER_HEADER_REMOVAL_GTPU_UDP_IP;
         } else
@@ -1564,13 +1564,13 @@ smf_bearer_t *smf_bearer_add(smf_sess_t *sess)
     ul_pdr->apn = ogs_strdup(sess->pdn.name);
 
     ul_pdr->outer_header_removal_len = 1;
-    if (sess->pdn.pdn_type == OGS_GTP_PDN_TYPE_IPV4) {
+    if (sess->pdn.session_type == OGS_GTP_PDN_TYPE_IPV4) {
         ul_pdr->outer_header_removal.description =
             OGS_PFCP_OUTER_HEADER_REMOVAL_GTPU_UDP_IPV4;
-    } else if (sess->pdn.pdn_type == OGS_GTP_PDN_TYPE_IPV6) {
+    } else if (sess->pdn.session_type == OGS_GTP_PDN_TYPE_IPV6) {
         ul_pdr->outer_header_removal.description =
             OGS_PFCP_OUTER_HEADER_REMOVAL_GTPU_UDP_IPV6;
-    } else if (sess->pdn.pdn_type == OGS_GTP_PDN_TYPE_IPV4V6) {
+    } else if (sess->pdn.session_type == OGS_GTP_PDN_TYPE_IPV4V6) {
         ul_pdr->outer_header_removal.description =
             OGS_PFCP_OUTER_HEADER_REMOVAL_GTPU_UDP_IP;
     } else

@@ -408,7 +408,7 @@ int ogs_dbi_subscription_data(char *supi,
                                     ogs_assert(pdn->name);
                                 } else if (!strcmp(child4_key, "type") &&
                                     BSON_ITER_HOLDS_INT32(&child4_iter)) {
-                                    pdn->pdn_type =
+                                    pdn->session_type =
                                         bson_iter_int32(&child4_iter);
                                 } else if (!strcmp(child4_key, "qos") &&
                                     BSON_ITER_HOLDS_DOCUMENT(&child4_iter)) {

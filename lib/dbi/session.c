@@ -167,7 +167,7 @@ done:
             ogs_assert(pdn->name);
         } else if (!strcmp(child4_key, "type") &&
             BSON_ITER_HOLDS_INT32(&child4_iter)) {
-            pdn->pdn_type = bson_iter_int32(&child4_iter);
+            pdn->session_type = bson_iter_int32(&child4_iter);
         } else if (!strcmp(child4_key, "qos") &&
             BSON_ITER_HOLDS_DOCUMENT(&child4_iter)) {
             bson_iter_recurse(&child4_iter, &child5_iter);

@@ -119,15 +119,16 @@ bool smf_nudm_sdm_handle_get(smf_sess_t *sess, ogs_sbi_stream_t *stream,
                     if (node2->data) {
                         uint8_t allowed_session_type = (uintptr_t)node2->data;
                         if (sess->ue_pdu_session_type == allowed_session_type) {
-                            sess->pdn.pdn_type = sess->ue_pdu_session_type;
+                            sess->pdn.session_type = sess->ue_pdu_session_type;
                             break;
                         }
                     }
                 }
             }
 
-            if (!sess->pdn.pdn_type)
-                sess->pdn.pdn_type = pduSessionTypeList->default_session_type;
+            if (!sess->pdn.session_type)
+                sess->pdn.session_type =
+                    pduSessionTypeList->default_session_type;
 
             if (sess->ue_ssc_mode) {
                 OpenAPI_list_for_each(sscModeList->allowed_ssc_modes, node2) {

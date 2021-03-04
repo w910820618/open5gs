@@ -412,7 +412,7 @@ typedef struct ogs_pdn_s {
 #define OGS_PDU_SESSION_TYPE_IPV4V6                 3
 #define OGS_PDU_SESSION_TYPE_UNSTRUCTURED           4
 #define OGS_PDU_SESSION_TYPE_ETHERNET               5
-    uint8_t pdn_type;
+    uint8_t session_type;
 
 #define OGS_SSC_MODE_1                              1
 #define OGS_SSC_MODE_2                              2

@@ -864,7 +864,7 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                     ogs_assert(ret == 0);
                     if (avpch3) {
                         ret = fd_msg_avp_hdr(avpch3, &hdr);
-                        pdn->pdn_type = hdr->avp_value->i32;
+                        pdn->session_type = hdr->avp_value->i32;
                     } else {
                         ogs_error("no_PDN-Type");
                         error++;
@@ -883,9 +883,10 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                             ogs_assert(ret == 0);
 
                             if (addr.ogs_sa_family == AF_INET) {
-                                if (pdn->pdn_type == OGS_DIAM_PDN_TYPE_IPV4) {
+                                if (pdn->session_type ==
+                                        OGS_DIAM_PDN_TYPE_IPV4) {
                                     pdn->paa.addr = addr.sin.sin_addr.s_addr;
-                                } else if (pdn->pdn_type ==
+                                } else if (pdn->session_type ==
                                         OGS_DIAM_PDN_TYPE_IPV4V6) {
                                     pdn->paa.both.addr =
                                         addr.sin.sin_addr.s_addr;
@@ -895,11 +896,12 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                                         "IPv4. Ignoring...");
                                 }
                             } else if (addr.ogs_sa_family == AF_INET6) {
-                                if (pdn->pdn_type == OGS_DIAM_PDN_TYPE_IPV6) {
+                                if (pdn->session_type ==
+                                        OGS_DIAM_PDN_TYPE_IPV6) {
                                     memcpy(pdn->paa.addr6,
                                         addr.sin6.sin6_addr.s6_addr,
                                         OGS_IPV6_LEN);
-                                } else if (pdn->pdn_type ==
+                                } else if (pdn->session_type ==
                                         OGS_DIAM_PDN_TYPE_IPV4V6) {
                                     memcpy(pdn->paa.both.addr6,
                                         addr.sin6.sin6_addr.s6_addr,

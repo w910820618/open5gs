@@ -148,7 +148,7 @@ void smf_s5c_handle_create_session_request(
 
     /* UE IP Address */
     ogs_assert(req->pdn_address_allocation.data);
-    sess->pdn.pdn_type = req->pdn_type.u8;
+    sess->pdn.session_type = req->pdn_type.u8;
     ogs_gtp_paa_to_ip(
             (ogs_paa_t *)req->pdn_address_allocation.data, &sess->pdn.ue_ip);
 

@@ -819,13 +819,13 @@ sgwc_tunnel_t *sgwc_tunnel_add(
         pdr->apn = ogs_strdup(sess->pdn.name);
 
     pdr->outer_header_removal_len = 1;
-    if (sess->pdn.pdn_type == OGS_GTP_PDN_TYPE_IPV4) {
+    if (sess->pdn.session_type == OGS_GTP_PDN_TYPE_IPV4) {
         pdr->outer_header_removal.description =
             OGS_PFCP_OUTER_HEADER_REMOVAL_GTPU_UDP_IPV4;
-    } else if (sess->pdn.pdn_type == OGS_GTP_PDN_TYPE_IPV6) {
+    } else if (sess->pdn.session_type == OGS_GTP_PDN_TYPE_IPV6) {
         pdr->outer_header_removal.description =
             OGS_PFCP_OUTER_HEADER_REMOVAL_GTPU_UDP_IPV6;
-    } else if (sess->pdn.pdn_type == OGS_GTP_PDN_TYPE_IPV4V6) {
+    } else if (sess->pdn.session_type == OGS_GTP_PDN_TYPE_IPV4V6) {
         pdr->outer_header_removal.description =
             OGS_PFCP_OUTER_HEADER_REMOVAL_GTPU_UDP_IP;
     } else

@@ -114,7 +114,7 @@ ogs_pkbuf_t *ngap_build_pdu_session_resource_setup_request_transfer(
     PDUSessionType = &ie->value.choice.PDUSessionType;
 
     *PDUSessionType = OGS_PDU_SESSION_TYPE_IPV4;
-    switch (sess->pdn.pdn_type) {
+    switch (sess->pdn.session_type) {
     case OGS_PDU_SESSION_TYPE_IPV4 :
         *PDUSessionType = NGAP_PDUSessionType_ipv4;
         break;
@@ -125,7 +125,7 @@ ogs_pkbuf_t *ngap_build_pdu_session_resource_setup_request_transfer(
         *PDUSessionType = NGAP_PDUSessionType_ipv4v6;
         break;
     default:
-        ogs_fatal("Unknown PDU Session Type [%d]", sess->pdn.pdn_type);
+        ogs_fatal("Unknown PDU Session Type [%d]", sess->pdn.session_type);
         ogs_assert_if_reached();
     }
 

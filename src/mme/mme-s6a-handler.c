@@ -76,7 +76,7 @@ void mme_s6a_handle_ula(mme_ue_t *mme_ue,
         mme_ue->session[i].context_identifier =
             slice_data->session[i].context_identifier;
 
-        mme_ue->session[i].pdn_type = slice_data->session[i].pdn_type;
+        mme_ue->session[i].session_type = slice_data->session[i].session_type;
         memcpy(&mme_ue->session[i].paa, &slice_data->session[i].paa,
                 sizeof(mme_ue->session[i].paa));
 

@@ -235,7 +235,7 @@ void sgwc_s11_handle_create_session_request(
                     bearer_qos.pre_emption_vulnerability;
 
     /* Set PDN Type */
-    sess->pdn.pdn_type = req->pdn_type.u8;
+    sess->pdn.session_type = req->pdn_type.u8;
     sess->pdn.paa.pdn_type = req->pdn_type.u8;
 
     /* Remove all previous bearer */

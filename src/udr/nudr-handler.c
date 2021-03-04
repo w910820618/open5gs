@@ -655,7 +655,7 @@ bool udr_nudr_dr_handle_subscription_provisioned(
             pduSessionTypeList = ogs_calloc(1, sizeof(*pduSessionTypeList));
             ogs_assert(pduSessionTypeList);
             pduSessionTypeList->default_session_type =
-                pdu_session_type_from_dbi(pdn->pdn_type);
+                pdu_session_type_from_dbi(pdn->session_type);
 
             pduSessionTypeList->allowed_session_types = OpenAPI_list_create();
             ogs_assert(pduSessionTypeList->allowed_session_types);

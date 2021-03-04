@@ -539,7 +539,7 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
             /* Set PDN-Type */
             ret = fd_msg_avp_new(ogs_diam_s6a_pdn_type, 0, &pdn_type);
             ogs_assert(ret == 0);
-            val.i32 = pdn->pdn_type;
+            val.i32 = pdn->session_type;
             ret = fd_msg_avp_setvalue(pdn_type, &val);
             ogs_assert(ret == 0);
             ret = fd_msg_avp_add(apn_configuration,
@@ -547,8 +547,8 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
             ogs_assert(ret == 0);
 
             /* Set Served-Party-IP-Address */
-            if ((pdn->pdn_type == OGS_DIAM_PDN_TYPE_IPV4 ||
-                 pdn->pdn_type == OGS_DIAM_PDN_TYPE_IPV4V6) &&
+            if ((pdn->session_type == OGS_DIAM_PDN_TYPE_IPV4 ||
+                 pdn->session_type == OGS_DIAM_PDN_TYPE_IPV4V6) &&
                 pdn->ue_ip.ipv4) {
                 ret = fd_msg_avp_new(ogs_diam_s6a_served_party_ip_address,
                         0, &served_party_ip_address);
@@ -562,8 +562,8 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
                 ogs_assert(ret == 0);
             }
 
-            if ((pdn->pdn_type == OGS_DIAM_PDN_TYPE_IPV6 ||
-                 pdn->pdn_type == OGS_DIAM_PDN_TYPE_IPV4V6) &&
+            if ((pdn->session_type == OGS_DIAM_PDN_TYPE_IPV6 ||
+                 pdn->session_type == OGS_DIAM_PDN_TYPE_IPV4V6) &&
                 pdn->ue_ip.ipv6) {
                 ret = fd_msg_avp_new(ogs_diam_s6a_served_party_ip_address,
                         0, &served_party_ip_address);

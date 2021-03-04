@@ -88,7 +88,7 @@ ogs_pkbuf_t *gsm_build_pdu_session_establishment_accept(smf_sess_t *sess)
     message.gsm.h.message_type = OGS_NAS_5GS_PDU_SESSION_ESTABLISHMENT_ACCEPT;
 
     selected_pdu_session_type->type = sess->pdn.ssc_mode;
-    selected_pdu_session_type->value = sess->pdn.pdn_type;
+    selected_pdu_session_type->value = sess->pdn.session_type;
 
     /*
      * TS23.501
