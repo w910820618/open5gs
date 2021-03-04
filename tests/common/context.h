@@ -370,7 +370,12 @@ typedef struct test_ue_s {
     struct {
         int num_of_s_nssai;
         ogs_nas_s_nssai_ie_t s_nssai[OGS_MAX_NUM_OF_SLICE];
-    } requested_nssai;
+    } requested_nssai, allowed_nssai;
+
+    struct {
+        int num_of_s_nssai;
+        ogs_nas_rejected_s_nssai_t s_nssai[OGS_MAX_NUM_OF_SLICE];
+    } rejected_nssai;
 
     test_initial_ue_param_t initial_ue_param;
 

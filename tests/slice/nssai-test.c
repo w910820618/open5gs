@@ -93,7 +93,29 @@ static void test1_func(abts_case *tc, void *data)
 
     /* Send Registration request */
     test_ue->registration_request_param.gmm_capability = 1;
+
     test_ue->registration_request_param.requested_nssai = 1;
+
+    test_ue->requested_nssai.s_nssai[test_ue->requested_nssai.num_of_s_nssai].
+        sst = 2;
+    test_ue->requested_nssai.s_nssai[test_ue->requested_nssai.num_of_s_nssai].
+        sd.v = OGS_S_NSSAI_NO_SD_VALUE;
+    test_ue->requested_nssai.s_nssai[test_ue->requested_nssai.num_of_s_nssai].
+        mapped_hplmn_sst = 0;
+    test_ue->requested_nssai.s_nssai[test_ue->requested_nssai.num_of_s_nssai].
+        mapped_hplmn_sd.v = OGS_S_NSSAI_NO_SD_VALUE;
+    test_ue->requested_nssai.num_of_s_nssai++;
+
+    test_ue->requested_nssai.s_nssai[test_ue->requested_nssai.num_of_s_nssai].
+        sst = 3;
+    test_ue->requested_nssai.s_nssai[test_ue->requested_nssai.num_of_s_nssai].
+        sd.v = 0x000080;
+    test_ue->requested_nssai.s_nssai[test_ue->requested_nssai.num_of_s_nssai].
+        mapped_hplmn_sst = 0;
+    test_ue->requested_nssai.s_nssai[test_ue->requested_nssai.num_of_s_nssai].
+        mapped_hplmn_sd.v = OGS_S_NSSAI_NO_SD_VALUE;
+    test_ue->requested_nssai.num_of_s_nssai++;
+
     gmmbuf = testgmm_build_registration_request(test_ue, NULL);
     ABTS_PTR_NOTNULL(tc, gmmbuf);
     sendbuf = testngap_build_initial_ue_message(test_ue, gmmbuf, false, true);

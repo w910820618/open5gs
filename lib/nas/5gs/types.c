@@ -273,6 +273,93 @@ int ogs_nas_parse_nssai(
     return num_of_nas_s_nssai_ie;
 }
 
+void ogs_nas_build_rejected_nssai(
+        ogs_nas_rejected_nssai_t *rejected_nssai,
+        ogs_nas_rejected_s_nssai_t *rejected_s_nssai,
+        int num_of_rejected_s_nssai)
+{
+    int i;
+
+    ogs_assert(rejected_nssai);
+    ogs_assert(rejected_s_nssai);
+    ogs_assert(num_of_rejected_s_nssai);
+
+    for (i = 0; i < num_of_rejected_s_nssai; i++) {
+        if (rejected_nssai->length < OGS_NAS_MAX_REJECTED_NSSAI_LEN) {
+            memcpy(rejected_nssai->buffer + rejected_nssai->length,
+                    rejected_s_nssai + i, 1);
+            rejected_nssai->length += 1;
+
+            ogs_assert(
+                rejected_s_nssai[i].length_of_rejected_s_nssai == 1 ||
+                rejected_s_nssai[i].length_of_rejected_s_nssai == 4);
+
+            if (rejected_s_nssai[i].length_of_rejected_s_nssai == 1 ||
+                rejected_s_nssai[i].length_of_rejected_s_nssai == 4) {
+                rejected_nssai->buffer[rejected_nssai->length] =
+                        rejected_s_nssai[i].sst;
+                rejected_nssai->length += 1;
+            }
+
+            if (rejected_s_nssai[i].length_of_rejected_s_nssai == 4) {
+                ogs_uint24_t v;
+                v = ogs_htobe24(rejected_s_nssai[i].sd);
+                memcpy(rejected_nssai->buffer + rejected_nssai->length, &v, 3);
+                rejected_nssai->length += 3;
+            }
+        }
+    }
+}
+
+int ogs_nas_parse_rejected_nssai(
+        ogs_nas_rejected_s_nssai_t *rejected_s_nssai,
+        ogs_nas_rejected_nssai_t *rejected_nssai)
+{
+    int i, pos;
+
+    ogs_assert(rejected_nssai);
+    ogs_assert(rejected_s_nssai);
+
+    if (!rejected_nssai->length) {
+        ogs_error("No NSSAI [%p:%d]",
+                rejected_nssai->buffer, rejected_nssai->length);
+        return OGS_ERROR;
+    }
+
+    i = 0;
+    pos = 0;
+    while (pos < rejected_nssai->length && i < OGS_MAX_NUM_OF_SLICE) {
+
+        ogs_assert((pos + 1) <= rejected_nssai->length);
+        memcpy(rejected_s_nssai + i, rejected_nssai->buffer + pos, 1);
+        pos += 1;
+
+        ogs_assert(
+            rejected_s_nssai[i].length_of_rejected_s_nssai == 1 ||
+            rejected_s_nssai[i].length_of_rejected_s_nssai == 4);
+
+        if (rejected_s_nssai[i].length_of_rejected_s_nssai == 1 ||
+            rejected_s_nssai[i].length_of_rejected_s_nssai == 4) {
+            ogs_assert((pos + 1) <= rejected_nssai->length);
+            rejected_s_nssai[i].sst = rejected_nssai->buffer[pos];
+            pos += 1;
+        }
+
+        if (rejected_s_nssai[i].length_of_rejected_s_nssai == 4) {
+            ogs_uint24_t v;
+
+            ogs_assert((pos + 3) <= rejected_nssai->length);
+            memcpy(&v, rejected_nssai->buffer + pos, 3);
+            rejected_s_nssai[i].sd = ogs_be24toh(v);
+            pos += 3;
+        }
+
+        i++;
+    }
+
+    return i;
+}
+
 void ogs_nas_build_qos_flow_descriptions(
     ogs_nas_qos_flow_descriptions_t *flow_descriptions,
     ogs_nas_qos_flow_description_t *flow_description,
