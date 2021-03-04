@@ -96,6 +96,8 @@ static void test1_func(abts_case *tc, void *data)
 
     test_ue->registration_request_param.requested_nssai = 1;
 
+    test_ue->requested_nssai.s_nssai[1].sd.v = 0x000070;
+
     test_ue->requested_nssai.s_nssai[test_ue->requested_nssai.num_of_s_nssai].
         sst = 2;
     test_ue->requested_nssai.s_nssai[test_ue->requested_nssai.num_of_s_nssai].
