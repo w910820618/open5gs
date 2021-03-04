@@ -191,7 +191,7 @@ bool pcf_nudr_dr_handle_query_sm_data(
 
     SWITCH(recvmsg->h.resource.component[3])
     CASE(OGS_SBI_RESOURCE_NAME_SM_DATA)
-        ogs_pdn_t *pdn = NULL;
+        ogs_session_t *session = NULL;
 
         OpenAPI_sm_policy_decision_t SmPolicyDecision;
 
@@ -234,21 +234,21 @@ bool pcf_nudr_dr_handle_query_sm_data(
             goto cleanup;
         }
 
-        pdn = &session_data.session;
+        session = &session_data.session;
 
-        if (!pdn->qos.index) {
+        if (!session->qos.index) {
             strerror = ogs_msprintf("[%s:%d] No 5QI", pcf_ue->supi, sess->psi);
             status = OGS_SBI_HTTP_STATUS_BAD_REQUEST;
             goto cleanup;
         }
-        if (!pdn->qos.arp.priority_level) {
+        if (!session->qos.arp.priority_level) {
             strerror = ogs_msprintf("[%s:%d] No Priority Level",
                     pcf_ue->supi, sess->psi);
             status = OGS_SBI_HTTP_STATUS_BAD_REQUEST;
             goto cleanup;
         }
 
-        if (!pdn->ambr.uplink && !pdn->ambr.downlink) {
+        if (!session->ambr.uplink && !session->ambr.downlink) {
             strerror = ogs_msprintf("[%s:%d] No Session-AMBR",
                     pcf_ue->supi, sess->psi);
             status = OGS_SBI_HTTP_STATUS_BAD_REQUEST;
@@ -282,9 +282,9 @@ bool pcf_nudr_dr_handle_query_sm_data(
                 subscribed_sess_ambr.downlink = ogs_sbi_bitrate_from_string(
                         sess->subscribed_sess_ambr->downlink);
                 if (((subscribed_sess_ambr.uplink / 1024) !=
-                     (pdn->ambr.uplink / 1024)) ||
+                     (session->ambr.uplink / 1024)) ||
                     ((subscribed_sess_ambr.downlink / 1024) !=
-                     (pdn->ambr.downlink / 1024))) {
+                     (session->ambr.downlink / 1024))) {
 
                     OpenAPI_list_add(PolicyCtrlReqTriggers,
                         (void *)OpenAPI_policy_control_request_trigger_SE_AMBR_CH);
@@ -292,9 +292,9 @@ bool pcf_nudr_dr_handle_query_sm_data(
 
                 memset(&AuthSessAmbr, 0, sizeof(AuthSessAmbr));
                 AuthSessAmbr.uplink = ogs_sbi_bitrate_to_string(
-                        pdn->ambr.uplink, OGS_SBI_BITRATE_KBPS);
+                        session->ambr.uplink, OGS_SBI_BITRATE_KBPS);
                 AuthSessAmbr.downlink = ogs_sbi_bitrate_to_string(
-                        pdn->ambr.downlink, OGS_SBI_BITRATE_KBPS);
+                        session->ambr.downlink, OGS_SBI_BITRATE_KBPS);
                 SessionRule->auth_sess_ambr = &AuthSessAmbr;
             }
         }
@@ -306,29 +306,29 @@ bool pcf_nudr_dr_handle_query_sm_data(
             AuthDefQos.arp = ogs_calloc(1, sizeof(OpenAPI_arp_t));
             ogs_assert(AuthDefQos.arp);
 
-            AuthDefQos._5qi = pdn->qos.index;
-            AuthDefQos.priority_level = pdn->qos.arp.priority_level;
+            AuthDefQos._5qi = session->qos.index;
+            AuthDefQos.priority_level = session->qos.arp.priority_level;
 
-            if (pdn->qos.arp.pre_emption_capability ==
+            if (session->qos.arp.pre_emption_capability ==
                     OGS_ARP_PRE_EMPTION_ENABLED)
                 AuthDefQos.arp->preempt_cap =
                     OpenAPI_preemption_capability_MAY_PREEMPT;
-            else if (pdn->qos.arp.pre_emption_capability ==
+            else if (session->qos.arp.pre_emption_capability ==
                     OGS_ARP_PRE_EMPTION_DISABLED)
                 AuthDefQos.arp->preempt_cap =
                     OpenAPI_preemption_capability_NOT_PREEMPT;
             ogs_assert(AuthDefQos.arp->preempt_cap);
 
-            if (pdn->qos.arp.pre_emption_vulnerability ==
+            if (session->qos.arp.pre_emption_vulnerability ==
                     OGS_ARP_PRE_EMPTION_ENABLED)
                 AuthDefQos.arp->preempt_vuln =
                     OpenAPI_preemption_vulnerability_PREEMPTABLE;
-            else if (pdn->qos.arp.pre_emption_vulnerability ==
+            else if (session->qos.arp.pre_emption_vulnerability ==
                     OGS_ARP_PRE_EMPTION_DISABLED)
                 AuthDefQos.arp->preempt_vuln =
                     OpenAPI_preemption_vulnerability_NOT_PREEMPTABLE;
             ogs_assert(AuthDefQos.arp->preempt_vuln);
-            AuthDefQos.arp->priority_level = pdn->qos.arp.priority_level;
+            AuthDefQos.arp->priority_level = session->qos.arp.priority_level;
 
             SessionRule->auth_def_qos = &AuthDefQos;
 

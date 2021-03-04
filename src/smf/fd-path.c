@@ -283,7 +283,7 @@ void smf_gx_send_ccr(smf_sess_t *sess, ogs_gtp_xact_t *xact,
         if (sess->ipv6) {
             ret = fd_msg_avp_new(ogs_diam_gx_framed_ipv6_prefix, 0, &avp);
             ogs_assert(ret == 0);
-            memcpy(&paa, &sess->pdn.paa, OGS_PAA_IPV6_LEN);
+            memcpy(&paa, &sess->session.paa, OGS_PAA_IPV6_LEN);
 #define FRAMED_IPV6_PREFIX_LENGTH 128  /* from spec document */
             paa.len = FRAMED_IPV6_PREFIX_LENGTH; 
             val.os.data = (uint8_t*)&paa;
@@ -313,26 +313,26 @@ void smf_gx_send_ccr(smf_sess_t *sess, ogs_gtp_xact_t *xact,
         ogs_assert(ret == 0);
 
         /* Set QoS-Information */
-        if (sess->pdn.ambr.downlink || sess->pdn.ambr.uplink) {
+        if (sess->session.ambr.downlink || sess->session.ambr.uplink) {
             ret = fd_msg_avp_new(ogs_diam_gx_qos_information, 0, &avp);
             ogs_assert(ret == 0);
 
-            if (sess->pdn.ambr.uplink) {
+            if (sess->session.ambr.uplink) {
                 ret = fd_msg_avp_new(ogs_diam_gx_apn_aggregate_max_bitrate_ul,
                         0, &avpch1);
                 ogs_assert(ret == 0);
-                val.u32 = sess->pdn.ambr.uplink;
+                val.u32 = sess->session.ambr.uplink;
                 ret = fd_msg_avp_setvalue (avpch1, &val);
                 ogs_assert(ret == 0);
                 ret = fd_msg_avp_add (avp, MSG_BRW_LAST_CHILD, avpch1);
                 ogs_assert(ret == 0);
             }
             
-            if (sess->pdn.ambr.downlink) {
+            if (sess->session.ambr.downlink) {
                 ret = fd_msg_avp_new(
                         ogs_diam_gx_apn_aggregate_max_bitrate_dl, 0, &avpch1);
                 ogs_assert(ret == 0);
-                val.u32 = sess->pdn.ambr.downlink;
+                val.u32 = sess->session.ambr.downlink;
                 ret = fd_msg_avp_setvalue (avpch1, &val);
                 ogs_assert(ret == 0);
                 ret = fd_msg_avp_add (avp, MSG_BRW_LAST_CHILD, avpch1);
@@ -349,7 +349,7 @@ void smf_gx_send_ccr(smf_sess_t *sess, ogs_gtp_xact_t *xact,
 
         ret = fd_msg_avp_new(ogs_diam_gx_qos_class_identifier, 0, &avpch1);
         ogs_assert(ret == 0);
-        val.u32 = sess->pdn.qos.index;
+        val.u32 = sess->session.qos.index;
         ret = fd_msg_avp_setvalue (avpch1, &val);
         ogs_assert(ret == 0);
         ret = fd_msg_avp_add (avp, MSG_BRW_LAST_CHILD, avpch1);
@@ -361,7 +361,7 @@ void smf_gx_send_ccr(smf_sess_t *sess, ogs_gtp_xact_t *xact,
 
         ret = fd_msg_avp_new(ogs_diam_gx_priority_level, 0, &avpch2);
         ogs_assert(ret == 0);
-        val.u32 = sess->pdn.qos.arp.priority_level;
+        val.u32 = sess->session.qos.arp.priority_level;
         ret = fd_msg_avp_setvalue (avpch2, &val);
         ogs_assert(ret == 0);
         ret = fd_msg_avp_add (avpch1, MSG_BRW_LAST_CHILD, avpch2);
@@ -369,7 +369,7 @@ void smf_gx_send_ccr(smf_sess_t *sess, ogs_gtp_xact_t *xact,
 
         ret = fd_msg_avp_new(ogs_diam_gx_pre_emption_capability, 0, &avpch2);
         ogs_assert(ret == 0);
-        val.u32 = sess->pdn.qos.arp.pre_emption_capability;
+        val.u32 = sess->session.qos.arp.pre_emption_capability;
         ret = fd_msg_avp_setvalue (avpch2, &val);
         ogs_assert(ret == 0);
         ret = fd_msg_avp_add (avpch1, MSG_BRW_LAST_CHILD, avpch2);
@@ -377,7 +377,7 @@ void smf_gx_send_ccr(smf_sess_t *sess, ogs_gtp_xact_t *xact,
 
         ret = fd_msg_avp_new(ogs_diam_gx_pre_emption_vulnerability, 0, &avpch2);
         ogs_assert(ret == 0);
-        val.u32 = sess->pdn.qos.arp.pre_emption_vulnerability;
+        val.u32 = sess->session.qos.arp.pre_emption_vulnerability;
         ret = fd_msg_avp_setvalue (avpch2, &val);
         ogs_assert(ret == 0);
         ret = fd_msg_avp_add (avpch1, MSG_BRW_LAST_CHILD, avpch2);
@@ -444,9 +444,9 @@ void smf_gx_send_ccr(smf_sess_t *sess, ogs_gtp_xact_t *xact,
     /* Set Called-Station-Id */
     ret = fd_msg_avp_new(ogs_diam_gx_called_station_id, 0, &avp);
     ogs_assert(ret == 0);
-    ogs_assert(sess->pdn.name);
-    val.os.data = (uint8_t*)sess->pdn.name;
-    val.os.len = strlen(sess->pdn.name);
+    ogs_assert(sess->session.name);
+    val.os.data = (uint8_t*)sess->session.name;
+    val.os.len = strlen(sess->session.name);
     ret = fd_msg_avp_setvalue(avp, &val);
     ogs_assert(ret == 0);
     ret = fd_msg_avp_add(req, MSG_BRW_LAST_CHILD, avp);

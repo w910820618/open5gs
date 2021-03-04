@@ -242,12 +242,13 @@ int amf_nudm_sdm_handle_provisioned(
                                 OpenAPI_list_for_each(DnnInfoList, node2) {
                                     DnnInfo = node2->data;
                                     if (DnnInfo) {
-                                        ogs_pdn_t *pdn =
+                                        ogs_session_t *session =
                                             &slice->session
                                                 [slice->num_of_session];
-                                        pdn->name = ogs_strdup(DnnInfo->dnn);
-                                        ogs_assert(pdn->name);
-                                        pdn->default_dnn_indicator =
+                                        session->name =
+                                            ogs_strdup(DnnInfo->dnn);
+                                        ogs_assert(session->name);
+                                        session->default_dnn_indicator =
                                             DnnInfo->default_dnn_indicator;
                                         slice->num_of_session++;
                                     }

@@ -397,7 +397,7 @@ typedef struct ogs_pcc_rule_s {
 
 /**********************************
  * PDN Structure                 */
-typedef struct ogs_pdn_s {
+typedef struct ogs_session_s {
     char *name;
 
     uint32_t context_identifier; /* EPC */
@@ -425,7 +425,7 @@ typedef struct ogs_pdn_s {
     ogs_paa_t paa;
     ogs_ip_t ue_ip;
     ogs_ip_t pgw_ip;
-} ogs_pdn_t;
+} ogs_session_t;
 
 int ogs_fqdn_build(char *dst, char *src, int len);
 int ogs_fqdn_parse(char *dst, char *src, int len);
@@ -488,7 +488,7 @@ typedef struct ogs_slice_data_s {
     uint32_t context_identifier; /* EPC for checking default APN */
 
     int num_of_session;
-    ogs_pdn_t session[OGS_MAX_NUM_OF_SESS];
+    ogs_session_t session[OGS_MAX_NUM_OF_SESS];
 } ogs_slice_data_t;
 
 ogs_slice_data_t *ogs_slice_find_by_s_nssai(
@@ -532,10 +532,10 @@ typedef struct ogs_subscription_data_s {
 void ogs_subscription_data_free(ogs_subscription_data_t *subscription_data);
 
 typedef struct ogs_session_data_s {
-    ogs_pdn_t           session;
+    ogs_session_t session;
 #define OGS_MAX_NUM_OF_PCC_RULE         8   /* Num of PCC Rule */
-    ogs_pcc_rule_t      pcc_rule[OGS_MAX_NUM_OF_PCC_RULE];
-    int                 num_of_pcc_rule;
+    ogs_pcc_rule_t pcc_rule[OGS_MAX_NUM_OF_PCC_RULE];
+    int num_of_pcc_rule;
 } ogs_session_data_t;
 
 void ogs_session_data_free(ogs_session_data_t *session_data);

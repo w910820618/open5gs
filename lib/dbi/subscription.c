@@ -388,12 +388,12 @@ int ogs_dbi_subscription_data(char *supi,
 
                         bson_iter_recurse(&child2_iter, &child3_iter);
                         while (bson_iter_next(&child3_iter)) {
-                            ogs_pdn_t *pdn = NULL;
+                            ogs_session_t *session = NULL;
 
                             ogs_assert(
                                 slice_data->num_of_session <
                                     OGS_MAX_NUM_OF_SESS);
-                            pdn = &slice_data->session
+                            session = &slice_data->session
                                 [slice_data->num_of_session];
 
                             bson_iter_recurse(&child3_iter, &child4_iter);
@@ -404,11 +404,11 @@ int ogs_dbi_subscription_data(char *supi,
                                     BSON_ITER_HOLDS_UTF8(&child4_iter)) {
                                     utf8 = bson_iter_utf8(
                                             &child4_iter, &length);
-                                    pdn->name = ogs_strndup(utf8, length);
-                                    ogs_assert(pdn->name);
+                                    session->name = ogs_strndup(utf8, length);
+                                    ogs_assert(session->name);
                                 } else if (!strcmp(child4_key, "type") &&
                                     BSON_ITER_HOLDS_INT32(&child4_iter)) {
-                                    pdn->session_type =
+                                    session->session_type =
                                         bson_iter_int32(&child4_iter);
                                 } else if (!strcmp(child4_key, "qos") &&
                                     BSON_ITER_HOLDS_DOCUMENT(&child4_iter)) {
@@ -420,7 +420,7 @@ int ogs_dbi_subscription_data(char *supi,
                                         if (!strcmp(child5_key, "index") &&
                                             BSON_ITER_HOLDS_INT32(
                                                 &child5_iter)) {
-                                            pdn->qos.index =
+                                            session->qos.index =
                                                 bson_iter_int32(&child5_iter);
                                         } else if (!strcmp(child5_key, "arp") &&
                                             BSON_ITER_HOLDS_DOCUMENT(
@@ -435,7 +435,7 @@ int ogs_dbi_subscription_data(char *supi,
                                                             "priority_level") &&
                                                     BSON_ITER_HOLDS_INT32(
                                                         &child6_iter)) {
-                                                    pdn->qos.arp.
+                                                    session->qos.arp.
                                                         priority_level =
                                                         bson_iter_int32(
                                                                 &child6_iter);
@@ -443,7 +443,7 @@ int ogs_dbi_subscription_data(char *supi,
                                                     "pre_emption_capability") &&
                                                     BSON_ITER_HOLDS_INT32(
                                                         &child6_iter)) {
-                                                    pdn->qos.arp.
+                                                    session->qos.arp.
                                                         pre_emption_capability =
                                                             bson_iter_int32(
                                                                 &child6_iter);
@@ -451,7 +451,7 @@ int ogs_dbi_subscription_data(char *supi,
                                                 "pre_emption_vulnerability") &&
                                                     BSON_ITER_HOLDS_INT32(
                                                         &child6_iter)) {
-                                                    pdn->qos.arp.
+                                                    session->qos.arp.
                                                     pre_emption_vulnerability =
                                                         bson_iter_int32(
                                                                 &child6_iter);
@@ -483,7 +483,7 @@ int ogs_dbi_subscription_data(char *supi,
                                                             "value") &&
                                                     BSON_ITER_HOLDS_INT32(
                                                         &child6_iter)) {
-                                                    pdn->ambr.downlink =
+                                                    session->ambr.downlink =
                                                         bson_iter_int32(
                                                                 &child6_iter);
                                                 } else if (!strcmp(child6_key,
@@ -496,7 +496,7 @@ int ogs_dbi_subscription_data(char *supi,
                                             }
 
                                             for (n = 0; n < unit; n++)
-                                                pdn->ambr.downlink *= 1024;
+                                                session->ambr.downlink *= 1024;
                                         } else if (!strcmp(child5_key,
                                                     "uplink") &&
                                                 BSON_ITER_HOLDS_DOCUMENT(
@@ -514,7 +514,7 @@ int ogs_dbi_subscription_data(char *supi,
                                                             "value") &&
                                                     BSON_ITER_HOLDS_INT32(
                                                         &child6_iter)) {
-                                                    pdn->ambr.uplink =
+                                                    session->ambr.uplink =
                                                         bson_iter_int32(
                                                                 &child6_iter);
                                                 } else if (!strcmp(child6_key,
@@ -527,7 +527,7 @@ int ogs_dbi_subscription_data(char *supi,
                                             }
 
                                             for (n = 0; n < unit; n++)
-                                                pdn->ambr.uplink *= 1024;
+                                                session->ambr.uplink *= 1024;
                                         }
                                     }
                                 } else if (!strcmp(child4_key, "pgw") &&
@@ -545,8 +545,8 @@ int ogs_dbi_subscription_data(char *supi,
                                                     &child5_iter, &length);
                                             rv = ogs_ipsubnet(&ipsub, v, NULL);
                                             if (rv == OGS_OK) {
-                                                pdn->pgw_ip.ipv4 = 1;
-                                                pdn->pgw_ip.addr =
+                                                session->pgw_ip.ipv4 = 1;
+                                                session->pgw_ip.addr =
                                                     ipsub.sub[0];
                                             }
                                         } else if (!strcmp(
@@ -558,8 +558,8 @@ int ogs_dbi_subscription_data(char *supi,
                                                     &child5_iter, &length);
                                             rv = ogs_ipsubnet(&ipsub, v, NULL);
                                             if (rv == OGS_OK) {
-                                                pdn->pgw_ip.ipv6 = 1;
-                                                memcpy(pdn->pgw_ip.addr6,
+                                                session->pgw_ip.ipv6 = 1;
+                                                memcpy(session->pgw_ip.addr6,
                                                         ipsub.sub,
                                                         sizeof(ipsub.sub));
                                             }
@@ -580,8 +580,9 @@ int ogs_dbi_subscription_data(char *supi,
                                                     &child5_iter, &length);
                                             rv = ogs_ipsubnet(&ipsub, v, NULL);
                                             if (rv == OGS_OK) {
-                                                pdn->ue_ip.ipv4 = true;
-                                                pdn->ue_ip.addr = ipsub.sub[0];
+                                                session->ue_ip.ipv4 = true;
+                                                session->ue_ip.addr =
+                                                    ipsub.sub[0];
                                             }
                                         } else if (!strcmp(
                                                     child5_key, "addr6") &&
@@ -592,8 +593,8 @@ int ogs_dbi_subscription_data(char *supi,
                                                     &child5_iter, &length);
                                             rv = ogs_ipsubnet(&ipsub, v, NULL);
                                             if (rv == OGS_OK) {
-                                                pdn->ue_ip.ipv6 = true;
-                                                memcpy(pdn->ue_ip.addr6,
+                                                session->ue_ip.ipv6 = true;
+                                                memcpy(session->ue_ip.addr6,
                                                     ipsub.sub, OGS_IPV6_LEN);
                                             }
 

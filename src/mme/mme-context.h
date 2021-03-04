@@ -399,8 +399,8 @@ struct mme_ue_s {
 
     uint32_t        context_identifier; /* default APN */
 
-    int             num_of_session;
-    ogs_pdn_t       session[OGS_MAX_NUM_OF_SESS];
+    int num_of_session;
+    ogs_session_t session[OGS_MAX_NUM_OF_SESS];
 
     /* ESM Info */
     ogs_list_t      sess_list;
@@ -542,9 +542,9 @@ typedef struct mme_sess_s {
     ogs_list_t      bearer_list;
 
     /* Related Context */
-    mme_ue_t        *mme_ue;
+    mme_ue_t *mme_ue;
 
-    ogs_pdn_t       *pdn;
+    ogs_session_t *session;
 
     /* Save Protocol Configuration Options from UE */
     struct {
@@ -795,8 +795,8 @@ mme_bearer_t *mme_bearer_next(mme_bearer_t *bearer);
 mme_bearer_t *mme_bearer_cycle(mme_bearer_t *bearer);
 
 void mme_pdn_remove_all(mme_ue_t *mme_ue);
-ogs_pdn_t *mme_pdn_find_by_apn(mme_ue_t *mme_ue, char *apn);
-ogs_pdn_t *mme_default_pdn(mme_ue_t *mme_ue);
+ogs_session_t *mme_pdn_find_by_apn(mme_ue_t *mme_ue, char *apn);
+ogs_session_t *mme_default_pdn(mme_ue_t *mme_ue);
 
 int mme_find_served_tai(ogs_eps_tai_t *tai);
 

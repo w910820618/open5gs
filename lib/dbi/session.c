@@ -35,7 +35,7 @@ int ogs_dbi_session_data(char *supi, ogs_s_nssai_t *s_nssai, char *dnn,
     uint32_t length = 0;
     bool found = false;
 
-    ogs_pdn_t *pdn = NULL;
+    ogs_session_t *session = NULL;
 
     char *supi_type = NULL;
     char *supi_id = NULL;
@@ -156,18 +156,18 @@ done:
         goto out;
     }
 
-    pdn = &session_data->session;
+    session = &session_data->session;
     bson_iter_recurse(&child3_iter, &child4_iter);
     while (bson_iter_next(&child4_iter)) {
         const char *child4_key = bson_iter_key(&child4_iter);
         if (!strcmp(child4_key, "name") &&
             BSON_ITER_HOLDS_UTF8(&child4_iter)) {
             utf8 = bson_iter_utf8(&child4_iter, &length);
-            pdn->name = ogs_strndup(utf8, length);
-            ogs_assert(pdn->name);
+            session->name = ogs_strndup(utf8, length);
+            ogs_assert(session->name);
         } else if (!strcmp(child4_key, "type") &&
             BSON_ITER_HOLDS_INT32(&child4_iter)) {
-            pdn->session_type = bson_iter_int32(&child4_iter);
+            session->session_type = bson_iter_int32(&child4_iter);
         } else if (!strcmp(child4_key, "qos") &&
             BSON_ITER_HOLDS_DOCUMENT(&child4_iter)) {
             bson_iter_recurse(&child4_iter, &child5_iter);
@@ -175,7 +175,7 @@ done:
                 const char *child5_key = bson_iter_key(&child5_iter);
                 if (!strcmp(child5_key, "index") &&
                     BSON_ITER_HOLDS_INT32(&child5_iter)) {
-                    pdn->qos.index = bson_iter_int32(&child5_iter);
+                    session->qos.index = bson_iter_int32(&child5_iter);
                 } else if (!strcmp(child5_key, "arp") &&
                     BSON_ITER_HOLDS_DOCUMENT(&child5_iter)) {
                     bson_iter_recurse(&child5_iter, &child6_iter);
@@ -183,17 +183,17 @@ done:
                         const char *child6_key = bson_iter_key(&child6_iter);
                         if (!strcmp(child6_key, "priority_level") &&
                             BSON_ITER_HOLDS_INT32(&child6_iter)) {
-                            pdn->qos.arp.priority_level =
+                            session->qos.arp.priority_level =
                                 bson_iter_int32(&child6_iter);
                         } else if (!strcmp(child6_key,
                                     "pre_emption_capability") &&
                             BSON_ITER_HOLDS_INT32(&child6_iter)) {
-                            pdn->qos.arp.pre_emption_capability =
+                            session->qos.arp.pre_emption_capability =
                                 bson_iter_int32(&child6_iter);
                         } else if (!strcmp(child6_key,
                                     "pre_emption_vulnerability") &&
                             BSON_ITER_HOLDS_INT32(&child6_iter)) {
-                            pdn->qos.arp.pre_emption_vulnerability =
+                            session->qos.arp.pre_emption_vulnerability =
                                 bson_iter_int32(&child6_iter);
                         }
                     }
@@ -214,7 +214,7 @@ done:
                         const char *child6_key = bson_iter_key(&child6_iter);
                         if (!strcmp(child6_key, "value") &&
                             BSON_ITER_HOLDS_INT32(&child6_iter)) {
-                            pdn->ambr.downlink =
+                            session->ambr.downlink =
                                 bson_iter_int32(&child6_iter);
                         } else if (!strcmp(child6_key, "unit") &&
                             BSON_ITER_HOLDS_INT32(&child6_iter)) {
@@ -223,7 +223,7 @@ done:
                     }
 
                     for (n = 0; n < unit; n++)
-                        pdn->ambr.downlink *= 1024;
+                        session->ambr.downlink *= 1024;
                 } else if (!strcmp(child5_key, "uplink") &&
                         BSON_ITER_HOLDS_DOCUMENT(&child5_iter)) {
                     uint8_t unit = 0;
@@ -234,7 +234,7 @@ done:
                         const char *child6_key = bson_iter_key(&child6_iter);
                         if (!strcmp(child6_key, "value") &&
                             BSON_ITER_HOLDS_INT32(&child6_iter)) {
-                            pdn->ambr.uplink =
+                            session->ambr.uplink =
                                 bson_iter_int32(&child6_iter);
                         } else if (!strcmp(child6_key, "unit") &&
                             BSON_ITER_HOLDS_INT32(&child6_iter)) {
@@ -243,7 +243,7 @@ done:
                     }
 
                     for (n = 0; n < unit; n++)
-                        pdn->ambr.uplink *= 1024;
+                        session->ambr.uplink *= 1024;
                 }
 
             }

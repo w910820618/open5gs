@@ -87,7 +87,7 @@ void mme_s11_handle_create_session_response(
 
     mme_bearer_t *bearer = NULL;
     mme_sess_t *sess = NULL;
-    ogs_pdn_t *pdn = NULL;
+    ogs_session_t *session = NULL;
     ogs_gtp_bearer_qos_t bearer_qos;
     ogs_gtp_ambr_t *ambr = NULL;
     uint16_t decoded = 0;
@@ -180,14 +180,14 @@ void mme_s11_handle_create_session_response(
     ogs_expect_or_return(bearer);
     sess = bearer->sess;
     ogs_assert(sess);
-    pdn = sess->pdn;
-    ogs_assert(pdn);
+    session = sess->session;
+    ogs_assert(session);
 
     /* Control Plane(UL) : SGW-S11 */
     sgw_s11_teid = rsp->sender_f_teid_for_control_plane.data;
     mme_ue->sgw_s11_teid = be32toh(sgw_s11_teid->teid);
 
-    memcpy(&pdn->paa, rsp->pdn_address_allocation.data,
+    memcpy(&session->paa, rsp->pdn_address_allocation.data,
             rsp->pdn_address_allocation.len);
 
     /* PCO */
@@ -202,19 +202,19 @@ void mme_s11_handle_create_session_response(
             &rsp->bearer_contexts_created.bearer_level_qos);
         ogs_assert(rsp->bearer_contexts_created.bearer_level_qos.len ==
                 decoded);
-        pdn->qos.index = bearer_qos.qci;
-        pdn->qos.arp.priority_level = bearer_qos.priority_level;
-        pdn->qos.arp.pre_emption_capability =
+        session->qos.index = bearer_qos.qci;
+        session->qos.arp.priority_level = bearer_qos.priority_level;
+        session->qos.arp.pre_emption_capability =
                         bearer_qos.pre_emption_capability;
-        pdn->qos.arp.pre_emption_vulnerability =
+        session->qos.arp.pre_emption_vulnerability =
                         bearer_qos.pre_emption_vulnerability;
     }
 
     /* AMBR */
     if (rsp->aggregate_maximum_bit_rate.presence) {
         ambr = rsp->aggregate_maximum_bit_rate.data;
-        pdn->ambr.downlink = be32toh(ambr->downlink) * 1000;
-        pdn->ambr.uplink = be32toh(ambr->uplink) * 1000;
+        session->ambr.downlink = be32toh(ambr->downlink) * 1000;
+        session->ambr.uplink = be32toh(ambr->uplink) * 1000;
     }
 
     /* Data Plane(UL) : SGW-S1U */
@@ -234,15 +234,15 @@ void mme_s11_handle_create_session_response(
         mme_ue->csmap = csmap;
 
         if (csmap) {
-            ogs_assert(OGS_GTP_PDN_TYPE_IS_VALID(pdn->paa.pdn_type));
+            ogs_assert(OGS_GTP_PDN_TYPE_IS_VALID(session->paa.pdn_type));
             sgsap_send_location_update_request(mme_ue);
         } else {
-            ogs_assert(OGS_GTP_PDN_TYPE_IS_VALID(pdn->paa.pdn_type));
+            ogs_assert(OGS_GTP_PDN_TYPE_IS_VALID(session->paa.pdn_type));
             nas_eps_send_attach_accept(mme_ue);
         }
 
     } else {
-        ogs_assert(OGS_GTP_PDN_TYPE_IS_VALID(pdn->paa.pdn_type));
+        ogs_assert(OGS_GTP_PDN_TYPE_IS_VALID(session->paa.pdn_type));
         nas_eps_send_activate_default_bearer_context_request(bearer);
     }
 }

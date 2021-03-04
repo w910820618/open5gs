@@ -61,8 +61,9 @@ int esm_handle_pdn_connectivity_request(mme_bearer_t *bearer,
 
     if (req->presencemask &
             OGS_NAS_EPS_PDN_CONNECTIVITY_REQUEST_ACCESS_POINT_NAME_PRESENT) {
-        sess->pdn = mme_pdn_find_by_apn(mme_ue, req->access_point_name.apn);
-        if (!sess->pdn) {
+        sess->session =
+            mme_pdn_find_by_apn(mme_ue, req->access_point_name.apn);
+        if (!sess->session) {
             /* Invalid APN */
             nas_eps_send_pdn_connectivity_reject(
                     sess, ESM_CAUSE_MISSING_OR_UNKNOWN_APN);
@@ -87,17 +88,17 @@ int esm_handle_pdn_connectivity_request(mme_bearer_t *bearer,
         return OGS_OK;
     }
 
-    if (!sess->pdn) {
+    if (!sess->session) {
         /* Default APN */
-        sess->pdn = mme_default_pdn(mme_ue);
+        sess->session = mme_default_pdn(mme_ue);
     }
 
-    if (sess->pdn) {
+    if (sess->session) {
         mme_bearer_t *default_bearer = NULL;
         mme_bearer_t *dedicated_bearer = NULL, *next_dedicated_bearer = NULL;
 
-        ogs_assert(sess->pdn->name);
-        ogs_debug("    APN[%s]", sess->pdn->name);
+        ogs_assert(sess->session->name);
+        ogs_debug("    APN[%s]", sess->session->name);
 
         default_bearer = mme_default_bearer_in_sess(sess);
         if (default_bearer) {
@@ -137,7 +138,7 @@ int esm_handle_information_response(mme_sess_t *sess,
 
     if (rsp->presencemask &
             OGS_NAS_EPS_ESM_INFORMATION_RESPONSE_ACCESS_POINT_NAME_PRESENT) {
-        sess->pdn = mme_pdn_find_by_apn(mme_ue, rsp->access_point_name.apn);
+        sess->session = mme_pdn_find_by_apn(mme_ue, rsp->access_point_name.apn);
     }
 
     if (rsp->presencemask &
@@ -148,12 +149,12 @@ int esm_handle_information_response(mme_sess_t *sess,
         OGS_NAS_STORE_DATA(&sess->ue_pco, protocol_configuration_options);
     }
 
-    if (sess->pdn) {
-        ogs_assert(sess->pdn->name);
-        ogs_debug("    APN[%s]", sess->pdn->name);
+    if (sess->session) {
+        ogs_assert(sess->session->name);
+        ogs_debug("    APN[%s]", sess->session->name);
 
         if (SESSION_CONTEXT_IS_AVAILABLE(mme_ue) &&
-            OGS_GTP_PDN_TYPE_IS_VALID(sess->pdn->paa.pdn_type)) {
+            OGS_GTP_PDN_TYPE_IS_VALID(sess->session->paa.pdn_type)) {
             mme_csmap_t *csmap = mme_csmap_find_by_tai(&mme_ue->tai);
             mme_ue->csmap = csmap;
 

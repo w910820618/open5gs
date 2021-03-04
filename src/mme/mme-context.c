@@ -2743,8 +2743,8 @@ mme_sess_t *mme_sess_find_by_apn(mme_ue_t *mme_ue, char *apn)
 
     sess = mme_sess_first(mme_ue);
     while (sess) {
-        ogs_assert(sess->pdn->name);
-        if (sess->pdn && ogs_strcasecmp(sess->pdn->name, apn) == 0)
+        ogs_assert(sess->session->name);
+        if (sess->session && ogs_strcasecmp(sess->session->name, apn) == 0)
             return sess;
 
         sess = mme_sess_next(sess);
@@ -3090,35 +3090,35 @@ void mme_pdn_remove_all(mme_ue_t *mme_ue)
     mme_ue->num_of_session = 0;
 }
 
-ogs_pdn_t *mme_pdn_find_by_apn(mme_ue_t *mme_ue, char *apn)
+ogs_session_t *mme_pdn_find_by_apn(mme_ue_t *mme_ue, char *apn)
 {
-    ogs_pdn_t *pdn = NULL;
+    ogs_session_t *session = NULL;
     int i = 0;
     
     ogs_assert(mme_ue);
     ogs_assert(apn);
 
     for (i = 0; i < mme_ue->num_of_session; i++) {
-        pdn = &mme_ue->session[i];
-        ogs_assert(pdn->name);
-        if (ogs_strcasecmp(pdn->name, apn) == 0)
-            return pdn;
+        session = &mme_ue->session[i];
+        ogs_assert(session->name);
+        if (ogs_strcasecmp(session->name, apn) == 0)
+            return session;
     }
 
     return NULL;
 }
 
-ogs_pdn_t *mme_default_pdn(mme_ue_t *mme_ue)
+ogs_session_t *mme_default_pdn(mme_ue_t *mme_ue)
 {
-    ogs_pdn_t *pdn = NULL;
+    ogs_session_t *session = NULL;
     int i = 0;
     
     ogs_assert(mme_ue);
 
     for (i = 0; i < mme_ue->num_of_session; i++) {
-        pdn = &mme_ue->session[i];
-        if (pdn->context_identifier == mme_ue->context_identifier)
-            return pdn;
+        session = &mme_ue->session[i];
+        if (session->context_identifier == mme_ue->context_identifier)
+            return session;
     }
 
     return NULL;

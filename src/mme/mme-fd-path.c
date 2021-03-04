@@ -832,15 +832,15 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                     break;
                 case OGS_DIAM_S6A_AVP_CODE_APN_CONFIGURATION:
                 {
-                    ogs_pdn_t *pdn =
+                    ogs_session_t *session =
                         &slice_data->session[slice_data->num_of_session];
-                    ogs_assert(pdn);
+                    ogs_assert(session);
                     ret = fd_avp_search_avp(
                         avpch2, ogs_diam_s6a_service_selection, &avpch3);
                     ogs_assert(ret == 0);
                     if (avpch3) {
                         ret = fd_msg_avp_hdr(avpch3, &hdr);
-                        pdn->name = ogs_strndup(
+                        session->name = ogs_strndup(
                                         (char*)hdr->avp_value->os.data,
                                         hdr->avp_value->os.len);
                     } else {
@@ -853,7 +853,7 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                     ogs_assert(ret == 0);
                     if (avpch3) {
                         ret = fd_msg_avp_hdr(avpch3, &hdr);
-                        pdn->context_identifier = hdr->avp_value->i32;
+                        session->context_identifier = hdr->avp_value->i32;
                     } else {
                         ogs_error("no_Context-Identifier");
                         error++;
@@ -864,7 +864,7 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                     ogs_assert(ret == 0);
                     if (avpch3) {
                         ret = fd_msg_avp_hdr(avpch3, &hdr);
-                        pdn->session_type = hdr->avp_value->i32;
+                        session->session_type = hdr->avp_value->i32;
                     } else {
                         ogs_error("no_PDN-Type");
                         error++;
@@ -883,12 +883,13 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                             ogs_assert(ret == 0);
 
                             if (addr.ogs_sa_family == AF_INET) {
-                                if (pdn->session_type ==
+                                if (session->session_type ==
                                         OGS_DIAM_PDN_TYPE_IPV4) {
-                                    pdn->paa.addr = addr.sin.sin_addr.s_addr;
-                                } else if (pdn->session_type ==
+                                    session->paa.addr =
+                                        addr.sin.sin_addr.s_addr;
+                                } else if (session->session_type ==
                                         OGS_DIAM_PDN_TYPE_IPV4V6) {
-                                    pdn->paa.both.addr =
+                                    session->paa.both.addr =
                                         addr.sin.sin_addr.s_addr;
                                 } else {
                                     ogs_error("Warning: Received a static IPv4 "
@@ -896,14 +897,14 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                                         "IPv4. Ignoring...");
                                 }
                             } else if (addr.ogs_sa_family == AF_INET6) {
-                                if (pdn->session_type ==
+                                if (session->session_type ==
                                         OGS_DIAM_PDN_TYPE_IPV6) {
-                                    memcpy(pdn->paa.addr6,
+                                    memcpy(session->paa.addr6,
                                         addr.sin6.sin6_addr.s6_addr,
                                         OGS_IPV6_LEN);
-                                } else if (pdn->session_type ==
+                                } else if (session->session_type ==
                                         OGS_DIAM_PDN_TYPE_IPV4V6) {
-                                    memcpy(pdn->paa.both.addr6,
+                                    memcpy(session->paa.both.addr6,
                                         addr.sin6.sin6_addr.s6_addr,
                                         OGS_IPV6_LEN);
                                 } else {
@@ -932,7 +933,7 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                         if (avpch4) {
                             ret = fd_msg_avp_hdr(avpch4, &hdr);
                             ogs_assert(ret == 0);
-                            pdn->qos.index = hdr->avp_value->i32;
+                            session->qos.index = hdr->avp_value->i32;
                         } else {
                             ogs_error("no_QoS-Class-Identifier");
                             error++;
@@ -949,7 +950,7 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                             if (avpch5) {
                                 ret = fd_msg_avp_hdr(avpch5, &hdr);
                                 ogs_assert(ret == 0);
-                                pdn->qos.arp.priority_level = 
+                                session->qos.arp.priority_level =
                                     hdr->avp_value->i32;
 
                             } else {
@@ -963,10 +964,10 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                             if (avpch5) {
                                 ret = fd_msg_avp_hdr(avpch5, &hdr);
                                 ogs_assert(ret == 0);
-                                pdn->qos.arp.pre_emption_capability =
+                                session->qos.arp.pre_emption_capability =
                                     hdr->avp_value->i32;
                             } else {
-                                pdn->qos.arp.pre_emption_capability =
+                                session->qos.arp.pre_emption_capability =
                                     OGS_DIAM_PRE_EMPTION_DISABLED;
                             }
 
@@ -977,10 +978,10 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                             if (avpch5) {
                                 ret = fd_msg_avp_hdr(avpch5, &hdr);
                                 ogs_assert(ret == 0);
-                                pdn->qos.arp.pre_emption_vulnerability =
+                                session->qos.arp.pre_emption_vulnerability =
                                     hdr->avp_value->i32;
                             } else {
-                                pdn->qos.arp.pre_emption_vulnerability =
+                                session->qos.arp.pre_emption_vulnerability =
                                     OGS_DIAM_PRE_EMPTION_ENABLED;
                             }
 
@@ -1009,14 +1010,14 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                                 ogs_assert(ret == 0);
                                 if (addr.ogs_sa_family == AF_INET)
                                 {
-                                    pdn->pgw_ip.ipv4 = 1;
-                                    pdn->pgw_ip.addr =
+                                    session->pgw_ip.ipv4 = 1;
+                                    session->pgw_ip.addr =
                                         addr.sin.sin_addr.s_addr;
                                 }
                                 else if (addr.ogs_sa_family == AF_INET6)
                                 {
-                                    pdn->pgw_ip.ipv6 = 1;
-                                    memcpy(pdn->pgw_ip.addr6,
+                                    session->pgw_ip.ipv6 = 1;
+                                    memcpy(session->pgw_ip.addr6,
                                         addr.sin6.sin6_addr.s6_addr,
                                         OGS_IPV6_LEN);
                                 }
@@ -1047,7 +1048,7 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                         if (avpch4) {
                             ret = fd_msg_avp_hdr(avpch4, &hdr);
                             ogs_assert(ret == 0);
-                            pdn->ambr.uplink = hdr->avp_value->u32;
+                            session->ambr.uplink = hdr->avp_value->u32;
                         } else {
                             ogs_error("no_Max-Bandwidth-UL");
                             error++;
@@ -1059,7 +1060,7 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                         if (avpch4) {
                             ret = fd_msg_avp_hdr(avpch4, &hdr);
                             ogs_assert(ret == 0);
-                            pdn->ambr.downlink = hdr->avp_value->u32;
+                            session->ambr.downlink = hdr->avp_value->u32;
                         } else {
                             ogs_error("no_Max-Bandwidth-DL");
                             error++;

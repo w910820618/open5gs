@@ -185,8 +185,8 @@ bool smf_nsmf_handle_create_sm_context(
     ogs_freeaddrinfo(addr);
 
     if (SmContextCreateData->dnn) {
-        if (sess->pdn.name) ogs_free(sess->pdn.name);
-        sess->pdn.name = ogs_strdup(SmContextCreateData->dnn);
+        if (sess->session.name) ogs_free(sess->session.name);
+        sess->session.name = ogs_strdup(SmContextCreateData->dnn);
     }
 
     if (SmContextCreateData->pcf_id) {

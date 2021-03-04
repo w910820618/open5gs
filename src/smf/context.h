@@ -263,7 +263,7 @@ typedef struct smf_sess_s {
     ogs_s_nssai_t mapped_hplmn;
 
     /* PDN Configuration */
-    ogs_pdn_t pdn;
+    ogs_session_t session;
     uint8_t ue_pdu_session_type;
     uint8_t ue_ssc_mode;
 

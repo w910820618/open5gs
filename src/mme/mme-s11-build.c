@@ -25,7 +25,7 @@ ogs_pkbuf_t *mme_s11_build_create_session_request(
         uint8_t type, mme_sess_t *sess)
 {
     int rv;
-    ogs_pdn_t *pdn = NULL;
+    ogs_session_t *session = NULL;
     mme_ue_t *mme_ue = NULL;
     mme_bearer_t *bearer = NULL;
     ogs_gtp_message_t gtp_message;
@@ -44,9 +44,9 @@ ogs_pkbuf_t *mme_s11_build_create_session_request(
     char apn[OGS_MAX_APN_LEN];
 
     ogs_assert(sess);
-    pdn = sess->pdn;
-    ogs_assert(pdn);
-    ogs_assert(pdn->name);
+    session = sess->session;
+    ogs_assert(session);
+    ogs_assert(session->name);
     bearer = mme_default_bearer_in_sess(sess);
     ogs_assert(bearer);
     mme_ue = sess->mme_ue;
@@ -105,22 +105,22 @@ ogs_pkbuf_t *mme_s11_build_create_session_request(
 
     memset(&pgw_s5c_teid, 0, sizeof(ogs_gtp_f_teid_t));
     pgw_s5c_teid.interface_type = OGS_GTP_F_TEID_S5_S8_PGW_GTP_C;
-    if (pdn->pgw_ip.ipv4 || pdn->pgw_ip.ipv6) {
-        pgw_s5c_teid.ipv4 = pdn->pgw_ip.ipv4;
-        pgw_s5c_teid.ipv6 = pdn->pgw_ip.ipv6;
+    if (session->pgw_ip.ipv4 || session->pgw_ip.ipv6) {
+        pgw_s5c_teid.ipv4 = session->pgw_ip.ipv4;
+        pgw_s5c_teid.ipv6 = session->pgw_ip.ipv6;
         if (pgw_s5c_teid.ipv4 && pgw_s5c_teid.ipv6) {
-            pgw_s5c_teid.both.addr = pdn->pgw_ip.addr;
-            memcpy(pgw_s5c_teid.both.addr6, pdn->pgw_ip.addr6,
-                    sizeof pdn->pgw_ip.addr6);
+            pgw_s5c_teid.both.addr = session->pgw_ip.addr;
+            memcpy(pgw_s5c_teid.both.addr6, session->pgw_ip.addr6,
+                    sizeof session->pgw_ip.addr6);
             req->pgw_s5_s8_address_for_control_plane_or_pmip.len =
                 OGS_GTP_F_TEID_IPV4V6_LEN;
         } else if (pgw_s5c_teid.ipv4) {
-            pgw_s5c_teid.addr = pdn->pgw_ip.addr;
+            pgw_s5c_teid.addr = session->pgw_ip.addr;
             req->pgw_s5_s8_address_for_control_plane_or_pmip.len =
                 OGS_GTP_F_TEID_IPV4_LEN;
         } else if (pgw_s5c_teid.ipv6) {
-            memcpy(pgw_s5c_teid.addr6, pdn->pgw_ip.addr6,
-                    sizeof pdn->pgw_ip.addr6);
+            memcpy(pgw_s5c_teid.addr6, session->pgw_ip.addr6,
+                    sizeof session->pgw_ip.addr6);
             req->pgw_s5_s8_address_for_control_plane_or_pmip.len =
                 OGS_GTP_F_TEID_IPV6_LEN;
         }
@@ -132,9 +132,9 @@ ogs_pkbuf_t *mme_s11_build_create_session_request(
         ogs_sockaddr_t *pgw_addr6 = NULL;
 
         pgw_addr = mme_pgw_addr_find_by_apn(
-                &mme_self()->pgw_list, AF_INET, pdn->name);
+                &mme_self()->pgw_list, AF_INET, session->name);
         pgw_addr6 = mme_pgw_addr_find_by_apn(
-                &mme_self()->pgw_list, AF_INET6, pdn->name);
+                &mme_self()->pgw_list, AF_INET6, session->name);
         if (!pgw_addr && !pgw_addr6) {
             pgw_addr = mme_self()->pgw_addr;
             pgw_addr6 = mme_self()->pgw_addr6;
@@ -150,7 +150,7 @@ ogs_pkbuf_t *mme_s11_build_create_session_request(
 
     req->access_point_name.presence = 1;
     req->access_point_name.len = ogs_fqdn_build(
-            apn, pdn->name, strlen(pdn->name));
+            apn, session->name, strlen(session->name));
     req->access_point_name.data = apn;
 
     req->selection_mode.presence = 1;
@@ -160,19 +160,20 @@ ogs_pkbuf_t *mme_s11_build_create_session_request(
     ogs_assert(sess->request_type.type == OGS_NAS_EPS_PDN_TYPE_IPV4 ||
             sess->request_type.type == OGS_NAS_EPS_PDN_TYPE_IPV6 ||
             sess->request_type.type == OGS_NAS_EPS_PDN_TYPE_IPV4V6);
-    if (pdn->session_type == OGS_DIAM_PDN_TYPE_IPV4 ||
-        pdn->session_type == OGS_DIAM_PDN_TYPE_IPV6 ||
-        pdn->session_type == OGS_DIAM_PDN_TYPE_IPV4V6) {
-        req->pdn_type.u8 = ((pdn->session_type + 1) & sess->request_type.type);
+    if (session->session_type == OGS_DIAM_PDN_TYPE_IPV4 ||
+        session->session_type == OGS_DIAM_PDN_TYPE_IPV6 ||
+        session->session_type == OGS_DIAM_PDN_TYPE_IPV4V6) {
+        req->pdn_type.u8 = ((session->session_type + 1) &
+                sess->request_type.type);
         if (req->pdn_type.u8 == 0) {
             ogs_fatal("Cannot derive PDN Type [UE:%d,HSS:%d]",
-                sess->request_type.type, pdn->session_type);
+                sess->request_type.type, session->session_type);
             ogs_assert_if_reached();
         }
-    } else if (pdn->session_type == OGS_DIAM_PDN_TYPE_IPV4_OR_IPV6) {
+    } else if (session->session_type == OGS_DIAM_PDN_TYPE_IPV4_OR_IPV6) {
         req->pdn_type.u8 = sess->request_type.type;
     } else {
-        ogs_fatal("Invalid PDN_TYPE[%d]", pdn->session_type);
+        ogs_fatal("Invalid PDN_TYPE[%d]", session->session_type);
         ogs_assert_if_reached();
     }
     req->pdn_type.presence = 1;
@@ -181,19 +182,19 @@ ogs_pkbuf_t *mme_s11_build_create_session_request(
      * (pdn_type & sess->request_type) truncates us down to just one,
      * we need to change position of addresses in struct. */
     if (req->pdn_type.u8 == OGS_GTP_PDN_TYPE_IPV4 &&
-            pdn->session_type == OGS_DIAM_PDN_TYPE_IPV4V6) {
-	    uint32_t addr = pdn->paa.both.addr;
-	    pdn->paa.addr = addr;
+            session->session_type == OGS_DIAM_PDN_TYPE_IPV4V6) {
+	    uint32_t addr = session->paa.both.addr;
+	    session->paa.addr = addr;
     }
     if (req->pdn_type.u8 == OGS_GTP_PDN_TYPE_IPV6 &&
-            pdn->session_type == OGS_DIAM_PDN_TYPE_IPV4V6) {
+            session->session_type == OGS_DIAM_PDN_TYPE_IPV4V6) {
 	    uint8_t addr[16];
-	    memcpy(&addr, pdn->paa.both.addr6, OGS_IPV6_LEN);
-	    memcpy(pdn->paa.addr6, &addr, OGS_IPV6_LEN);
+	    memcpy(&addr, session->paa.both.addr6, OGS_IPV6_LEN);
+	    memcpy(session->paa.addr6, &addr, OGS_IPV6_LEN);
     }
 
-    pdn->paa.pdn_type = req->pdn_type.u8;
-    req->pdn_address_allocation.data = &pdn->paa;
+    session->paa.pdn_type = req->pdn_type.u8;
+    req->pdn_address_allocation.data = &session->paa;
     if (req->pdn_type.u8 == OGS_GTP_PDN_TYPE_IPV4)
         req->pdn_address_allocation.len = OGS_PAA_IPV4_LEN;
     else if (req->pdn_type.u8 == OGS_GTP_PDN_TYPE_IPV6)
@@ -207,7 +208,7 @@ ogs_pkbuf_t *mme_s11_build_create_session_request(
     req->maximum_apn_restriction.presence = 1;
     req->maximum_apn_restriction.u8 = OGS_GTP_APN_NO_RESTRICTION;
 
-    if (pdn->ambr.uplink || pdn->ambr.downlink) {
+    if (session->ambr.uplink || session->ambr.downlink) {
         /*
          * Ch 8.7. Aggregate Maximum Bit Rate(AMBR) in TS 29.274 V15.9.0
          *
@@ -216,8 +217,8 @@ ogs_pkbuf_t *mme_s11_build_create_session_request(
          * Unsigned32 binary integer values in kbps (1000 bits per second).
          */
         memset(&ambr, 0, sizeof(ogs_gtp_ambr_t));
-        ambr.uplink = htobe32(pdn->ambr.uplink / 1000);
-        ambr.downlink = htobe32(pdn->ambr.downlink / 1000);
+        ambr.uplink = htobe32(session->ambr.uplink / 1000);
+        ambr.downlink = htobe32(session->ambr.downlink / 1000);
         req->aggregate_maximum_bit_rate.presence = 1;
         req->aggregate_maximum_bit_rate.data = &ambr;
         req->aggregate_maximum_bit_rate.len = sizeof(ambr);
@@ -234,11 +235,11 @@ ogs_pkbuf_t *mme_s11_build_create_session_request(
     req->bearer_contexts_to_be_created.eps_bearer_id.u8 = bearer->ebi;
 
     memset(&bearer_qos, 0, sizeof(bearer_qos));
-    bearer_qos.qci = pdn->qos.index;
-    bearer_qos.priority_level = pdn->qos.arp.priority_level;
-    bearer_qos.pre_emption_capability = pdn->qos.arp.pre_emption_capability;
+    bearer_qos.qci = session->qos.index;
+    bearer_qos.priority_level = session->qos.arp.priority_level;
+    bearer_qos.pre_emption_capability = session->qos.arp.pre_emption_capability;
     bearer_qos.pre_emption_vulnerability =
-        pdn->qos.arp.pre_emption_vulnerability;
+        session->qos.arp.pre_emption_vulnerability;
     req->bearer_contexts_to_be_created.bearer_level_qos.presence = 1;
     ogs_gtp_build_bearer_qos(
             &req->bearer_contexts_to_be_created.bearer_level_qos,

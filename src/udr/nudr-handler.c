@@ -514,14 +514,14 @@ bool udr_nudr_dr_handle_subscription_provisioned(
             ogs_assert(DnnInfoList);
 
             for (j = 0; j < slice_data->num_of_session; j++) {
-                ogs_pdn_t *pdn = &slice_data->session[j];
-                ogs_assert(pdn);
-                ogs_assert(pdn->name);
+                ogs_session_t *session = &slice_data->session[j];
+                ogs_assert(session);
+                ogs_assert(session->name);
 
                 DnnInfo = ogs_calloc(1, sizeof(*DnnInfo));
                 ogs_assert(DnnInfo);
 
-                DnnInfo->dnn = pdn->name;
+                DnnInfo->dnn = session->name;
 
                 /* 0-index DNN becomes the default DNN */
                 if (j == 0)
@@ -628,23 +628,24 @@ bool udr_nudr_dr_handle_subscription_provisioned(
         dnnConfigurationList = OpenAPI_list_create();
 
         for (i = 0; i < slice_data->num_of_session; i++) {
-            ogs_pdn_t *pdn = &slice_data->session[i];
-            ogs_assert(pdn);
-            ogs_assert(pdn->name);
+            ogs_session_t *session = &slice_data->session[i];
+            ogs_assert(session);
+            ogs_assert(session->name);
 
             if (recvmsg->param.dnn &&
-                ogs_strcasecmp(recvmsg->param.dnn, pdn->name) != 0) continue;
+                ogs_strcasecmp(recvmsg->param.dnn, session->name) != 0)
+                continue;
 
-            if (!pdn->qos.index) {
+            if (!session->qos.index) {
                 ogs_error("No 5QI");
                 continue;
             }
-            if (!pdn->qos.arp.priority_level) {
+            if (!session->qos.arp.priority_level) {
                 ogs_error("No Priority Level");
                 continue;
             }
 
-            if (!pdn->ambr.uplink && !pdn->ambr.downlink) {
+            if (!session->ambr.uplink && !session->ambr.downlink) {
                 ogs_error("No Session-AMBR");
                 continue;
             }
@@ -655,7 +656,7 @@ bool udr_nudr_dr_handle_subscription_provisioned(
             pduSessionTypeList = ogs_calloc(1, sizeof(*pduSessionTypeList));
             ogs_assert(pduSessionTypeList);
             pduSessionTypeList->default_session_type =
-                pdu_session_type_from_dbi(pdn->session_type);
+                pdu_session_type_from_dbi(session->session_type);
 
             pduSessionTypeList->allowed_session_types = OpenAPI_list_create();
             ogs_assert(pduSessionTypeList->allowed_session_types);
@@ -701,26 +702,27 @@ bool udr_nudr_dr_handle_subscription_provisioned(
 
             _5gQoSProfile = ogs_calloc(1, sizeof(*_5gQoSProfile));
             ogs_assert(_5gQoSProfile);
-            _5gQoSProfile->_5qi = pdn->qos.index;
-            _5gQoSProfile->priority_level = pdn->qos.arp.priority_level;
+            _5gQoSProfile->_5qi = session->qos.index;
+            _5gQoSProfile->priority_level = session->qos.arp.priority_level;
             _5gQoSProfile->arp = ogs_calloc(1, sizeof(OpenAPI_arp_t));
             ogs_assert(_5gQoSProfile->arp);
-            _5gQoSProfile->arp->priority_level = pdn->qos.arp.priority_level;
-            if (pdn->qos.arp.pre_emption_capability ==
+            _5gQoSProfile->arp->priority_level =
+                session->qos.arp.priority_level;
+            if (session->qos.arp.pre_emption_capability ==
                     OGS_ARP_PRE_EMPTION_ENABLED)
                 _5gQoSProfile->arp->preempt_cap =
                         OpenAPI_preemption_capability_MAY_PREEMPT;
-            else if (pdn->qos.arp.pre_emption_capability ==
+            else if (session->qos.arp.pre_emption_capability ==
                     OGS_ARP_PRE_EMPTION_DISABLED)
                 _5gQoSProfile->arp->preempt_cap =
                         OpenAPI_preemption_capability_NOT_PREEMPT;
             ogs_assert(_5gQoSProfile->arp->preempt_cap);
 
-            if (pdn->qos.arp.pre_emption_vulnerability ==
+            if (session->qos.arp.pre_emption_vulnerability ==
                 OGS_ARP_PRE_EMPTION_ENABLED)
                 _5gQoSProfile->arp->preempt_vuln =
                     OpenAPI_preemption_vulnerability_PREEMPTABLE;
-            else if (pdn->qos.arp.pre_emption_vulnerability ==
+            else if (session->qos.arp.pre_emption_vulnerability ==
                 OGS_ARP_PRE_EMPTION_DISABLED)
                 _5gQoSProfile->arp->preempt_vuln =
                     OpenAPI_preemption_vulnerability_NOT_PREEMPTABLE;
@@ -728,27 +730,29 @@ bool udr_nudr_dr_handle_subscription_provisioned(
 
             dnnConfiguration->_5g_qos_profile = _5gQoSProfile;
 
-            ogs_assert(pdn->ambr.uplink || pdn->ambr.downlink);
+            ogs_assert(session->ambr.uplink || session->ambr.downlink);
             sessionAmbr = ogs_calloc(1, sizeof(*sessionAmbr));
             ogs_assert(sessionAmbr);
             sessionAmbr->uplink = ogs_sbi_bitrate_to_string(
-                    pdn->ambr.uplink, OGS_SBI_BITRATE_KBPS);
+                    session->ambr.uplink, OGS_SBI_BITRATE_KBPS);
             sessionAmbr->downlink = ogs_sbi_bitrate_to_string(
-                    pdn->ambr.downlink, OGS_SBI_BITRATE_KBPS);
+                    session->ambr.downlink, OGS_SBI_BITRATE_KBPS);
 
             dnnConfiguration->session_ambr = sessionAmbr;
 
             staticIpAddress = OpenAPI_list_create();
             ogs_assert(staticIpAddress);
 
-            if (pdn->ue_ip.ipv4 || pdn->ue_ip.ipv6) {
+            if (session->ue_ip.ipv4 || session->ue_ip.ipv6) {
                 ipAddress = ogs_calloc(1, sizeof(*ipAddress));
                 ogs_assert(ipAddress);
 
-                if (pdn->ue_ip.ipv4)
-                    ipAddress->ipv4_addr = ogs_ipv4_to_string(pdn->ue_ip.addr);
-                if (pdn->ue_ip.ipv6)
-                    ipAddress->ipv6_addr = ogs_ipv6_to_string(pdn->ue_ip.addr6);
+                if (session->ue_ip.ipv4)
+                    ipAddress->ipv4_addr =
+                        ogs_ipv4_to_string(session->ue_ip.addr);
+                if (session->ue_ip.ipv6)
+                    ipAddress->ipv6_addr =
+                        ogs_ipv6_to_string(session->ue_ip.addr6);
 
                 if (ipAddress->ipv4_addr || ipAddress->ipv6_addr)
                     OpenAPI_list_add(staticIpAddress, ipAddress);
@@ -762,7 +766,7 @@ bool udr_nudr_dr_handle_subscription_provisioned(
                 OpenAPI_list_free(staticIpAddress);
 
             dnnConfigurationMap = OpenAPI_map_create(
-                    pdn->name, dnnConfiguration);
+                    session->name, dnnConfiguration);
             ogs_assert(dnnConfigurationMap);
             OpenAPI_list_add(dnnConfigurationList, dnnConfigurationMap);
         }
@@ -974,21 +978,21 @@ bool udr_nudr_dr_handle_policy_data(
                 slice_data = &subscription_data.slice[0];
 
                 for (i = 0; i < slice_data->num_of_session; i++) {
-                    ogs_pdn_t *pdn = &slice_data->session[i];
-                    ogs_assert(pdn);
-                    ogs_assert(pdn->name);
+                    ogs_session_t *session = &slice_data->session[i];
+                    ogs_assert(session);
+                    ogs_assert(session->name);
 
                     if (recvmsg->param.dnn &&
-                        ogs_strcasecmp(recvmsg->param.dnn, pdn->name) != 0)
+                        ogs_strcasecmp(recvmsg->param.dnn, session->name) != 0)
                         continue;
 
                     SmPolicyDnnData = ogs_calloc(1, sizeof(*SmPolicyDnnData));
                     ogs_assert(SmPolicyDnnData);
 
-                    SmPolicyDnnData->dnn = pdn->name;
+                    SmPolicyDnnData->dnn = session->name;
 
                     SmPolicyDnnDataMap = OpenAPI_map_create(
-                            pdn->name, SmPolicyDnnData);
+                            session->name, SmPolicyDnnData);
                     ogs_assert(SmPolicyDnnDataMap);
 
                     OpenAPI_list_add(SmPolicyDnnDataList, SmPolicyDnnDataMap);

@@ -517,9 +517,9 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
             struct avp *pre_emption_capability, *pre_emption_vulnerability;
             struct avp *mip6_agent_info, *mip_home_agent_address;
 
-            ogs_pdn_t *pdn = &slice_data->session[i];
-            ogs_assert(pdn);
-            pdn->context_identifier = i+1;
+            ogs_session_t *session = &slice_data->session[i];
+            ogs_assert(session);
+            session->context_identifier = i+1;
 
             ret = fd_msg_avp_new(ogs_diam_s6a_apn_configuration, 0,
                 &apn_configuration);
@@ -529,7 +529,7 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
             ret = fd_msg_avp_new(ogs_diam_s6a_context_identifier, 0,
                     &context_identifier);
             ogs_assert(ret == 0);
-            val.i32 = pdn->context_identifier;
+            val.i32 = session->context_identifier;
             ret = fd_msg_avp_setvalue(context_identifier, &val);
             ogs_assert(ret == 0);
             ret = fd_msg_avp_add(apn_configuration,
@@ -539,7 +539,7 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
             /* Set PDN-Type */
             ret = fd_msg_avp_new(ogs_diam_s6a_pdn_type, 0, &pdn_type);
             ogs_assert(ret == 0);
-            val.i32 = pdn->session_type;
+            val.i32 = session->session_type;
             ret = fd_msg_avp_setvalue(pdn_type, &val);
             ogs_assert(ret == 0);
             ret = fd_msg_avp_add(apn_configuration,
@@ -547,14 +547,14 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
             ogs_assert(ret == 0);
 
             /* Set Served-Party-IP-Address */
-            if ((pdn->session_type == OGS_DIAM_PDN_TYPE_IPV4 ||
-                 pdn->session_type == OGS_DIAM_PDN_TYPE_IPV4V6) &&
-                pdn->ue_ip.ipv4) {
+            if ((session->session_type == OGS_DIAM_PDN_TYPE_IPV4 ||
+                 session->session_type == OGS_DIAM_PDN_TYPE_IPV4V6) &&
+                session->ue_ip.ipv4) {
                 ret = fd_msg_avp_new(ogs_diam_s6a_served_party_ip_address,
                         0, &served_party_ip_address);
                 ogs_assert(ret == 0);
                 sin.sin_family = AF_INET;
-                sin.sin_addr.s_addr = pdn->ue_ip.addr;
+                sin.sin_addr.s_addr = session->ue_ip.addr;
                 ret = fd_msg_avp_value_encode(&sin, served_party_ip_address);
                 ogs_assert(ret == 0);
                 ret = fd_msg_avp_add(apn_configuration, MSG_BRW_LAST_CHILD,
@@ -562,14 +562,15 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
                 ogs_assert(ret == 0);
             }
 
-            if ((pdn->session_type == OGS_DIAM_PDN_TYPE_IPV6 ||
-                 pdn->session_type == OGS_DIAM_PDN_TYPE_IPV4V6) &&
-                pdn->ue_ip.ipv6) {
+            if ((session->session_type == OGS_DIAM_PDN_TYPE_IPV6 ||
+                 session->session_type == OGS_DIAM_PDN_TYPE_IPV4V6) &&
+                session->ue_ip.ipv6) {
                 ret = fd_msg_avp_new(ogs_diam_s6a_served_party_ip_address,
                         0, &served_party_ip_address);
                 ogs_assert(ret == 0);
                 sin6.sin6_family = AF_INET6;
-                memcpy(sin6.sin6_addr.s6_addr, pdn->ue_ip.addr6, OGS_IPV6_LEN);
+                memcpy(sin6.sin6_addr.s6_addr,
+                        session->ue_ip.addr6, OGS_IPV6_LEN);
                 ret = fd_msg_avp_value_encode(&sin6, served_party_ip_address);
                 ogs_assert(ret == 0);
                 ret = fd_msg_avp_add(apn_configuration, MSG_BRW_LAST_CHILD,
@@ -581,9 +582,9 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
             ret = fd_msg_avp_new(ogs_diam_s6a_service_selection, 0,
                     &service_selection);
             ogs_assert(ret == 0);
-            ogs_assert(pdn->name);
-            val.os.data = (uint8_t *)pdn->name;
-            val.os.len = strlen(pdn->name);
+            ogs_assert(session->name);
+            val.os.data = (uint8_t *)session->name;
+            val.os.len = strlen(session->name);
             ret = fd_msg_avp_setvalue(service_selection, &val);
             ogs_assert(ret == 0);
             ret = fd_msg_avp_add(apn_configuration,
@@ -598,7 +599,7 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
             ret = fd_msg_avp_new(ogs_diam_s6a_qos_class_identifier, 0,
                     &qos_class_identifier);
             ogs_assert(ret == 0);
-            val.i32 = pdn->qos.index;
+            val.i32 = session->qos.index;
             ret = fd_msg_avp_setvalue(qos_class_identifier, &val);
             ogs_assert(ret == 0);
             ret = fd_msg_avp_add(eps_subscribed_qos_profile, 
@@ -613,7 +614,7 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
             ret = fd_msg_avp_new(
                     ogs_diam_s6a_priority_level, 0, &priority_level);
             ogs_assert(ret == 0);
-            val.u32 = pdn->qos.arp.priority_level;
+            val.u32 = session->qos.arp.priority_level;
             ret = fd_msg_avp_setvalue(priority_level, &val);
             ogs_assert(ret == 0);
             ret = fd_msg_avp_add(allocation_retention_priority,
@@ -624,7 +625,7 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
                     &pre_emption_capability);
             ogs_assert(ret == 0);
             val.u32 = OGS_DIAM_PRE_EMPTION_DISABLED;
-            if (pdn->qos.arp.pre_emption_capability ==
+            if (session->qos.arp.pre_emption_capability ==
                     OGS_ARP_PRE_EMPTION_ENABLED)
                 val.u32 = OGS_DIAM_PRE_EMPTION_ENABLED;
             ret = fd_msg_avp_setvalue(pre_emption_capability, &val);
@@ -637,7 +638,7 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
                     &pre_emption_vulnerability);
             ogs_assert(ret == 0);
             val.u32 = OGS_DIAM_PRE_EMPTION_DISABLED;
-            if (pdn->qos.arp.pre_emption_vulnerability ==
+            if (session->qos.arp.pre_emption_vulnerability ==
                     OGS_ARP_PRE_EMPTION_ENABLED)
                 val.u32 = OGS_DIAM_PRE_EMPTION_ENABLED;
             ret = fd_msg_avp_setvalue(pre_emption_vulnerability, &val);
@@ -655,17 +656,17 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
             ogs_assert(ret == 0);
 
             /* Set MIP6-Agent-Info */
-            if (pdn->pgw_ip.ipv4 || pdn->pgw_ip.ipv6) {
+            if (session->pgw_ip.ipv4 || session->pgw_ip.ipv6) {
                 ret = fd_msg_avp_new(ogs_diam_mip6_agent_info, 0,
                             &mip6_agent_info);
                 ogs_assert(ret == 0);
 
-                if (pdn->pgw_ip.ipv4) {
+                if (session->pgw_ip.ipv4) {
                     ret = fd_msg_avp_new(ogs_diam_mip_home_agent_address, 0,
                                 &mip_home_agent_address);
                     ogs_assert(ret == 0);
                     sin.sin_family = AF_INET;
-                    sin.sin_addr.s_addr = pdn->pgw_ip.addr;
+                    sin.sin_addr.s_addr = session->pgw_ip.addr;
                     ret = fd_msg_avp_value_encode (
                                 &sin, mip_home_agent_address );
                     ogs_assert(ret == 0);
@@ -674,13 +675,13 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
                     ogs_assert(ret == 0);
                 }
 
-                if (pdn->pgw_ip.ipv6) {
+                if (session->pgw_ip.ipv6) {
                     ret = fd_msg_avp_new(ogs_diam_mip_home_agent_address, 0,
                                 &mip_home_agent_address);
                     ogs_assert(ret == 0);
                     sin6.sin6_family = AF_INET6;
-                    memcpy(sin6.sin6_addr.s6_addr, pdn->pgw_ip.addr6,
-                            sizeof pdn->pgw_ip.addr6);
+                    memcpy(sin6.sin6_addr.s6_addr, session->pgw_ip.addr6,
+                            sizeof session->pgw_ip.addr6);
                     ret = fd_msg_avp_value_encode (
                                 &sin6, mip_home_agent_address );
                     ogs_assert(ret == 0);
@@ -695,13 +696,13 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
             }
 
             /* Set AMBR */
-            if (pdn->ambr.downlink || pdn->ambr.uplink) {
+            if (session->ambr.downlink || session->ambr.uplink) {
                 ret = fd_msg_avp_new(ogs_diam_s6a_ambr, 0, &avp_ambr);
                 ogs_assert(ret == 0);
                 ret = fd_msg_avp_new(ogs_diam_s6a_max_bandwidth_ul, 0,
                             &avp_max_bandwidth_ul);
                 ogs_assert(ret == 0);
-                val.u32 = pdn->ambr.uplink;
+                val.u32 = session->ambr.uplink;
                 ret = fd_msg_avp_setvalue(avp_max_bandwidth_ul, &val);
                 ogs_assert(ret == 0);
                 ret = fd_msg_avp_add(avp_ambr, MSG_BRW_LAST_CHILD,
@@ -710,7 +711,7 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
                 ret = fd_msg_avp_new(ogs_diam_s6a_max_bandwidth_dl, 0,
                             &avp_max_bandwidth_dl);
                 ogs_assert(ret == 0);
-                val.u32 = pdn->ambr.downlink;
+                val.u32 = session->ambr.downlink;
                 ret = fd_msg_avp_setvalue(avp_max_bandwidth_dl, &val);
                 ogs_assert(ret == 0);
                 ret = fd_msg_avp_add(avp_ambr, MSG_BRW_LAST_CHILD,

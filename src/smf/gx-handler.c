@@ -79,15 +79,16 @@ void smf_gx_handle_cca_initial_request(
      * if PCRF changes APN-AMBR, this should be included. */
     sess->gtp.create_session_response_apn_ambr = false;
     if ((gx_message->session_data.session.ambr.uplink &&
-            (sess->pdn.ambr.uplink / 1000) !=
+            (sess->session.ambr.uplink / 1000) !=
                 (gx_message->session_data.session.ambr.uplink / 1000)) ||
         (gx_message->session_data.session.ambr.downlink &&
-            (sess->pdn.ambr.downlink / 1000) !=
+            (sess->session.ambr.downlink / 1000) !=
                 (gx_message->session_data.session.ambr.downlink / 1000))) {
 
-        sess->pdn.ambr.downlink =
+        sess->session.ambr.downlink =
             gx_message->session_data.session.ambr.downlink;
-        sess->pdn.ambr.uplink = gx_message->session_data.session.ambr.uplink;
+        sess->session.ambr.uplink =
+            gx_message->session_data.session.ambr.uplink;
 
         sess->gtp.create_session_response_apn_ambr = true;
     }
@@ -96,22 +97,23 @@ void smf_gx_handle_cca_initial_request(
      * if PCRF changes Bearer QoS, this should be included. */
     sess->gtp.create_session_response_bearer_qos = false;
     if ((gx_message->session_data.session.qos.index &&
-        sess->pdn.qos.index != gx_message->session_data.session.qos.index) ||
+        sess->session.qos.index !=
+            gx_message->session_data.session.qos.index) ||
         (gx_message->session_data.session.qos.arp.priority_level &&
-        sess->pdn.qos.arp.priority_level !=
+        sess->session.qos.arp.priority_level !=
             gx_message->session_data.session.qos.arp.priority_level) ||
-        sess->pdn.qos.arp.pre_emption_capability !=
+        sess->session.qos.arp.pre_emption_capability !=
             gx_message->session_data.session.qos.arp.pre_emption_capability ||
-        sess->pdn.qos.arp.pre_emption_vulnerability !=
+        sess->session.qos.arp.pre_emption_vulnerability !=
             gx_message->session_data.
                 session.qos.arp.pre_emption_vulnerability) {
 
-        sess->pdn.qos.index = gx_message->session_data.session.qos.index;
-        sess->pdn.qos.arp.priority_level =
+        sess->session.qos.index = gx_message->session_data.session.qos.index;
+        sess->session.qos.arp.priority_level =
             gx_message->session_data.session.qos.arp.priority_level;
-        sess->pdn.qos.arp.pre_emption_capability =
+        sess->session.qos.arp.pre_emption_capability =
             gx_message->session_data.session.qos.arp.pre_emption_capability;
-        sess->pdn.qos.arp.pre_emption_vulnerability =
+        sess->session.qos.arp.pre_emption_vulnerability =
             gx_message->session_data.session.qos.arp.pre_emption_vulnerability;
 
         sess->gtp.create_session_response_bearer_qos = true;
@@ -121,7 +123,7 @@ void smf_gx_handle_cca_initial_request(
     ogs_assert(bearer);
 
     /* Setup QER */
-    if (sess->pdn.ambr.downlink || sess->pdn.ambr.uplink) {
+    if (sess->session.ambr.downlink || sess->session.ambr.uplink) {
         /* Only 1 QER is used per bearer */
         qer = bearer->qer;
         if (!qer) {
@@ -130,8 +132,8 @@ void smf_gx_handle_cca_initial_request(
             bearer->qer = qer;
         }
 
-        qer->mbr.uplink = sess->pdn.ambr.uplink;
-        qer->mbr.downlink = sess->pdn.ambr.downlink;
+        qer->mbr.uplink = sess->session.ambr.uplink;
+        qer->mbr.downlink = sess->session.ambr.downlink;
     }
 
     /* Setup FAR */
@@ -152,7 +154,7 @@ void smf_gx_handle_cca_initial_request(
     ogs_assert(ul_pdr);
 
     /* Set UE IP Address to the Default DL PDR */
-    ogs_pfcp_paa_to_ue_ip_addr(&sess->pdn.paa,
+    ogs_pfcp_paa_to_ue_ip_addr(&sess->session.paa,
             &dl_pdr->ue_ip_addr, &dl_pdr->ue_ip_addr_len);
     dl_pdr->ue_ip_addr.sd = OGS_PFCP_UE_IP_DST;
 
