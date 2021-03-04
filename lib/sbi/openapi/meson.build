@@ -725,8 +725,13 @@ libsbi_openapi_sources = files('''
     model/usage_monitoring_data.c
     model/wireline_area.c
     model/wireline_service_area_restriction.c
-
     model/subscription_data_subscr_cond.c
+	model/authorized_network_slice_info.c
+	model/roaming_indication.c
+	model/slice_info_for_pdu_session.c
+	model/slice_info_for_registration.c
+	model/slice_info_for_ue_configuration_update.c
+	model/subscribed_snssai.c
 '''.split())
 
 libsbi_openapi_inc = include_directories('.')
