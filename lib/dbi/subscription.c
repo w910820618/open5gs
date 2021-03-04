@@ -351,7 +351,7 @@ int ogs_dbi_subscription_data(char *supi,
                 }
 
             }
-        } else if (!strcmp(key, "s_nssai") && BSON_ITER_HOLDS_ARRAY(&iter)) {
+        } else if (!strcmp(key, "slice") && BSON_ITER_HOLDS_ARRAY(&iter)) {
 
             bson_iter_recurse(&iter, &child1_iter);
             while (bson_iter_next(&child1_iter)) {
@@ -383,7 +383,7 @@ int ogs_dbi_subscription_data(char *supi,
                         BSON_ITER_HOLDS_BOOL(&child2_iter)) {
                         slice_data->default_indicator =
                             bson_iter_bool(&child2_iter);
-                    } else if (!strcmp(child2_key, "pdn") &&
+                    } else if (!strcmp(child2_key, "session") &&
                         BSON_ITER_HOLDS_ARRAY(&child2_iter)) {
 
                         bson_iter_recurse(&child2_iter, &child3_iter);
@@ -398,8 +398,7 @@ int ogs_dbi_subscription_data(char *supi,
                             while (bson_iter_next(&child4_iter)) {
                                 const char *child4_key =
                                     bson_iter_key(&child4_iter);
-                                if ((!strcmp(child4_key, "apn") ||
-                                        !strcmp(child4_key, "dnn")) &&
+                                if (!strcmp(child4_key, "name") &&
                                     BSON_ITER_HOLDS_UTF8(&child4_iter)) {
                                     utf8 = bson_iter_utf8(
                                             &child4_iter, &length);
@@ -416,7 +415,7 @@ int ogs_dbi_subscription_data(char *supi,
                                     while (bson_iter_next(&child5_iter)) {
                                         const char *child5_key =
                                             bson_iter_key(&child5_iter);
-                                        if (!strcmp(child5_key, "qci") &&
+                                        if (!strcmp(child5_key, "index") &&
                                             BSON_ITER_HOLDS_INT32(
                                                 &child5_iter)) {
                                             pdn->qos.qci =

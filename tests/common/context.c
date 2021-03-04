@@ -1262,11 +1262,11 @@ bson_t *test_db_new_simple(test_ue_t *test_ue)
                     "unit", BCON_INT32(3),
                 "}",
             "}",
-            "s_nssai", "[", "{",
+            "slice", "[", "{",
                 "sst", BCON_INT32(1),
                 "default_indicator", BCON_BOOL(true),
-                "pdn", "[", "{",
-                    "apn", BCON_UTF8("internet"),
+                "session", "[", "{",
+                    "name", BCON_UTF8("internet"),
                     "type", BCON_INT32(2),
                     "ambr", "{",
                         "downlink", "{",
@@ -1279,7 +1279,7 @@ bson_t *test_db_new_simple(test_ue_t *test_ue)
                         "}",
                     "}",
                     "qos", "{",
-                        "qci", BCON_INT32(9),
+                        "index", BCON_INT32(9),
                         "arp", "{",
                             "priority_level", BCON_INT32(8),
                             "pre_emption_vulnerability", BCON_INT32(1),
@@ -1319,13 +1319,13 @@ bson_t *test_db_new_simple(test_ue_t *test_ue)
             "\"unit\" : 3"
           "}"
         "},"
-        "\"s_nssai\" : ["
+        "\"slice\" : ["
           "{"
             "\"sst\" : 1,"
             "\"default_indicator\" : true,"
-            "\"pdn\" : ["
+            "\"session\" : ["
               "{"
-                "\"apn\" : \"internet\", "
+                "\"name\" : \"internet\", "
                 "\"_id\" : { \"$oid\" : \"597223158b8861d7605378c7\" }, "
                 "\"ambr\" : {"
                   "\"downlink\" : {"
@@ -1338,7 +1338,7 @@ bson_t *test_db_new_simple(test_ue_t *test_ue)
                   "}"
                 "},"
                 "\"qos\" : { "
-                  "\"qci\" : 9, "
+                  "\"index\" : 9, "
                   "\"arp\" : { "
                     "\"priority_level\" : 8,"
                     "\"pre_emption_vulnerability\" : 1, "
@@ -1389,11 +1389,11 @@ bson_t *test_db_new_qos_flow(test_ue_t *test_ue)
                     "unit", BCON_INT32(3),
                 "}",
             "}",
-            "s_nssai", "[", "{",
+            "slice", "[", "{",
                 "sst", BCON_INT32(1),
                 "default_indicator", BCON_BOOL(true),
-                "pdn", "[", "{",
-                    "apn", BCON_UTF8("internet"),
+                "session", "[", "{",
+                    "name", BCON_UTF8("internet"),
                     "type", BCON_INT32(2),
                     "ambr", "{",
                         "downlink", "{",
@@ -1406,7 +1406,7 @@ bson_t *test_db_new_qos_flow(test_ue_t *test_ue)
                         "}",
                     "}",
                     "qos", "{",
-                        "qci", BCON_INT32(9),
+                        "index", BCON_INT32(9),
                         "arp", "{",
                             "priority_level", BCON_INT32(8),
                             "pre_emption_vulnerability", BCON_INT32(1),
@@ -1415,7 +1415,7 @@ bson_t *test_db_new_qos_flow(test_ue_t *test_ue)
                     "}",
                     "pcc_rule", "[", "{",
                         "qos", "{",
-                            "qci", BCON_INT32(1),
+                            "index", BCON_INT32(1),
                             "arp", "{",
                                 "priority_level", BCON_INT32(2),
                                 "pre_emption_vulnerability", BCON_INT32(2),
@@ -1482,13 +1482,13 @@ bson_t *test_db_new_qos_flow(test_ue_t *test_ue)
             "\"unit\" : 3"
           "}"
         "},"
-        "\"s_nssai\" : ["
+        "\"slice\" : ["
           "{"
             "\"sst\" : 1,"
             "\"default_indicator\" : true,"
-            "\"pdn\" : ["
+            "\"session\" : ["
               "{"
-                "\"apn\" : \"internet\", "
+                "\"name\" : \"internet\", "
                 "\"_id\" : { \"$oid\" : \"597223158b8861d7605378c7\" }, "
                 "\"ambr\" : {"
                   "\"downlink\" : {"
@@ -1501,7 +1501,7 @@ bson_t *test_db_new_qos_flow(test_ue_t *test_ue)
                   "}"
                 "},"
                 "\"qos\" : { "
-                  "\"qci\" : 9, "
+                  "\"index\" : 9, "
                   "\"arp\" : { "
                     "\"priority_level\" : 8,"
                     "\"pre_emption_vulnerability\" : 1, "
@@ -1513,7 +1513,7 @@ bson_t *test_db_new_qos_flow(test_ue_t *test_ue)
                   "{"
                     "\"_id\" : { \"$oid\" : \"599eb929c850caabcbfdcd2d\" },"
                     "\"qos\" : {"
-                      "\"qci\" : 1,"
+                      "\"index\" : 1,"
                       "\"mbr\" : {"
                         "\"downlink\" : {"
                           "\"value\" : 64,"
@@ -1598,12 +1598,12 @@ bson_t *test_db_new_session(test_ue_t *test_ue)
                     "unit", BCON_INT32(3),
                 "}",
             "}",
-            "s_nssai", "[", "{",
+            "slice", "[", "{",
                 "sst", BCON_INT32(1),
                 "default_indicator", BCON_BOOL(true),
-                "pdn", "[",
+                "session", "[",
                   "{",
-                    "apn", BCON_UTF8("internet"),
+                    "name", BCON_UTF8("internet"),
                     "type", BCON_INT32(2),
                     "ambr", "{",
                         "downlink", "{",
@@ -1616,7 +1616,7 @@ bson_t *test_db_new_session(test_ue_t *test_ue)
                         "}",
                     "}",
                     "qos", "{",
-                        "qci", BCON_INT32(9),
+                        "index", BCON_INT32(9),
                         "arp", "{",
                             "priority_level", BCON_INT32(8),
                             "pre_emption_vulnerability", BCON_INT32(1),
@@ -1625,7 +1625,7 @@ bson_t *test_db_new_session(test_ue_t *test_ue)
                     "}",
                   "}",
                   "{",
-                    "apn", BCON_UTF8("ims"),
+                    "name", BCON_UTF8("ims"),
                     "type", BCON_INT32(2),
                     "ambr", "{",
                         "downlink", "{",
@@ -1638,7 +1638,7 @@ bson_t *test_db_new_session(test_ue_t *test_ue)
                         "}",
                     "}",
                     "qos", "{",
-                        "qci", BCON_INT32(6),
+                        "index", BCON_INT32(6),
                         "arp", "{",
                             "priority_level", BCON_INT32(6),
                             "pre_emption_vulnerability", BCON_INT32(1),
@@ -1647,7 +1647,7 @@ bson_t *test_db_new_session(test_ue_t *test_ue)
                     "}",
                     "pcc_rule", "[", "{",
                         "qos", "{",
-                            "qci", BCON_INT32(1),
+                            "index", BCON_INT32(1),
                             "arp", "{",
                                 "priority_level", BCON_INT32(3),
                                 "pre_emption_vulnerability", BCON_INT32(2),
@@ -1715,13 +1715,13 @@ bson_t *test_db_new_session(test_ue_t *test_ue)
             "\"unit\" : 3"
           "}"
         "},"
-        "\"s_nssai\" : ["
+        "\"slice\" : ["
           "{"
             "\"sst\" : 1,"
             "\"default_indicator\" : true,"
-            "\"pdn\" : ["
+            "\"session\" : ["
               "{"
-                "\"apn\" : \"internet\", "
+                "\"name\" : \"internet\", "
                 "\"_id\" : { \"$oid\" : \"597223158b8861d7605378c6\" }, "
                 "\"ambr\" : {"
                   "\"downlink\" : {"
@@ -1734,7 +1734,7 @@ bson_t *test_db_new_session(test_ue_t *test_ue)
                   "}"
                 "},"
                 "\"qos\" : { "
-                  "\"qci\" : 9, "
+                  "\"index\" : 9, "
                   "\"arp\" : { "
                     "\"priority_level\" : 8,"
                     "\"pre_emption_vulnerability\" : 1, "
@@ -1744,7 +1744,7 @@ bson_t *test_db_new_session(test_ue_t *test_ue)
                 "\"type\" : 2"
               "},"
               "{"
-                "\"apn\" : \"ims\", "
+                "\"name\" : \"ims\", "
                 "\"_id\" : { \"$oid\" : \"597223158b8861d7605378c7\" }, "
                 "\"ambr\" : {"
                   "\"downlink\" : {"
@@ -1757,7 +1757,7 @@ bson_t *test_db_new_session(test_ue_t *test_ue)
                   "}"
                 "},"
                 "\"qos\" : { "
-                  "\"qci\" : 6, "
+                  "\"index\" : 6, "
                   "\"arp\" : { "
                     "\"priority_level\" : 6,"
                     "\"pre_emption_vulnerability\" : 1, "
@@ -1769,7 +1769,7 @@ bson_t *test_db_new_session(test_ue_t *test_ue)
                   "{"
                     "\"_id\" : { \"$oid\" : \"599eb929c850caabcbfdcd2d\" },"
                     "\"qos\" : {"
-                      "\"qci\" : 1,"
+                      "\"index\" : 1,"
                       "\"mbr\" : {"
                         "\"downlink\" : {"
                           "\"value\" : 64,"
@@ -1854,12 +1854,12 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                     "unit", BCON_INT32(3),
                 "}",
             "}",
-            "s_nssai", "[", "{",
+            "slice", "[", "{",
                 "sst", BCON_INT32(1),
                 "default_indicator", BCON_BOOL(true),
-                "pdn", "[",
+                "session", "[",
                   "{",
-                    "apn", BCON_UTF8("internet"),
+                    "name", BCON_UTF8("internet"),
                     "type", BCON_INT32(2),
                     "ambr", "{",
                         "downlink", "{",
@@ -1872,7 +1872,7 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                         "}",
                     "}",
                     "qos", "{",
-                        "qci", BCON_INT32(9),
+                        "index", BCON_INT32(9),
                         "arp", "{",
                             "priority_level", BCON_INT32(8),
                             "pre_emption_vulnerability", BCON_INT32(1),
@@ -1881,7 +1881,7 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                     "}",
                   "}",
                   "{",
-                    "apn", BCON_UTF8("ims"),
+                    "name", BCON_UTF8("ims"),
                     "type", BCON_INT32(2),
                     "ambr", "{",
                         "downlink", "{",
@@ -1894,7 +1894,7 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                         "}",
                     "}",
                     "qos", "{",
-                        "qci", BCON_INT32(5),
+                        "index", BCON_INT32(5),
                         "arp", "{",
                             "priority_level", BCON_INT32(1),
                             "pre_emption_vulnerability", BCON_INT32(1),
@@ -1904,7 +1904,7 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                     "pcc_rule", "[",
                       "{",
                         "qos", "{",
-                            "qci", BCON_INT32(1),
+                            "index", BCON_INT32(1),
                             "arp", "{",
                                 "priority_level", BCON_INT32(3),
                                 "pre_emption_vulnerability", BCON_INT32(2),
@@ -1934,7 +1934,7 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                       "}",
                       "{",
                         "qos", "{",
-                            "qci", BCON_INT32(2),
+                            "index", BCON_INT32(2),
                             "arp", "{",
                                 "priority_level", BCON_INT32(4),
                                 "pre_emption_vulnerability", BCON_INT32(2),
@@ -1993,14 +1993,14 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
             "\"unit\" : 3"
           "}"
         "},"
-        "\"s_nssai\" : ["
+        "\"slice\" : ["
           "{"
             "\"sst\" : 1,"
             "\"default_indicator\" : true,"
-            "\"pdn\" : ["
+            "\"session\" : ["
               "{"
                 "\"_id\" : { \"$oid\" : \"599eb929c850caabcbfdcd32\" },"
-                "\"apn\" : \"internet\","
+                "\"name\" : \"internet\","
                 "\"ambr\" : {"
                   "\"downlink\" : {"
                     "\"value\" : 1,"
@@ -2012,7 +2012,7 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                   "}"
                 "},"
                 "\"qos\" : {"
-                  "\"qci\" : 9,"
+                  "\"index\" : 9,"
                   "\"arp\" : {"
                     "\"priority_level\" : 8,"
                     "\"pre_emption_vulnerability\" : 1,"
@@ -2023,7 +2023,7 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
               "},"
               "{"
                 "\"_id\" : { \"$oid\" : \"310014158b8861d7605378c7\" }, "
-                "\"apn\" : \"ims\", "
+                "\"name\" : \"ims\", "
                 "\"ambr\" : {"
                   "\"downlink\" : {"
                     "\"value\" : 1,"
@@ -2035,7 +2035,7 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                   "}"
                 "},"
                 "\"qos\" : { "
-                  "\"qci\" : 5, "
+                  "\"index\" : 5, "
                   "\"arp\" : { "
                     "\"priority_level\" : 1,"
                     "\"pre_emption_vulnerability\" : 1, "
@@ -2046,7 +2046,7 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                   "{"
                     "\"_id\" : { \"$oid\" : \"599eb929c850caabcbfdcd2d\" },"
                     "\"qos\" : {"
-                      "\"qci\" : 1,"
+                      "\"index\" : 1,"
                       "\"mbr\" : {"
                         "\"downlink\" : {"
                           "\"value\" : 82,"
@@ -2076,7 +2076,7 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                   "{"
                     "\"_id\" : { \"$oid\" : \"599eb929c850caabcbfdcd4d\" },"
                     "\"qos\" : {"
-                      "\"qci\" : 2,"
+                      "\"index\" : 2,"
                       "\"mbr\" : {"
                         "\"downlink\" : {"
                           "\"value\" : 802,"
@@ -2148,13 +2148,13 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                     "unit", BCON_INT32(3),
                 "}",
             "}",
-            "s_nssai", "[",
+            "slice", "[",
               "{",
                 "sst", BCON_INT32(1),
                 "default_indicator", BCON_BOOL(true),
-                "pdn", "[",
+                "session", "[",
                   "{",
-                    "apn", BCON_UTF8("internet"),
+                    "name", BCON_UTF8("internet"),
                     "type", BCON_INT32(2),
                     "ambr", "{",
                         "downlink", "{",
@@ -2167,7 +2167,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                         "}",
                     "}",
                     "qos", "{",
-                        "qci", BCON_INT32(9),
+                        "index", BCON_INT32(9),
                         "arp", "{",
                             "priority_level", BCON_INT32(8),
                             "pre_emption_vulnerability", BCON_INT32(1),
@@ -2176,7 +2176,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                     "}",
                   "}",
                   "{",
-                    "apn", BCON_UTF8("ims"),
+                    "name", BCON_UTF8("ims"),
                     "type", BCON_INT32(2),
                     "ambr", "{",
                         "downlink", "{",
@@ -2189,7 +2189,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                         "}",
                     "}",
                     "qos", "{",
-                        "qci", BCON_INT32(5),
+                        "index", BCON_INT32(5),
                         "arp", "{",
                             "priority_level", BCON_INT32(1),
                             "pre_emption_vulnerability", BCON_INT32(1),
@@ -2199,7 +2199,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                     "pcc_rule", "[",
                       "{",
                         "qos", "{",
-                            "qci", BCON_INT32(1),
+                            "index", BCON_INT32(1),
                             "arp", "{",
                                 "priority_level", BCON_INT32(3),
                                 "pre_emption_vulnerability", BCON_INT32(2),
@@ -2229,7 +2229,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                       "}",
                       "{",
                         "qos", "{",
-                            "qci", BCON_INT32(2),
+                            "index", BCON_INT32(2),
                             "arp", "{",
                                 "priority_level", BCON_INT32(4),
                                 "pre_emption_vulnerability", BCON_INT32(2),
@@ -2264,9 +2264,9 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
               "{",
                 "sst", BCON_INT32(1),
                 "sd", BCON_UTF8("000080"),
-                "pdn", "[",
+                "session", "[",
                   "{",
-                    "apn", BCON_UTF8("internet"),
+                    "name", BCON_UTF8("internet"),
                     "type", BCON_INT32(2),
                     "ambr", "{",
                         "downlink", "{",
@@ -2279,7 +2279,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                         "}",
                     "}",
                     "qos", "{",
-                        "qci", BCON_INT32(9),
+                        "index", BCON_INT32(9),
                         "arp", "{",
                             "priority_level", BCON_INT32(8),
                             "pre_emption_vulnerability", BCON_INT32(1),
@@ -2288,7 +2288,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                     "}",
                   "}",
                   "{",
-                    "apn", BCON_UTF8("ims"),
+                    "name", BCON_UTF8("ims"),
                     "type", BCON_INT32(2),
                     "ambr", "{",
                         "downlink", "{",
@@ -2301,7 +2301,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                         "}",
                     "}",
                     "qos", "{",
-                        "qci", BCON_INT32(5),
+                        "index", BCON_INT32(5),
                         "arp", "{",
                             "priority_level", BCON_INT32(1),
                             "pre_emption_vulnerability", BCON_INT32(1),
@@ -2311,7 +2311,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                     "pcc_rule", "[",
                       "{",
                         "qos", "{",
-                            "qci", BCON_INT32(1),
+                            "index", BCON_INT32(1),
                             "arp", "{",
                                 "priority_level", BCON_INT32(3),
                                 "pre_emption_vulnerability", BCON_INT32(2),
@@ -2341,7 +2341,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                       "}",
                       "{",
                         "qos", "{",
-                            "qci", BCON_INT32(2),
+                            "index", BCON_INT32(2),
                             "arp", "{",
                                 "priority_level", BCON_INT32(4),
                                 "pre_emption_vulnerability", BCON_INT32(2),
@@ -2376,9 +2376,9 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
               "{",
                 "sst", BCON_INT32(1),
                 "sd", BCON_UTF8("009000"),
-                "pdn", "[",
+                "session", "[",
                   "{",
-                    "apn", BCON_UTF8("internet"),
+                    "name", BCON_UTF8("internet"),
                     "type", BCON_INT32(2),
                     "ambr", "{",
                         "downlink", "{",
@@ -2391,7 +2391,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                         "}",
                     "}",
                     "qos", "{",
-                        "qci", BCON_INT32(9),
+                        "index", BCON_INT32(9),
                         "arp", "{",
                             "priority_level", BCON_INT32(8),
                             "pre_emption_vulnerability", BCON_INT32(1),
@@ -2400,7 +2400,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                     "}",
                   "}",
                   "{",
-                    "apn", BCON_UTF8("ims"),
+                    "name", BCON_UTF8("ims"),
                     "type", BCON_INT32(2),
                     "ambr", "{",
                         "downlink", "{",
@@ -2413,7 +2413,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                         "}",
                     "}",
                     "qos", "{",
-                        "qci", BCON_INT32(5),
+                        "index", BCON_INT32(5),
                         "arp", "{",
                             "priority_level", BCON_INT32(1),
                             "pre_emption_vulnerability", BCON_INT32(1),
@@ -2423,7 +2423,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                     "pcc_rule", "[",
                       "{",
                         "qos", "{",
-                            "qci", BCON_INT32(1),
+                            "index", BCON_INT32(1),
                             "arp", "{",
                                 "priority_level", BCON_INT32(3),
                                 "pre_emption_vulnerability", BCON_INT32(2),
@@ -2453,7 +2453,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                       "}",
                       "{",
                         "qos", "{",
-                            "qci", BCON_INT32(2),
+                            "index", BCON_INT32(2),
                             "arp", "{",
                                 "priority_level", BCON_INT32(4),
                                 "pre_emption_vulnerability", BCON_INT32(2),
@@ -2513,14 +2513,14 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
             "\"unit\" : 3"
           "}"
         "},"
-        "\"s_nssai\" : ["
+        "\"slice\" : ["
           "{"
             "\"sst\" : 1,"
             "\"default_indicator\" : true,"
-            "\"pdn\" : ["
+            "\"session\" : ["
               "{"
                 "\"_id\" : { \"$oid\" : \"599eb929c850caabcbfdcd32\" },"
-                "\"apn\" : \"internet\","
+                "\"name\" : \"internet\","
                 "\"ambr\" : {"
                   "\"downlink\" : {"
                     "\"value\" : 1,"
@@ -2532,7 +2532,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                   "}"
                 "},"
                 "\"qos\" : {"
-                  "\"qci\" : 9,"
+                  "\"index\" : 9,"
                   "\"arp\" : {"
                     "\"priority_level\" : 8,"
                     "\"pre_emption_vulnerability\" : 1,"
@@ -2543,7 +2543,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
               "},"
               "{"
                 "\"_id\" : { \"$oid\" : \"310014158b8861d7605378c7\" }, "
-                "\"apn\" : \"ims\", "
+                "\"name\" : \"ims\", "
                 "\"ambr\" : {"
                   "\"downlink\" : {"
                     "\"value\" : 1,"
@@ -2555,7 +2555,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                   "}"
                 "},"
                 "\"qos\" : { "
-                  "\"qci\" : 5, "
+                  "\"index\" : 5, "
                   "\"arp\" : { "
                     "\"priority_level\" : 1,"
                     "\"pre_emption_vulnerability\" : 1, "
@@ -2566,7 +2566,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                   "{"
                     "\"_id\" : { \"$oid\" : \"599eb929c850caabcbfdcd2d\" },"
                     "\"qos\" : {"
-                      "\"qci\" : 1,"
+                      "\"index\" : 1,"
                       "\"mbr\" : {"
                         "\"downlink\" : {"
                           "\"value\" : 82,"
@@ -2596,7 +2596,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                   "{"
                     "\"_id\" : { \"$oid\" : \"599eb929c850caabcbfdcd4d\" },"
                     "\"qos\" : {"
-                      "\"qci\" : 2,"
+                      "\"index\" : 2,"
                       "\"mbr\" : {"
                         "\"downlink\" : {"
                           "\"value\" : 802,"
@@ -2631,10 +2631,10 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
           "{"
             "\"sst\" : 1,"
             "\"sd\" : \"000080\","
-            "\"pdn\" : ["
+            "\"session\" : ["
               "{"
                 "\"_id\" : { \"$oid\" : \"599eb929c850caabcbfdcd32\" },"
-                "\"apn\" : \"internet\","
+                "\"name\" : \"internet\","
                 "\"ambr\" : {"
                   "\"downlink\" : {"
                     "\"value\" : 1,"
@@ -2646,7 +2646,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                   "}"
                 "},"
                 "\"qos\" : {"
-                  "\"qci\" : 9,"
+                  "\"index\" : 9,"
                   "\"arp\" : {"
                     "\"priority_level\" : 8,"
                     "\"pre_emption_vulnerability\" : 1,"
@@ -2657,7 +2657,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
               "},"
               "{"
                 "\"_id\" : { \"$oid\" : \"310014158b8861d7605378c7\" }, "
-                "\"apn\" : \"ims\", "
+                "\"name\" : \"ims\", "
                 "\"ambr\" : {"
                   "\"downlink\" : {"
                     "\"value\" : 1,"
@@ -2669,7 +2669,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                   "}"
                 "},"
                 "\"qos\" : { "
-                  "\"qci\" : 5, "
+                  "\"index\" : 5, "
                   "\"arp\" : { "
                     "\"priority_level\" : 1,"
                     "\"pre_emption_vulnerability\" : 1, "
@@ -2680,7 +2680,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                   "{"
                     "\"_id\" : { \"$oid\" : \"599eb929c850caabcbfdcd2d\" },"
                     "\"qos\" : {"
-                      "\"qci\" : 1,"
+                      "\"index\" : 1,"
                       "\"mbr\" : {"
                         "\"downlink\" : {"
                           "\"value\" : 82,"
@@ -2710,7 +2710,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                   "{"
                     "\"_id\" : { \"$oid\" : \"599eb929c850caabcbfdcd4d\" },"
                     "\"qos\" : {"
-                      "\"qci\" : 2,"
+                      "\"index\" : 2,"
                       "\"mbr\" : {"
                         "\"downlink\" : {"
                           "\"value\" : 802,"
@@ -2745,10 +2745,10 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
           "{"
             "\"sst\" : 1,"
             "\"sd\" : \"009000\","
-            "\"pdn\" : ["
+            "\"session\" : ["
               "{"
                 "\"_id\" : { \"$oid\" : \"599eb929c850caabcbfdcd32\" },"
-                "\"apn\" : \"internet\","
+                "\"name\" : \"internet\","
                 "\"ambr\" : {"
                   "\"downlink\" : {"
                     "\"value\" : 1,"
@@ -2760,7 +2760,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                   "}"
                 "},"
                 "\"qos\" : {"
-                  "\"qci\" : 9,"
+                  "\"index\" : 9,"
                   "\"arp\" : {"
                     "\"priority_level\" : 8,"
                     "\"pre_emption_vulnerability\" : 1,"
@@ -2771,7 +2771,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
               "},"
               "{"
                 "\"_id\" : { \"$oid\" : \"310014158b8861d7605378c7\" }, "
-                "\"apn\" : \"ims\", "
+                "\"name\" : \"ims\", "
                 "\"ambr\" : {"
                   "\"downlink\" : {"
                     "\"value\" : 1,"
@@ -2783,7 +2783,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                   "}"
                 "},"
                 "\"qos\" : { "
-                  "\"qci\" : 5, "
+                  "\"index\" : 5, "
                   "\"arp\" : { "
                     "\"priority_level\" : 1,"
                     "\"pre_emption_vulnerability\" : 1, "
@@ -2794,7 +2794,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                   "{"
                     "\"_id\" : { \"$oid\" : \"599eb929c850caabcbfdcd2d\" },"
                     "\"qos\" : {"
-                      "\"qci\" : 1,"
+                      "\"index\" : 1,"
                       "\"mbr\" : {"
                         "\"downlink\" : {"
                           "\"value\" : 82,"
@@ -2824,7 +2824,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                   "{"
                     "\"_id\" : { \"$oid\" : \"599eb929c850caabcbfdcd4d\" },"
                     "\"qos\" : {"
-                      "\"qci\" : 2,"
+                      "\"index\" : 2,"
                       "\"mbr\" : {"
                         "\"downlink\" : {"
                           "\"value\" : 802,"

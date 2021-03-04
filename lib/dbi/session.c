@@ -90,7 +90,7 @@ int ogs_dbi_session_data(char *supi, ogs_s_nssai_t *s_nssai, char *dnn,
 
     while (bson_iter_next(&iter)) {
         const char *key = bson_iter_key(&iter);
-        if (!strcmp(key, "s_nssai") && BSON_ITER_HOLDS_ARRAY(&iter)) {
+        if (!strcmp(key, "slice") && BSON_ITER_HOLDS_ARRAY(&iter)) {
             bson_iter_recurse(&iter, &child1_iter);
             while (bson_iter_next(&child1_iter)) {
                 uint8_t sst;
@@ -111,7 +111,7 @@ int ogs_dbi_session_data(char *supi, ogs_s_nssai_t *s_nssai, char *dnn,
                         utf8 = bson_iter_utf8(&child2_iter, &length);
                         ogs_assert(utf8);
                         sd = ogs_s_nssai_sd_from_string(utf8);
-                    } else if (!strcmp(child2_key, "pdn") &&
+                    } else if (!strcmp(child2_key, "session") &&
                         BSON_ITER_HOLDS_ARRAY(&child2_iter)) {
                         bson_iter_recurse(&child2_iter, &child3_iter);
                     }
@@ -133,8 +133,7 @@ int ogs_dbi_session_data(char *supi, ogs_s_nssai_t *s_nssai, char *dnn,
                     bson_iter_recurse(&child3_iter, &child4_iter);
                     while (bson_iter_next(&child4_iter)) {
                         const char *child4_key = bson_iter_key(&child4_iter);
-                        if ((!strcmp(child4_key, "apn") ||
-                                !strcmp(child4_key, "dnn")) &&
+                        if (!strcmp(child4_key, "name") &&
                             BSON_ITER_HOLDS_UTF8(&child4_iter)) {
                             utf8 = bson_iter_utf8(&child4_iter, &length);
                             if (ogs_strncasecmp(utf8, dnn, length) == 0) {
@@ -161,7 +160,7 @@ done:
     bson_iter_recurse(&child3_iter, &child4_iter);
     while (bson_iter_next(&child4_iter)) {
         const char *child4_key = bson_iter_key(&child4_iter);
-        if ((!strcmp(child4_key, "apn") || !strcmp(child4_key, "dnn")) &&
+        if (!strcmp(child4_key, "name") &&
             BSON_ITER_HOLDS_UTF8(&child4_iter)) {
             utf8 = bson_iter_utf8(&child4_iter, &length);
             pdn->name = ogs_strndup(utf8, length);
@@ -174,7 +173,7 @@ done:
             bson_iter_recurse(&child4_iter, &child5_iter);
             while (bson_iter_next(&child5_iter)) {
                 const char *child5_key = bson_iter_key(&child5_iter);
-                if (!strcmp(child5_key, "qci") &&
+                if (!strcmp(child5_key, "index") &&
                     BSON_ITER_HOLDS_INT32(&child5_iter)) {
                     pdn->qos.qci = bson_iter_int32(&child5_iter);
                 } else if (!strcmp(child5_key, "arp") &&
@@ -272,7 +271,7 @@ done:
                         while (bson_iter_next(&child7_iter)) {
                             const char *child7_key =
                                 bson_iter_key(&child7_iter);
-                            if (!strcmp(child7_key, "qci") &&
+                            if (!strcmp(child7_key, "index") &&
                                 BSON_ITER_HOLDS_INT32(&child7_iter)) {
                                 pcc_rule->qos.qci =
                                     bson_iter_int32(&child7_iter);
