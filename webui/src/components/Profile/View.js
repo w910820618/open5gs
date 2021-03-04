@@ -288,7 +288,12 @@ const View = ({ visible, disableOnClickOutside, profile, onEdit, onDelete, onHid
                     <div key={session.name}>
                       <div className="body">
                         <div className="medium_data">{session.name}</div>
-                        <div className="medium_data">{session.type === 0 ? "IPv4" : (session.type === 1 ? "IPv6" : "IPv4v6")}</div>
+                        <div className="medium_data">{
+                            session.type === 1 ? "IPv4" :
+                            session.type === 2 ? "IPv6" :
+                            session.type === 3 ? "IPv4v6" :
+                            "Unknown"
+                        }</div>
                         <div className="small_data">{session.qos.index}</div>
                         <div className="small_data">{session.qos.arp.priority_level}</div>
                         <div className="medium_data">

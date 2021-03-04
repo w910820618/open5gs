@@ -34,7 +34,7 @@ const formData = {
     "sst": 1,
     "session": [{
         "name": "internet",
-        "type": 2,
+        "type": 3,
         "ambr": {
           "downlink": {
             "value": 1,

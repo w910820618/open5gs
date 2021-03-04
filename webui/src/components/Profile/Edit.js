@@ -144,9 +144,9 @@ const schema = {
                 "type": {
                   "type": "number",
                   "title": "Type*",
-                  "enum": [0, 1, 2],
+                  "enum": [1, 2, 3],
                   "enumNames": ["IPv4", "IPv6", "IPv4v6"],
-                  "default": 2,
+                  "default": 3,
                 },
                 "qos": {
                   "type": "object",
