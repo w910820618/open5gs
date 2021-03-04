@@ -99,7 +99,6 @@ const Subscriber = new Schema({
     $type: Number,
     default: 2 // Only Packet
   },
-
   subscribed_rau_tau_timer: {
     $type: Number,
     default: 12 // minites
