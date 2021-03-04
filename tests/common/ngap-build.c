@@ -136,8 +136,7 @@ ogs_pkbuf_t *testngap_build_ng_setup_request(uint32_t gnb_id, uint8_t bitsize)
                 plmn_id, OGS_PLMN_ID_LEN, &BroadcastPLMNItem->pLMNIdentity);
 
         for (j = 0; j < test_self()->plmn_support[i].num_of_s_nssai; j++) {
-            ogs_nas_s_nssai_ie_t *s_nssai =
-                &test_self()->plmn_support[i].s_nssai[j];
+            ogs_s_nssai_t *s_nssai = &test_self()->plmn_support[i].s_nssai[j];
 
             SliceSupportItem = CALLOC(1, sizeof(NGAP_SliceSupportItem_t));
             ogs_asn_uint8_to_OCTET_STRING(s_nssai->sst,

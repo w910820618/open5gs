@@ -441,7 +441,7 @@ int test_context_parse_config(void)
                                 ogs_yaml_iter_recurse(&plmn_support_iter,
                                         &s_nssai_array);
                                 do {
-                                    ogs_nas_s_nssai_ie_t *s_nssai = NULL;
+                                    ogs_s_nssai_t *s_nssai = NULL;
                                     const char *sst = NULL, *sd = NULL;
                                     ogs_assert(
                                         self.plmn_support[
@@ -495,10 +495,6 @@ int test_context_parse_config(void)
                                                         (char*)sd);
                                         else
                                             s_nssai->sd.v =
-                                                OGS_S_NSSAI_NO_SD_VALUE;
-
-                                        s_nssai->mapped_hplmn_sst = 0;
-                                        s_nssai->mapped_hplmn_sd.v =
                                                 OGS_S_NSSAI_NO_SD_VALUE;
 
                                         self.plmn_support[
@@ -899,12 +895,18 @@ test_ue_t *test_ue_add_by_suci(
 
     for (i = 0; i < test_self()->num_of_plmn_support; i++) {
         for (j = 0; j < test_self()->plmn_support[i].num_of_s_nssai; j++) {
-            memcpy(&test_ue->requested_nssai.
-                    s_nssai[test_ue->requested_nssai.num_of_s_nssai],
-                    &test_self()->plmn_support[i].s_nssai[j],
-                    sizeof(ogs_nas_s_nssai_ie_t));
-            test_ue->requested_nssai.num_of_s_nssai++;
+            ogs_nas_s_nssai_ie_t *s_nssai = &test_ue->requested_nssai.
+                    s_nssai[test_ue->requested_nssai.num_of_s_nssai];
 
+            s_nssai->sst = 0;
+            s_nssai->sd.v = OGS_S_NSSAI_NO_SD_VALUE;
+            s_nssai->mapped_hplmn_sst = 0;
+            s_nssai->mapped_hplmn_sd.v = OGS_S_NSSAI_NO_SD_VALUE;
+
+            memcpy(s_nssai, &test_self()->plmn_support[i].s_nssai[j],
+                    sizeof(ogs_s_nssai_t));
+
+            test_ue->requested_nssai.num_of_s_nssai++;
         }
     }
 
