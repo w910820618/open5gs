@@ -476,7 +476,7 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
             goto out;
         }
 
-        if (!slice_data->num_of_pdn) {
+        if (!slice_data->num_of_session) {
             ogs_error("[%s] No PDN", imsi_bcd);
             result_code = OGS_DIAM_S6A_ERROR_UNKNOWN_EPS_SUBSCRIPTION;
             goto out;
@@ -508,7 +508,7 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
                 all_apn_configuration_included_indicator);
         ogs_assert(ret == 0);
 
-        for (i = 0; i < slice_data->num_of_pdn; i++) {
+        for (i = 0; i < slice_data->num_of_session; i++) {
             /* Set the APN Configuration */
             struct avp *apn_configuration, *context_identifier, *pdn_type;
             struct avp *served_party_ip_address, *service_selection;
@@ -517,7 +517,7 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
             struct avp *pre_emption_capability, *pre_emption_vulnerability;
             struct avp *mip6_agent_info, *mip_home_agent_address;
 
-            ogs_pdn_t *pdn = &slice_data->pdn[i];
+            ogs_pdn_t *pdn = &slice_data->session[i];
             ogs_assert(pdn);
             pdn->context_identifier = i+1;
 

@@ -3082,12 +3082,12 @@ void mme_pdn_remove_all(mme_ue_t *mme_ue)
 
     ogs_assert(mme_ue);
 
-    for (i = 0; i < mme_ue->num_of_pdn; i++) {
-        if (mme_ue->pdn[i].name)
-            ogs_free(mme_ue->pdn[i].name);
+    for (i = 0; i < mme_ue->num_of_session; i++) {
+        if (mme_ue->session[i].name)
+            ogs_free(mme_ue->session[i].name);
     }
 
-    mme_ue->num_of_pdn = 0;
+    mme_ue->num_of_session = 0;
 }
 
 ogs_pdn_t *mme_pdn_find_by_apn(mme_ue_t *mme_ue, char *apn)
@@ -3098,8 +3098,8 @@ ogs_pdn_t *mme_pdn_find_by_apn(mme_ue_t *mme_ue, char *apn)
     ogs_assert(mme_ue);
     ogs_assert(apn);
 
-    for (i = 0; i < mme_ue->num_of_pdn; i++) {
-        pdn = &mme_ue->pdn[i];
+    for (i = 0; i < mme_ue->num_of_session; i++) {
+        pdn = &mme_ue->session[i];
         ogs_assert(pdn->name);
         if (ogs_strcasecmp(pdn->name, apn) == 0)
             return pdn;
@@ -3115,8 +3115,8 @@ ogs_pdn_t *mme_default_pdn(mme_ue_t *mme_ue)
     
     ogs_assert(mme_ue);
 
-    for (i = 0; i < mme_ue->num_of_pdn; i++) {
-        pdn = &mme_ue->pdn[i];
+    for (i = 0; i < mme_ue->num_of_session; i++) {
+        pdn = &mme_ue->session[i];
         if (pdn->context_identifier == mme_ue->context_identifier)
             return pdn;
     }

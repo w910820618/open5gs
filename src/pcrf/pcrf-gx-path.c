@@ -455,27 +455,27 @@ static int pcrf_gx_ccr_cb( struct msg **msg, struct avp *avp,
         }
 
         /* Set QoS-Information */
-        if (gx_message.session_data.pdn.ambr.downlink ||
-                gx_message.session_data.pdn.ambr.uplink) {
+        if (gx_message.session_data.session.ambr.downlink ||
+                gx_message.session_data.session.ambr.uplink) {
             ret = fd_msg_avp_new(ogs_diam_gx_qos_information, 0, &avp);
             ogs_assert(ret == 0);
 
-            if (gx_message.session_data.pdn.ambr.uplink) {
+            if (gx_message.session_data.session.ambr.uplink) {
                 ret = fd_msg_avp_new(
                         ogs_diam_gx_apn_aggregate_max_bitrate_ul, 0, &avpch1);
                 ogs_assert(ret == 0);
-                val.u32 = gx_message.session_data.pdn.ambr.uplink;
+                val.u32 = gx_message.session_data.session.ambr.uplink;
                 ret = fd_msg_avp_setvalue (avpch1, &val);
                 ogs_assert(ret == 0);
                 ret = fd_msg_avp_add (avp, MSG_BRW_LAST_CHILD, avpch1);
                 ogs_assert(ret == 0);
             }
             
-            if (gx_message.session_data.pdn.ambr.downlink) {
+            if (gx_message.session_data.session.ambr.downlink) {
                 ret = fd_msg_avp_new(
                         ogs_diam_gx_apn_aggregate_max_bitrate_dl, 0, &avpch1);
                 ogs_assert(ret == 0);
-                val.u32 = gx_message.session_data.pdn.ambr.downlink;
+                val.u32 = gx_message.session_data.session.ambr.downlink;
                 ret = fd_msg_avp_setvalue (avpch1, &val);
                 ogs_assert(ret == 0);
                 ret = fd_msg_avp_add (avp, MSG_BRW_LAST_CHILD, avpch1);
@@ -492,7 +492,7 @@ static int pcrf_gx_ccr_cb( struct msg **msg, struct avp *avp,
 
         ret = fd_msg_avp_new(ogs_diam_gx_qos_class_identifier, 0, &avpch1);
         ogs_assert(ret == 0);
-        val.u32 = gx_message.session_data.pdn.qos.index;
+        val.u32 = gx_message.session_data.session.qos.index;
         ret = fd_msg_avp_setvalue (avpch1, &val);
         ogs_assert(ret == 0);
         ret = fd_msg_avp_add (avp, MSG_BRW_LAST_CHILD, avpch1);
@@ -504,7 +504,7 @@ static int pcrf_gx_ccr_cb( struct msg **msg, struct avp *avp,
 
         ret = fd_msg_avp_new(ogs_diam_gx_priority_level, 0, &avpch2);
         ogs_assert(ret == 0);
-        val.u32 = gx_message.session_data.pdn.qos.arp.priority_level;
+        val.u32 = gx_message.session_data.session.qos.arp.priority_level;
         ret = fd_msg_avp_setvalue (avpch2, &val);
         ogs_assert(ret == 0);
         ret = fd_msg_avp_add (avpch1, MSG_BRW_LAST_CHILD, avpch2);
@@ -513,7 +513,7 @@ static int pcrf_gx_ccr_cb( struct msg **msg, struct avp *avp,
         ret = fd_msg_avp_new(ogs_diam_gx_pre_emption_capability, 0, &avpch2);
         ogs_assert(ret == 0);
         val.u32 = OGS_DIAM_PRE_EMPTION_DISABLED;
-        if (gx_message.session_data.pdn.qos.arp.pre_emption_capability ==
+        if (gx_message.session_data.session.qos.arp.pre_emption_capability ==
                 OGS_ARP_PRE_EMPTION_ENABLED)
             val.u32 = OGS_DIAM_PRE_EMPTION_ENABLED;
         ret = fd_msg_avp_setvalue (avpch2, &val);
@@ -524,7 +524,7 @@ static int pcrf_gx_ccr_cb( struct msg **msg, struct avp *avp,
         ret = fd_msg_avp_new(ogs_diam_gx_pre_emption_vulnerability, 0, &avpch2);
         ogs_assert(ret == 0);
         val.u32 = OGS_DIAM_PRE_EMPTION_DISABLED;
-        if (gx_message.session_data.pdn.qos.arp.pre_emption_vulnerability ==
+        if (gx_message.session_data.session.qos.arp.pre_emption_vulnerability ==
                 OGS_ARP_PRE_EMPTION_ENABLED)
             val.u32 = OGS_DIAM_PRE_EMPTION_ENABLED;
         ret = fd_msg_avp_setvalue (avpch2, &val);
@@ -774,12 +774,14 @@ int pcrf_gx_send_rar(
                  * Check for default bearer for IMS signalling
                  * QCI 5 and ARP 1
                  */
-                if (gx_message.session_data.pdn.qos.index != OGS_QOS_INDEX_5 ||
-                    gx_message.session_data.pdn.qos.arp.priority_level != 1) {
+                if (gx_message.session_data.
+                        session.qos.index != OGS_QOS_INDEX_5 ||
+                    gx_message.session_data.
+                        session.qos.arp.priority_level != 1) {
                     ogs_error("CHECK WEBUI : Even the Default "
                         "Bearer(QCI:%d,ARP:%d) cannot support IMS signalling.",
-                        gx_message.session_data.pdn.qos.index,
-                        gx_message.session_data.pdn.qos.arp.priority_level);
+                        gx_message.session_data.session.qos.index,
+                        gx_message.session_data.session.qos.arp.priority_level);
                     rx_message->result_code =
                         OGS_DIAM_RX_DIAMETER_REQUESTED_SERVICE_NOT_AUTHORIZED;
                     goto out;

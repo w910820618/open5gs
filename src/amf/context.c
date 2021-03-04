@@ -1785,11 +1785,11 @@ void amf_clear_subscribed_info(amf_ue_t *amf_ue)
     ogs_assert(amf_ue);
 
     for (i = 0; i < amf_ue->num_of_slice; i++) {
-        for (j = 0; j < amf_ue->slice[i].num_of_pdn; j++) {
-            ogs_assert(amf_ue->slice[i].pdn[j].name);
-            ogs_free(amf_ue->slice[i].pdn[j].name);
+        for (j = 0; j < amf_ue->slice[i].num_of_session; j++) {
+            ogs_assert(amf_ue->slice[i].session[j].name);
+            ogs_free(amf_ue->slice[i].session[j].name);
         }
-        amf_ue->slice[i].num_of_pdn = 0;
+        amf_ue->slice[i].num_of_session = 0;
     }
     amf_ue->num_of_slice = 0;
 }

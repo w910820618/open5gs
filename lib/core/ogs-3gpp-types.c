@@ -511,12 +511,12 @@ void ogs_subscription_data_free(ogs_subscription_data_t *subscription_data)
     for (i = 0; i < subscription_data->num_of_slice; i++) {
         ogs_slice_data_t *slice_data = &subscription_data->slice[i];
 
-        for (j = 0; j < slice_data->num_of_pdn; j++) {
-            if (slice_data->pdn[j].name)
-                ogs_free(slice_data->pdn[j].name);
+        for (j = 0; j < slice_data->num_of_session; j++) {
+            if (slice_data->session[j].name)
+                ogs_free(slice_data->session[j].name);
         }
 
-        slice_data->num_of_pdn = 0;
+        slice_data->num_of_session = 0;
     }
 
     subscription_data->num_of_slice = 0;
@@ -528,8 +528,8 @@ void ogs_session_data_free(ogs_session_data_t *session_data)
 
     ogs_assert(session_data);
 
-    if (session_data->pdn.name)
-        ogs_free(session_data->pdn.name);
+    if (session_data->session.name)
+        ogs_free(session_data->session.name);
 
     for (i = 0; i < session_data->num_of_pcc_rule; i++)
         OGS_PCC_RULE_FREE(&session_data->pcc_rule[i]);

@@ -513,8 +513,8 @@ bool udr_nudr_dr_handle_subscription_provisioned(
             DnnInfoList = OpenAPI_list_create();
             ogs_assert(DnnInfoList);
 
-            for (j = 0; j < slice_data->num_of_pdn; j++) {
-                ogs_pdn_t *pdn = &slice_data->pdn[j];
+            for (j = 0; j < slice_data->num_of_session; j++) {
+                ogs_pdn_t *pdn = &slice_data->session[j];
                 ogs_assert(pdn);
                 ogs_assert(pdn->name);
 
@@ -627,8 +627,8 @@ bool udr_nudr_dr_handle_subscription_provisioned(
 
         dnnConfigurationList = OpenAPI_list_create();
 
-        for (i = 0; i < slice_data->num_of_pdn; i++) {
-            ogs_pdn_t *pdn = &slice_data->pdn[i];
+        for (i = 0; i < slice_data->num_of_session; i++) {
+            ogs_pdn_t *pdn = &slice_data->session[i];
             ogs_assert(pdn);
             ogs_assert(pdn->name);
 
@@ -973,8 +973,8 @@ bool udr_nudr_dr_handle_policy_data(
 
                 slice_data = &subscription_data.slice[0];
 
-                for (i = 0; i < slice_data->num_of_pdn; i++) {
-                    ogs_pdn_t *pdn = &slice_data->pdn[i];
+                for (i = 0; i < slice_data->num_of_session; i++) {
+                    ogs_pdn_t *pdn = &slice_data->session[i];
                     ogs_assert(pdn);
                     ogs_assert(pdn->name);
 

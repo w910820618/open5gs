@@ -628,7 +628,7 @@ static void smf_gx_cca_cb(void *data, struct msg **msg)
         if (avpch1) {
             ret = fd_msg_avp_hdr(avpch1, &hdr);
             ogs_assert(ret == 0);
-            gx_message->session_data.pdn.ambr.uplink = hdr->avp_value->u32;
+            gx_message->session_data.session.ambr.uplink = hdr->avp_value->u32;
         }
         ret = fd_avp_search_avp(
                 avp, ogs_diam_gx_apn_aggregate_max_bitrate_dl, &avpch1);
@@ -636,7 +636,8 @@ static void smf_gx_cca_cb(void *data, struct msg **msg)
         if (avpch1) {
             ret = fd_msg_avp_hdr(avpch1, &hdr);
             ogs_assert(ret == 0);
-            gx_message->session_data.pdn.ambr.downlink = hdr->avp_value->u32;
+            gx_message->session_data.session.ambr.downlink =
+                hdr->avp_value->u32;
         }
     }
 
@@ -648,7 +649,7 @@ static void smf_gx_cca_cb(void *data, struct msg **msg)
         if (avpch1) {
             ret = fd_msg_avp_hdr(avpch1, &hdr);
             ogs_assert(ret == 0);
-            gx_message->session_data.pdn.qos.index = hdr->avp_value->u32;
+            gx_message->session_data.session.qos.index = hdr->avp_value->u32;
         }
 
         ret = fd_avp_search_avp(
@@ -661,7 +662,7 @@ static void smf_gx_cca_cb(void *data, struct msg **msg)
             if (avpch2) {
                 ret = fd_msg_avp_hdr(avpch2, &hdr);
                 ogs_assert(ret == 0);
-                gx_message->session_data.pdn.qos.arp.priority_level =
+                gx_message->session_data.session.qos.arp.priority_level =
                     hdr->avp_value->u32;
             }
 
@@ -686,11 +687,13 @@ static void smf_gx_cca_cb(void *data, struct msg **msg)
             if (avpch2) {
                 ret = fd_msg_avp_hdr(avpch2, &hdr);
                 ogs_assert(ret == 0);
-                gx_message->session_data.pdn.qos.arp.pre_emption_capability =
-                    hdr->avp_value->u32;
+                gx_message->session_data.
+                    session.qos.arp.pre_emption_capability =
+                        hdr->avp_value->u32;
             } else {
-                gx_message->session_data.pdn.qos.arp.pre_emption_capability =
-                    OGS_DIAM_PRE_EMPTION_DISABLED;
+                gx_message->session_data.
+                    session.qos.arp.pre_emption_capability =
+                        OGS_DIAM_PRE_EMPTION_DISABLED;
             }
 
             ret = fd_avp_search_avp(avpch1,
@@ -699,11 +702,13 @@ static void smf_gx_cca_cb(void *data, struct msg **msg)
             if (avpch2) {
                 ret = fd_msg_avp_hdr(avpch2, &hdr);
                 ogs_assert(ret == 0);
-                gx_message->session_data.pdn.qos.arp.pre_emption_vulnerability =
-                    hdr->avp_value->u32;
+                gx_message->session_data.
+                    session.qos.arp.pre_emption_vulnerability =
+                        hdr->avp_value->u32;
             } else {
-                gx_message->session_data.pdn.qos.arp.pre_emption_vulnerability =
-                    OGS_DIAM_PRE_EMPTION_ENABLED;
+                gx_message->session_data.
+                    session.qos.arp.pre_emption_vulnerability =
+                        OGS_DIAM_PRE_EMPTION_ENABLED;
             }
         }
     }

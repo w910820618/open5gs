@@ -391,8 +391,10 @@ int ogs_dbi_subscription_data(char *supi,
                             ogs_pdn_t *pdn = NULL;
 
                             ogs_assert(
-                                slice_data->num_of_pdn < OGS_MAX_NUM_OF_SESS);
-                            pdn = &slice_data->pdn[slice_data->num_of_pdn];
+                                slice_data->num_of_session <
+                                    OGS_MAX_NUM_OF_SESS);
+                            pdn = &slice_data->session
+                                [slice_data->num_of_session];
 
                             bson_iter_recurse(&child3_iter, &child4_iter);
                             while (bson_iter_next(&child4_iter)) {
@@ -599,7 +601,7 @@ int ogs_dbi_subscription_data(char *supi,
                                     }
                                 }
                             }
-                            slice_data->num_of_pdn++;
+                            slice_data->num_of_session++;
                         }
                     }
                 }

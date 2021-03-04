@@ -66,26 +66,26 @@ void mme_s6a_handle_ula(mme_ue_t *mme_ue,
 
     mme_pdn_remove_all(mme_ue);
 
-    mme_ue->num_of_pdn = slice_data->num_of_pdn;
+    mme_ue->num_of_session = slice_data->num_of_session;
     mme_ue->context_identifier = slice_data->context_identifier;
 
-    for (i = 0; i < slice_data->num_of_pdn; i++) {
-        mme_ue->pdn[i].name = ogs_strdup(slice_data->pdn[i].name);
-        ogs_assert(mme_ue->pdn[i].name);
+    for (i = 0; i < slice_data->num_of_session; i++) {
+        mme_ue->session[i].name = ogs_strdup(slice_data->session[i].name);
+        ogs_assert(mme_ue->session[i].name);
 
-        mme_ue->pdn[i].context_identifier =
-            slice_data->pdn[i].context_identifier;
+        mme_ue->session[i].context_identifier =
+            slice_data->session[i].context_identifier;
 
-        mme_ue->pdn[i].pdn_type = slice_data->pdn[i].pdn_type;
-        memcpy(&mme_ue->pdn[i].paa, &slice_data->pdn[i].paa,
-                sizeof(mme_ue->pdn[i].paa));
+        mme_ue->session[i].pdn_type = slice_data->session[i].pdn_type;
+        memcpy(&mme_ue->session[i].paa, &slice_data->session[i].paa,
+                sizeof(mme_ue->session[i].paa));
 
-        memcpy(&mme_ue->pdn[i].qos, &slice_data->pdn[i].qos,
-                sizeof(mme_ue->pdn[i].qos));
-        memcpy(&mme_ue->pdn[i].ambr, &slice_data->pdn[i].ambr,
-                sizeof(mme_ue->pdn[i].ambr));
+        memcpy(&mme_ue->session[i].qos, &slice_data->session[i].qos,
+                sizeof(mme_ue->session[i].qos));
+        memcpy(&mme_ue->session[i].ambr, &slice_data->session[i].ambr,
+                sizeof(mme_ue->session[i].ambr));
 
-        memcpy(&mme_ue->pdn[i].pgw_ip, &slice_data->pdn[i].pgw_ip,
-                sizeof(mme_ue->pdn[i].pgw_ip));
+        memcpy(&mme_ue->session[i].pgw_ip, &slice_data->session[i].pgw_ip,
+                sizeof(mme_ue->session[i].pgw_ip));
     }
 }

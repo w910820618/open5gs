@@ -399,8 +399,8 @@ struct mme_ue_s {
 
     uint32_t        context_identifier; /* default APN */
 
-    int             num_of_pdn;
-    ogs_pdn_t       pdn[OGS_MAX_NUM_OF_SESS];
+    int             num_of_session;
+    ogs_pdn_t       session[OGS_MAX_NUM_OF_SESS];
 
     /* ESM Info */
     ogs_list_t      sess_list;

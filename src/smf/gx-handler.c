@@ -78,15 +78,16 @@ void smf_gx_handle_cca_initial_request(
     /* APN-AMBR
      * if PCRF changes APN-AMBR, this should be included. */
     sess->gtp.create_session_response_apn_ambr = false;
-    if ((gx_message->session_data.pdn.ambr.uplink &&
+    if ((gx_message->session_data.session.ambr.uplink &&
             (sess->pdn.ambr.uplink / 1000) !=
-                (gx_message->session_data.pdn.ambr.uplink / 1000)) ||
-        (gx_message->session_data.pdn.ambr.downlink &&
+                (gx_message->session_data.session.ambr.uplink / 1000)) ||
+        (gx_message->session_data.session.ambr.downlink &&
             (sess->pdn.ambr.downlink / 1000) !=
-                (gx_message->session_data.pdn.ambr.downlink / 1000))) {
+                (gx_message->session_data.session.ambr.downlink / 1000))) {
 
-        sess->pdn.ambr.downlink = gx_message->session_data.pdn.ambr.downlink;
-        sess->pdn.ambr.uplink = gx_message->session_data.pdn.ambr.uplink;
+        sess->pdn.ambr.downlink =
+            gx_message->session_data.session.ambr.downlink;
+        sess->pdn.ambr.uplink = gx_message->session_data.session.ambr.uplink;
 
         sess->gtp.create_session_response_apn_ambr = true;
     }
@@ -94,23 +95,24 @@ void smf_gx_handle_cca_initial_request(
     /* Bearer QoS
      * if PCRF changes Bearer QoS, this should be included. */
     sess->gtp.create_session_response_bearer_qos = false;
-    if ((gx_message->session_data.pdn.qos.index &&
-        sess->pdn.qos.index != gx_message->session_data.pdn.qos.index) ||
-        (gx_message->session_data.pdn.qos.arp.priority_level &&
+    if ((gx_message->session_data.session.qos.index &&
+        sess->pdn.qos.index != gx_message->session_data.session.qos.index) ||
+        (gx_message->session_data.session.qos.arp.priority_level &&
         sess->pdn.qos.arp.priority_level !=
-            gx_message->session_data.pdn.qos.arp.priority_level) ||
+            gx_message->session_data.session.qos.arp.priority_level) ||
         sess->pdn.qos.arp.pre_emption_capability !=
-            gx_message->session_data.pdn.qos.arp.pre_emption_capability ||
+            gx_message->session_data.session.qos.arp.pre_emption_capability ||
         sess->pdn.qos.arp.pre_emption_vulnerability !=
-            gx_message->session_data.pdn.qos.arp.pre_emption_vulnerability) {
+            gx_message->session_data.
+                session.qos.arp.pre_emption_vulnerability) {
 
-        sess->pdn.qos.index = gx_message->session_data.pdn.qos.index;
+        sess->pdn.qos.index = gx_message->session_data.session.qos.index;
         sess->pdn.qos.arp.priority_level =
-            gx_message->session_data.pdn.qos.arp.priority_level;
+            gx_message->session_data.session.qos.arp.priority_level;
         sess->pdn.qos.arp.pre_emption_capability =
-            gx_message->session_data.pdn.qos.arp.pre_emption_capability;
+            gx_message->session_data.session.qos.arp.pre_emption_capability;
         sess->pdn.qos.arp.pre_emption_vulnerability =
-            gx_message->session_data.pdn.qos.arp.pre_emption_vulnerability;
+            gx_message->session_data.session.qos.arp.pre_emption_vulnerability;
 
         sess->gtp.create_session_response_bearer_qos = true;
     }

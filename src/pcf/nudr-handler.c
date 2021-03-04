@@ -234,7 +234,7 @@ bool pcf_nudr_dr_handle_query_sm_data(
             goto cleanup;
         }
 
-        pdn = &session_data.pdn;
+        pdn = &session_data.session;
 
         if (!pdn->qos.index) {
             strerror = ogs_msprintf("[%s:%d] No 5QI", pcf_ue->supi, sess->psi);

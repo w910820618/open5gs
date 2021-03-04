@@ -156,7 +156,7 @@ done:
         goto out;
     }
 
-    pdn = &session_data->pdn;
+    pdn = &session_data->session;
     bson_iter_recurse(&child3_iter, &child4_iter);
     while (bson_iter_next(&child4_iter)) {
         const char *child4_key = bson_iter_key(&child4_iter);

@@ -832,7 +832,8 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                     break;
                 case OGS_DIAM_S6A_AVP_CODE_APN_CONFIGURATION:
                 {
-                    ogs_pdn_t *pdn = &slice_data->pdn[slice_data->num_of_pdn];
+                    ogs_pdn_t *pdn =
+                        &slice_data->session[slice_data->num_of_session];
                     ogs_assert(pdn);
                     ret = fd_avp_search_avp(
                         avpch2, ogs_diam_s6a_service_selection, &avpch3);
@@ -1063,7 +1064,7 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                         }
                     }
 
-                    slice_data->num_of_pdn++;
+                    slice_data->num_of_session++;
                     break;
                 }
                 default:
@@ -1074,7 +1075,7 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                 fd_msg_browse(avpch2, MSG_BRW_NEXT, &avpch2, NULL);
             }
 
-            if (slice_data->num_of_pdn)
+            if (slice_data->num_of_session)
                 subscription_data->num_of_slice = 1;
         } else {
             ogs_error("no_APN-Configuration-Profile");

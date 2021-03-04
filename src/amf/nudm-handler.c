@@ -243,12 +243,13 @@ int amf_nudm_sdm_handle_provisioned(
                                     DnnInfo = node2->data;
                                     if (DnnInfo) {
                                         ogs_pdn_t *pdn =
-                                            &slice->pdn[slice->num_of_pdn];
+                                            &slice->session
+                                                [slice->num_of_session];
                                         pdn->name = ogs_strdup(DnnInfo->dnn);
                                         ogs_assert(pdn->name);
                                         pdn->default_dnn_indicator =
                                             DnnInfo->default_dnn_indicator;
-                                        slice->num_of_pdn++;
+                                        slice->num_of_session++;
                                     }
                                 }
                             }

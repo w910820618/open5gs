@@ -487,8 +487,8 @@ typedef struct ogs_slice_data_s {
 
     uint32_t context_identifier; /* EPC for checking default APN */
 
-    int num_of_pdn;
-    ogs_pdn_t pdn[OGS_MAX_NUM_OF_SESS];
+    int num_of_session;
+    ogs_pdn_t session[OGS_MAX_NUM_OF_SESS];
 } ogs_slice_data_t;
 
 ogs_slice_data_t *ogs_slice_find_by_s_nssai(
@@ -532,7 +532,7 @@ typedef struct ogs_subscription_data_s {
 void ogs_subscription_data_free(ogs_subscription_data_t *subscription_data);
 
 typedef struct ogs_session_data_s {
-    ogs_pdn_t           pdn;
+    ogs_pdn_t           session;
 #define OGS_MAX_NUM_OF_PCC_RULE         8   /* Num of PCC Rule */
     ogs_pcc_rule_t      pcc_rule[OGS_MAX_NUM_OF_PCC_RULE];
     int                 num_of_pcc_rule;

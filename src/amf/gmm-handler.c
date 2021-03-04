@@ -798,8 +798,8 @@ int gmm_handle_ul_nas_transport(amf_ue_t *amf_ue,
             }
 
             if (!sess->dnn) {
-                if (selected_slice->num_of_pdn) {
-                    sess->dnn = ogs_strdup(selected_slice->pdn[0].name);
+                if (selected_slice->num_of_session) {
+                    sess->dnn = ogs_strdup(selected_slice->session[0].name);
                 }
             }
 
