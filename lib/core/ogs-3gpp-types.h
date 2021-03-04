@@ -394,15 +394,14 @@ typedef struct ogs_session_s {
     uint32_t context_identifier; /* EPC */
     bool default_dnn_indicator; /* 5GC */
 
-#define OGS_DIAM_PDN_TYPE_IPV4                      0
-#define OGS_DIAM_PDN_TYPE_IPV6                      1
-#define OGS_DIAM_PDN_TYPE_IPV4V6                    2
-#define OGS_DIAM_PDN_TYPE_IPV4_OR_IPV6              3
 #define OGS_PDU_SESSION_TYPE_IPV4                   1
 #define OGS_PDU_SESSION_TYPE_IPV6                   2
 #define OGS_PDU_SESSION_TYPE_IPV4V6                 3
 #define OGS_PDU_SESSION_TYPE_UNSTRUCTURED           4
 #define OGS_PDU_SESSION_TYPE_ETHERNET               5
+
+#define OGS_PDU_SESSION_TYPE_TO_DIAMETER(x)         ((x)-1)
+#define OGS_PDU_SESSION_TYPE_FROM_DIAMETER(x)       ((x)+1)
     uint8_t session_type;
 
 #define OGS_SSC_MODE_1                              1

@@ -304,20 +304,6 @@ bool udr_nudr_dr_handle_subscription_context(
     return false;
 }
 
-static OpenAPI_pdu_session_type_e pdu_session_type_from_dbi(uint8_t pdn_type)
-{
-    if (pdn_type == OGS_DIAM_PDN_TYPE_IPV4)
-        return OpenAPI_pdu_session_type_IPV4;
-    else if (pdn_type == OGS_DIAM_PDN_TYPE_IPV6)
-        return OpenAPI_pdu_session_type_IPV6;
-    else if (pdn_type == OGS_DIAM_PDN_TYPE_IPV4V6)
-        return OpenAPI_pdu_session_type_IPV4V6;
-    else {
-        ogs_fatal("Unsupported PDN_TYPE[%d]", pdn_type);
-        ogs_assert_if_reached();
-    }
-}
-
 bool udr_nudr_dr_handle_subscription_provisioned(
         ogs_sbi_stream_t *stream, ogs_sbi_message_t *recvmsg)
 {
@@ -655,8 +641,7 @@ bool udr_nudr_dr_handle_subscription_provisioned(
 
             pduSessionTypeList = ogs_calloc(1, sizeof(*pduSessionTypeList));
             ogs_assert(pduSessionTypeList);
-            pduSessionTypeList->default_session_type =
-                pdu_session_type_from_dbi(session->session_type);
+            pduSessionTypeList->default_session_type = session->session_type;
 
             pduSessionTypeList->allowed_session_types = OpenAPI_list_create();
             ogs_assert(pduSessionTypeList->allowed_session_types);

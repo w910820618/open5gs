@@ -864,7 +864,9 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                     ogs_assert(ret == 0);
                     if (avpch3) {
                         ret = fd_msg_avp_hdr(avpch3, &hdr);
-                        session->session_type = hdr->avp_value->i32;
+                        session->session_type =
+                            OGS_PDU_SESSION_TYPE_FROM_DIAMETER(
+                                    hdr->avp_value->i32);
                     } else {
                         ogs_error("no_PDN-Type");
                         error++;
@@ -884,11 +886,11 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
 
                             if (addr.ogs_sa_family == AF_INET) {
                                 if (session->session_type ==
-                                        OGS_DIAM_PDN_TYPE_IPV4) {
+                                        OGS_PDU_SESSION_TYPE_IPV4) {
                                     session->paa.addr =
                                         addr.sin.sin_addr.s_addr;
                                 } else if (session->session_type ==
-                                        OGS_DIAM_PDN_TYPE_IPV4V6) {
+                                        OGS_PDU_SESSION_TYPE_IPV4V6) {
                                     session->paa.both.addr =
                                         addr.sin.sin_addr.s_addr;
                                 } else {
@@ -898,12 +900,12 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                                 }
                             } else if (addr.ogs_sa_family == AF_INET6) {
                                 if (session->session_type ==
-                                        OGS_DIAM_PDN_TYPE_IPV6) {
+                                        OGS_PDU_SESSION_TYPE_IPV6) {
                                     memcpy(session->paa.addr6,
                                         addr.sin6.sin6_addr.s6_addr,
                                         OGS_IPV6_LEN);
                                 } else if (session->session_type ==
-                                        OGS_DIAM_PDN_TYPE_IPV4V6) {
+                                        OGS_PDU_SESSION_TYPE_IPV4V6) {
                                     memcpy(session->paa.both.addr6,
                                         addr.sin6.sin6_addr.s6_addr,
                                         OGS_IPV6_LEN);

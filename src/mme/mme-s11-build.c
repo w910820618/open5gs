@@ -160,18 +160,19 @@ ogs_pkbuf_t *mme_s11_build_create_session_request(
     ogs_assert(sess->request_type.type == OGS_NAS_EPS_PDN_TYPE_IPV4 ||
             sess->request_type.type == OGS_NAS_EPS_PDN_TYPE_IPV6 ||
             sess->request_type.type == OGS_NAS_EPS_PDN_TYPE_IPV4V6);
-    if (session->session_type == OGS_DIAM_PDN_TYPE_IPV4 ||
-        session->session_type == OGS_DIAM_PDN_TYPE_IPV6 ||
-        session->session_type == OGS_DIAM_PDN_TYPE_IPV4V6) {
-        req->pdn_type.u8 = ((session->session_type + 1) &
-                sess->request_type.type);
+
+    req->pdn_type.u8 = ((session->session_type + 1) &
+            sess->request_type.type);
+    if (session->session_type == OGS_PDU_SESSION_TYPE_IPV4 ||
+        session->session_type == OGS_PDU_SESSION_TYPE_IPV6 ||
+        session->session_type == OGS_PDU_SESSION_TYPE_IPV4V6) {
+        req->pdn_type.u8 =
+            (session->session_type & sess->request_type.type);
         if (req->pdn_type.u8 == 0) {
             ogs_fatal("Cannot derive PDN Type [UE:%d,HSS:%d]",
                 sess->request_type.type, session->session_type);
             ogs_assert_if_reached();
         }
-    } else if (session->session_type == OGS_DIAM_PDN_TYPE_IPV4_OR_IPV6) {
-        req->pdn_type.u8 = sess->request_type.type;
     } else {
         ogs_fatal("Invalid PDN_TYPE[%d]", session->session_type);
         ogs_assert_if_reached();
@@ -182,12 +183,12 @@ ogs_pkbuf_t *mme_s11_build_create_session_request(
      * (pdn_type & sess->request_type) truncates us down to just one,
      * we need to change position of addresses in struct. */
     if (req->pdn_type.u8 == OGS_PDU_SESSION_TYPE_IPV4 &&
-        session->session_type == OGS_DIAM_PDN_TYPE_IPV4V6) {
+        session->session_type == OGS_PDU_SESSION_TYPE_IPV4V6) {
 	    uint32_t addr = session->paa.both.addr;
 	    session->paa.addr = addr;
     }
     if (req->pdn_type.u8 == OGS_PDU_SESSION_TYPE_IPV6 &&
-        session->session_type == OGS_DIAM_PDN_TYPE_IPV4V6) {
+        session->session_type == OGS_PDU_SESSION_TYPE_IPV4V6) {
 	    uint8_t addr[16];
 	    memcpy(&addr, session->paa.both.addr6, OGS_IPV6_LEN);
 	    memcpy(session->paa.addr6, &addr, OGS_IPV6_LEN);

@@ -1267,7 +1267,7 @@ bson_t *test_db_new_simple(test_ue_t *test_ue)
                 "default_indicator", BCON_BOOL(true),
                 "session", "[", "{",
                     "name", BCON_UTF8("internet"),
-                    "type", BCON_INT32(2),
+                    "type", BCON_INT32(3),
                     "ambr", "{",
                         "downlink", "{",
                             "value", BCON_INT32(1),
@@ -1345,7 +1345,7 @@ bson_t *test_db_new_simple(test_ue_t *test_ue)
                     "\"pre_emption_capability\" : 1"
                   "} "
                 "}, "
-                "\"type\" : 2"
+                "\"type\" : 3"
               "}"
             "]"
           "}"
@@ -1394,7 +1394,7 @@ bson_t *test_db_new_qos_flow(test_ue_t *test_ue)
                 "default_indicator", BCON_BOOL(true),
                 "session", "[", "{",
                     "name", BCON_UTF8("internet"),
-                    "type", BCON_INT32(2),
+                    "type", BCON_INT32(3),
                     "ambr", "{",
                         "downlink", "{",
                             "value", BCON_INT32(1),
@@ -1508,7 +1508,7 @@ bson_t *test_db_new_qos_flow(test_ue_t *test_ue)
                     "\"pre_emption_capability\" : 1"
                   "} "
                 "}, "
-                "\"type\" : 2,"
+                "\"type\" : 3,"
                 "\"pcc_rule\" : ["
                   "{"
                     "\"_id\" : { \"$oid\" : \"599eb929c850caabcbfdcd2d\" },"
@@ -1604,7 +1604,7 @@ bson_t *test_db_new_session(test_ue_t *test_ue)
                 "session", "[",
                   "{",
                     "name", BCON_UTF8("internet"),
-                    "type", BCON_INT32(2),
+                    "type", BCON_INT32(3),
                     "ambr", "{",
                         "downlink", "{",
                             "value", BCON_INT32(1),
@@ -1626,7 +1626,7 @@ bson_t *test_db_new_session(test_ue_t *test_ue)
                   "}",
                   "{",
                     "name", BCON_UTF8("ims"),
-                    "type", BCON_INT32(2),
+                    "type", BCON_INT32(3),
                     "ambr", "{",
                         "downlink", "{",
                             "value", BCON_INT32(1),
@@ -1741,7 +1741,7 @@ bson_t *test_db_new_session(test_ue_t *test_ue)
                     "\"pre_emption_capability\" : 1"
                   "} "
                 "}, "
-                "\"type\" : 2"
+                "\"type\" : 3"
               "},"
               "{"
                 "\"name\" : \"ims\", "
@@ -1764,7 +1764,7 @@ bson_t *test_db_new_session(test_ue_t *test_ue)
                     "\"pre_emption_capability\" : 1"
                   "} "
                 "}, "
-                "\"type\" : 2,"
+                "\"type\" : 3,"
                 "\"pcc_rule\" : ["
                   "{"
                     "\"_id\" : { \"$oid\" : \"599eb929c850caabcbfdcd2d\" },"
@@ -1860,7 +1860,7 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                 "session", "[",
                   "{",
                     "name", BCON_UTF8("internet"),
-                    "type", BCON_INT32(2),
+                    "type", BCON_INT32(3),
                     "ambr", "{",
                         "downlink", "{",
                             "value", BCON_INT32(1),
@@ -1882,7 +1882,7 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                   "}",
                   "{",
                     "name", BCON_UTF8("ims"),
-                    "type", BCON_INT32(2),
+                    "type", BCON_INT32(3),
                     "ambr", "{",
                         "downlink", "{",
                             "value", BCON_INT32(1),
@@ -2019,7 +2019,7 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                     "\"pre_emption_capability\" : 1"
                   "}"
                 "},"
-                "\"type\" : 2"
+                "\"type\" : 3"
               "},"
               "{"
                 "\"_id\" : { \"$oid\" : \"310014158b8861d7605378c7\" }, "
@@ -2104,7 +2104,7 @@ bson_t *test_db_new_ims(test_ue_t *test_ue)
                       "}"
                   "}"
                 "],"
-                "\"type\" : 2"
+                "\"type\" : 3"
               "}"
             "]"
           "}"
@@ -2155,7 +2155,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                 "session", "[",
                   "{",
                     "name", BCON_UTF8("internet"),
-                    "type", BCON_INT32(2),
+                    "type", BCON_INT32(3),
                     "ambr", "{",
                         "downlink", "{",
                             "value", BCON_INT32(1),
@@ -2177,7 +2177,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                   "}",
                   "{",
                     "name", BCON_UTF8("ims"),
-                    "type", BCON_INT32(2),
+                    "type", BCON_INT32(3),
                     "ambr", "{",
                         "downlink", "{",
                             "value", BCON_INT32(1),
@@ -2267,7 +2267,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                 "session", "[",
                   "{",
                     "name", BCON_UTF8("internet"),
-                    "type", BCON_INT32(2),
+                    "type", BCON_INT32(3),
                     "ambr", "{",
                         "downlink", "{",
                             "value", BCON_INT32(1),
@@ -2289,7 +2289,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                   "}",
                   "{",
                     "name", BCON_UTF8("ims"),
-                    "type", BCON_INT32(2),
+                    "type", BCON_INT32(3),
                     "ambr", "{",
                         "downlink", "{",
                             "value", BCON_INT32(1),
@@ -2379,7 +2379,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                 "session", "[",
                   "{",
                     "name", BCON_UTF8("internet"),
-                    "type", BCON_INT32(2),
+                    "type", BCON_INT32(3),
                     "ambr", "{",
                         "downlink", "{",
                             "value", BCON_INT32(1),
@@ -2401,7 +2401,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                   "}",
                   "{",
                     "name", BCON_UTF8("ims"),
-                    "type", BCON_INT32(2),
+                    "type", BCON_INT32(3),
                     "ambr", "{",
                         "downlink", "{",
                             "value", BCON_INT32(1),
@@ -2539,7 +2539,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                     "\"pre_emption_capability\" : 1"
                   "}"
                 "},"
-                "\"type\" : 2"
+                "\"type\" : 3"
               "},"
               "{"
                 "\"_id\" : { \"$oid\" : \"310014158b8861d7605378c7\" }, "
@@ -2624,7 +2624,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                       "}"
                   "}"
                 "],"
-                "\"type\" : 2"
+                "\"type\" : 3"
               "}"
             "]"
           "},"
@@ -2653,7 +2653,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                     "\"pre_emption_capability\" : 1"
                   "}"
                 "},"
-                "\"type\" : 2"
+                "\"type\" : 3"
               "},"
               "{"
                 "\"_id\" : { \"$oid\" : \"310014158b8861d7605378c7\" }, "
@@ -2738,7 +2738,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                       "}"
                   "}"
                 "],"
-                "\"type\" : 2"
+                "\"type\" : 3"
               "}"
             "]"
           "},"
@@ -2767,7 +2767,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                     "\"pre_emption_capability\" : 1"
                   "}"
                 "},"
-                "\"type\" : 2"
+                "\"type\" : 3"
               "},"
               "{"
                 "\"_id\" : { \"$oid\" : \"310014158b8861d7605378c7\" }, "
@@ -2852,7 +2852,7 @@ bson_t *test_db_new_slice(test_ue_t *test_ue)
                       "}"
                   "}"
                 "],"
-                "\"type\" : 2"
+                "\"type\" : 3"
               "}"
             "]"
           "}"
