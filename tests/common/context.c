@@ -862,6 +862,7 @@ test_ue_t *test_ue_add_by_suci(
     ogs_nas_5gs_mobile_identity_suci_t *mobile_identity_suci,
     uint16_t mobile_identity_suci_length)
 {
+    int i, j;
     test_ue_t *test_ue = NULL;
 
     ogs_assert(mobile_identity_suci);
@@ -895,6 +896,17 @@ test_ue_t *test_ue_add_by_suci(
     else
         ogs_nas_from_plmn_id(
             &mobile_identity_suci->nas_plmn_id, &test_ue->e_tai.plmn_id);
+
+    for (i = 0; i < test_self()->num_of_plmn_support; i++) {
+        for (j = 0; j < test_self()->plmn_support[i].num_of_s_nssai; j++) {
+            memcpy(&test_ue->requested_nssai.
+                    s_nssai[test_ue->requested_nssai.num_of_s_nssai],
+                    &test_self()->plmn_support[i].s_nssai[j],
+                    sizeof(ogs_nas_s_nssai_ie_t));
+            test_ue->requested_nssai.num_of_s_nssai++;
+
+        }
+    }
 
     test_ue_set_mobile_identity_suci(
             test_ue, mobile_identity_suci, mobile_identity_suci_length);

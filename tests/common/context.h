@@ -367,6 +367,11 @@ typedef struct test_ue_s {
     ogs_nas_ue_security_capability_t ue_security_capability;
     ogs_nas_ue_network_capability_t ue_network_capability;
 
+    struct {
+        int num_of_s_nssai;
+        ogs_nas_s_nssai_ie_t s_nssai[OGS_MAX_NUM_OF_SLICE];
+    } requested_nssai;
+
     test_initial_ue_param_t initial_ue_param;
 
     test_registration_request_param_t registration_request_param;

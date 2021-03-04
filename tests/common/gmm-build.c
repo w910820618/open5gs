@@ -162,11 +162,9 @@ ogs_pkbuf_t *testgmm_build_registration_request(
             OGS_NAS_5GS_REGISTRATION_REQUEST_REQUESTED_NSSAI_PRESENT;
         requested_nssai->length = 0;
 
-        for (i = 0; i < test_self()->num_of_plmn_support; i++) {
-            ogs_nas_build_nssai(requested_nssai,
-                test_self()->plmn_support[i].s_nssai,
-                test_self()->plmn_support[i].num_of_s_nssai);
-        }
+        ogs_nas_build_nssai(requested_nssai,
+                            test_ue->requested_nssai.s_nssai,
+                            test_ue->requested_nssai.num_of_s_nssai);
     }
 
     if (test_ue->registration_request_param.last_visited_registered_tai) {
