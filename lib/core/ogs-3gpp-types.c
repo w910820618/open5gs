@@ -483,25 +483,19 @@ ogs_slice_data_t *ogs_slice_find_by_s_nssai(
     ogs_assert(num_of_slice_data);
     ogs_assert(s_nssai);
 
-    /* Compare Both SST & SD */
+    /* Compare SST & SD */
     for (i = 0; i < num_of_slice_data; i++) {
-        if (s_nssai->sd.v != OGS_S_NSSAI_NO_SD_VALUE &&
-            slice_data[i].s_nssai.sd.v != OGS_S_NSSAI_NO_SD_VALUE) {
-            if (s_nssai->sst == slice_data[i].s_nssai.sst &&
-                    s_nssai->sd.v == slice_data[i].s_nssai.sd.v) {
-                return slice_data + i;
-            }
+        if (s_nssai->sst == slice_data[i].s_nssai.sst &&
+                s_nssai->sd.v == slice_data[i].s_nssai.sd.v) {
+            return slice_data + i;
         }
     }
 
     /* Compare Only SST if DefaultSingleNSSAI */
     for (i = 0; i < num_of_slice_data; i++) {
-        if (s_nssai->sd.v == OGS_S_NSSAI_NO_SD_VALUE ||
-            slice_data[i].s_nssai.sd.v == OGS_S_NSSAI_NO_SD_VALUE) {
-            if (slice_data[i].default_indicator == true &&
-                s_nssai->sst == slice_data[i].s_nssai.sst) {
-                return slice_data + i;
-            }
+        if (slice_data[i].default_indicator == true &&
+            s_nssai->sst == slice_data[i].s_nssai.sst) {
+            return slice_data + i;
         }
     }
 
