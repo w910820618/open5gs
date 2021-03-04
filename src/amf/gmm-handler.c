@@ -226,25 +226,27 @@ int gmm_handle_registration_update(amf_ue_t *amf_ue,
     if (registration_request->presencemask &
         OGS_NAS_5GS_REGISTRATION_REQUEST_REQUESTED_NSSAI_PRESENT) {
 
-        amf_ue->num_of_requested_nssai = ogs_nas_parse_nssai(
-            amf_ue->requested_nssai, &registration_request->requested_nssai);
+        amf_ue->requested_nssai.num_of_s_nssai =
+            ogs_nas_parse_nssai(
+                    amf_ue->requested_nssai.s_nssai,
+                    &registration_request->requested_nssai);
 
-        for (i = 0; i < amf_ue->num_of_requested_nssai; i++) {
+        for (i = 0; i < amf_ue->requested_nssai.num_of_s_nssai; i++) {
             if (amf_find_s_nssai(
                     &amf_ue->tai.plmn_id,
-                    (ogs_s_nssai_t *)&amf_ue->requested_nssai[i]))
+                    (ogs_s_nssai_t *)&amf_ue->requested_nssai.s_nssai[i]))
                 break;
         }
 
-        if (i == amf_ue->num_of_requested_nssai) {
+        if (i == amf_ue->requested_nssai.num_of_s_nssai) {
             ogs_error("CHECK CONFIGURATION: Cannot find Requested NSSAI");
-            for (i = 0; i < amf_ue->num_of_requested_nssai; i++) {
+            for (i = 0; i < amf_ue->requested_nssai.num_of_s_nssai; i++) {
                 ogs_error("    PLMN_ID[MCC:%d MNC:%d]",
                         ogs_plmn_id_mcc(&amf_ue->tai.plmn_id),
                         ogs_plmn_id_mnc(&amf_ue->tai.plmn_id));
                 ogs_error("    S_NSSAI[SST:%d SD:0x%x]",
-                        amf_ue->requested_nssai[i].sst,
-                        amf_ue->requested_nssai[i].sd.v);
+                        amf_ue->requested_nssai.s_nssai[i].sst,
+                        amf_ue->requested_nssai.s_nssai[i].sd.v);
             }
             return OGS_ERROR;
         }
@@ -779,10 +781,10 @@ int gmm_handle_ul_nas_transport(amf_ue_t *amf_ue,
 
             if (!selected_slice) {
                 int i;
-                for (i = 0; i < amf_ue->num_of_requested_nssai; i++) {
+                for (i = 0; i < amf_ue->requested_nssai.num_of_s_nssai; i++) {
                     selected_slice = ogs_slice_find_by_s_nssai(
-                                amf_ue->slice, amf_ue->num_of_slice,
-                                (ogs_s_nssai_t *)&amf_ue->requested_nssai[i]);
+                        amf_ue->slice, amf_ue->num_of_slice,
+                        (ogs_s_nssai_t *)&amf_ue->requested_nssai.s_nssai[i]);
 
                     if (selected_slice) {
                         break;

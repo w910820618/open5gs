@@ -274,8 +274,10 @@ struct amf_ue_s {
     ogs_plmn_id_t   last_visited_plmn_id;
     ogs_nas_ue_usage_setting_t ue_usage_setting;
 
-    int num_of_requested_nssai;
-    ogs_nas_s_nssai_ie_t requested_nssai[OGS_MAX_NUM_OF_SLICE];
+    struct {
+        int num_of_s_nssai;
+        ogs_nas_s_nssai_ie_t s_nssai[OGS_MAX_NUM_OF_SLICE];
+    } requested_nssai, allowed_nssai;
 
     /* PCF sends the RESPONSE
      * of [POST] /npcf-am-polocy-control/v1/policies */
