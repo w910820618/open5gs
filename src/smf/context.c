@@ -1739,7 +1739,7 @@ smf_bearer_t *smf_bearer_find_by_pcc_rule_name(
 }
 
 smf_bearer_t *smf_bearer_find_by_qci_arp(smf_sess_t *sess, 
-                                uint8_t qci,
+                                uint8_t qos_index,
                                 uint8_t priority_level,
                                 uint8_t pre_emption_capability,
                                 uint8_t pre_emption_vulnerability)
@@ -1751,7 +1751,7 @@ smf_bearer_t *smf_bearer_find_by_qci_arp(smf_sess_t *sess,
     bearer = smf_default_bearer_in_sess(sess);
     if (!bearer) return NULL;
 
-    if (sess->pdn.qos.qci == qci &&
+    if (sess->pdn.qos.index == qos_index &&
         sess->pdn.qos.arp.priority_level == priority_level &&
         sess->pdn.qos.arp.pre_emption_capability == 
             pre_emption_capability &&
@@ -1762,7 +1762,7 @@ smf_bearer_t *smf_bearer_find_by_qci_arp(smf_sess_t *sess,
 
     bearer = smf_bearer_next(bearer);
     while (bearer) {
-        if (bearer->qos.qci == qci &&
+        if (bearer->qos.index == qos_index &&
             bearer->qos.arp.priority_level == priority_level &&
             bearer->qos.arp.pre_emption_capability == 
                 pre_emption_capability &&

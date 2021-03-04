@@ -418,7 +418,7 @@ int ogs_dbi_subscription_data(char *supi,
                                         if (!strcmp(child5_key, "index") &&
                                             BSON_ITER_HOLDS_INT32(
                                                 &child5_iter)) {
-                                            pdn->qos.qci =
+                                            pdn->qos.index =
                                                 bson_iter_int32(&child5_iter);
                                         } else if (!strcmp(child5_key, "arp") &&
                                             BSON_ITER_HOLDS_DOCUMENT(

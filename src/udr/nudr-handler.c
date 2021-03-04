@@ -635,8 +635,8 @@ bool udr_nudr_dr_handle_subscription_provisioned(
             if (recvmsg->param.dnn &&
                 ogs_strcasecmp(recvmsg->param.dnn, pdn->name) != 0) continue;
 
-            if (!pdn->qos.qci) {
-                ogs_error("No QCI");
+            if (!pdn->qos.index) {
+                ogs_error("No 5QI");
                 continue;
             }
             if (!pdn->qos.arp.priority_level) {
@@ -701,7 +701,7 @@ bool udr_nudr_dr_handle_subscription_provisioned(
 
             _5gQoSProfile = ogs_calloc(1, sizeof(*_5gQoSProfile));
             ogs_assert(_5gQoSProfile);
-            _5gQoSProfile->_5qi = pdn->qos.qci;
+            _5gQoSProfile->_5qi = pdn->qos.index;
             _5gQoSProfile->priority_level = pdn->qos.arp.priority_level;
             _5gQoSProfile->arp = ogs_calloc(1, sizeof(OpenAPI_arp_t));
             ogs_assert(_5gQoSProfile->arp);

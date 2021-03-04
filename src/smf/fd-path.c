@@ -349,7 +349,7 @@ void smf_gx_send_ccr(smf_sess_t *sess, ogs_gtp_xact_t *xact,
 
         ret = fd_msg_avp_new(ogs_diam_gx_qos_class_identifier, 0, &avpch1);
         ogs_assert(ret == 0);
-        val.u32 = sess->pdn.qos.qci;
+        val.u32 = sess->pdn.qos.index;
         ret = fd_msg_avp_setvalue (avpch1, &val);
         ogs_assert(ret == 0);
         ret = fd_msg_avp_add (avp, MSG_BRW_LAST_CHILD, avpch1);
@@ -648,7 +648,7 @@ static void smf_gx_cca_cb(void *data, struct msg **msg)
         if (avpch1) {
             ret = fd_msg_avp_hdr(avpch1, &hdr);
             ogs_assert(ret == 0);
-            gx_message->session_data.pdn.qos.qci = hdr->avp_value->u32;
+            gx_message->session_data.pdn.qos.index = hdr->avp_value->u32;
         }
 
         ret = fd_avp_search_avp(
@@ -1200,7 +1200,7 @@ static int decode_pcc_rule_definition(
             if (avpch3) {
                 ret = fd_msg_avp_hdr(avpch3, &hdr);
                 ogs_assert(ret == 0);
-                pcc_rule->qos.qci = hdr->avp_value->u32;
+                pcc_rule->qos.index = hdr->avp_value->u32;
             } else {
                 ogs_error("no_QCI");
                 error++;

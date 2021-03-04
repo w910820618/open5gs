@@ -929,7 +929,7 @@ static void mme_s6a_ula_cb(void *data, struct msg **msg)
                         if (avpch4) {
                             ret = fd_msg_avp_hdr(avpch4, &hdr);
                             ogs_assert(ret == 0);
-                            pdn->qos.qci = hdr->avp_value->i32;
+                            pdn->qos.index = hdr->avp_value->i32;
                         } else {
                             ogs_error("no_QoS-Class-Identifier");
                             error++;

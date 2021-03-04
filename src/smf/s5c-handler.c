@@ -192,7 +192,7 @@ void smf_s5c_handle_create_session_request(
         &req->bearer_contexts_to_be_created.bearer_level_qos);
     ogs_assert(req->bearer_contexts_to_be_created.bearer_level_qos.len ==
             decoded);
-    sess->pdn.qos.qci = bearer_qos.qci;
+    sess->pdn.qos.index = bearer_qos.qci;
     sess->pdn.qos.arp.priority_level = bearer_qos.priority_level;
     sess->pdn.qos.arp.pre_emption_capability =
                     bearer_qos.pre_emption_capability;

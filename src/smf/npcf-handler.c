@@ -155,7 +155,7 @@ bool smf_npcf_smpolicycontrol_handle_create(
             AuthDefQos = SessionRule->auth_def_qos;
             if (AuthDefQos && trigger_results[
                 OpenAPI_policy_control_request_trigger_DEF_QOS_CH] == true) {
-                sess->pdn.qos.qci = AuthDefQos->_5qi;
+                sess->pdn.qos.index = AuthDefQos->_5qi;
                 sess->pdn.qos.arp.priority_level =
                     AuthDefQos->priority_level;
                 if (AuthDefQos->arp) {
@@ -298,7 +298,7 @@ bool smf_npcf_smpolicycontrol_handle_create(
                 }
             }
 
-            pcc_rule->qos.qci = QosData->_5qi;
+            pcc_rule->qos.index = QosData->_5qi;
             pcc_rule->qos.arp.priority_level = QosData->priority_level;
 
             if (QosData->arp) {

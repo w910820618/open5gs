@@ -160,7 +160,7 @@ ogs_pkbuf_t *ngap_build_pdu_session_resource_setup_request_transfer(
 
         *qosFlowIdentifier = qos_flow->qfi;
 
-        nonDynamic5QI->fiveQI = qos_flow->qos.qci;
+        nonDynamic5QI->fiveQI = qos_flow->qos.index;
 
         allocationAndRetentionPriority->priorityLevelARP =
             qos_flow->qos.arp.priority_level;
@@ -249,7 +249,7 @@ ogs_pkbuf_t *ngap_build_qos_flow_resource_modify_request_transfer(
 
     *qosFlowIdentifier = qos_flow->qfi;
 
-    nonDynamic5QI->fiveQI = qos_flow->qos.qci;
+    nonDynamic5QI->fiveQI = qos_flow->qos.index;
 
     allocationAndRetentionPriority->priorityLevelARP =
         qos_flow->qos.arp.priority_level;

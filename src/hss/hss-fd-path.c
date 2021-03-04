@@ -598,7 +598,7 @@ static int hss_ogs_diam_s6a_ulr_cb( struct msg **msg, struct avp *avp,
             ret = fd_msg_avp_new(ogs_diam_s6a_qos_class_identifier, 0,
                     &qos_class_identifier);
             ogs_assert(ret == 0);
-            val.i32 = pdn->qos.qci;
+            val.i32 = pdn->qos.index;
             ret = fd_msg_avp_setvalue(qos_class_identifier, &val);
             ogs_assert(ret == 0);
             ret = fd_msg_avp_add(eps_subscribed_qos_profile, 

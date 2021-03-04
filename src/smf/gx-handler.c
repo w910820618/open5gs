@@ -94,8 +94,8 @@ void smf_gx_handle_cca_initial_request(
     /* Bearer QoS
      * if PCRF changes Bearer QoS, this should be included. */
     sess->gtp.create_session_response_bearer_qos = false;
-    if ((gx_message->session_data.pdn.qos.qci &&
-        sess->pdn.qos.qci != gx_message->session_data.pdn.qos.qci) ||
+    if ((gx_message->session_data.pdn.qos.index &&
+        sess->pdn.qos.index != gx_message->session_data.pdn.qos.index) ||
         (gx_message->session_data.pdn.qos.arp.priority_level &&
         sess->pdn.qos.arp.priority_level !=
             gx_message->session_data.pdn.qos.arp.priority_level) ||
@@ -104,7 +104,7 @@ void smf_gx_handle_cca_initial_request(
         sess->pdn.qos.arp.pre_emption_vulnerability !=
             gx_message->session_data.pdn.qos.arp.pre_emption_vulnerability) {
 
-        sess->pdn.qos.qci = gx_message->session_data.pdn.qos.qci;
+        sess->pdn.qos.index = gx_message->session_data.pdn.qos.index;
         sess->pdn.qos.arp.priority_level =
             gx_message->session_data.pdn.qos.arp.priority_level;
         sess->pdn.qos.arp.pre_emption_capability =

@@ -234,7 +234,7 @@ ogs_pkbuf_t *mme_s11_build_create_session_request(
     req->bearer_contexts_to_be_created.eps_bearer_id.u8 = bearer->ebi;
 
     memset(&bearer_qos, 0, sizeof(bearer_qos));
-    bearer_qos.qci = pdn->qos.qci;
+    bearer_qos.qci = pdn->qos.index;
     bearer_qos.priority_level = pdn->qos.arp.priority_level;
     bearer_qos.pre_emption_capability = pdn->qos.arp.pre_emption_capability;
     bearer_qos.pre_emption_vulnerability =

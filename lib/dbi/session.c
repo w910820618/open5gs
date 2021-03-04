@@ -175,7 +175,7 @@ done:
                 const char *child5_key = bson_iter_key(&child5_iter);
                 if (!strcmp(child5_key, "index") &&
                     BSON_ITER_HOLDS_INT32(&child5_iter)) {
-                    pdn->qos.qci = bson_iter_int32(&child5_iter);
+                    pdn->qos.index = bson_iter_int32(&child5_iter);
                 } else if (!strcmp(child5_key, "arp") &&
                     BSON_ITER_HOLDS_DOCUMENT(&child5_iter)) {
                     bson_iter_recurse(&child5_iter, &child6_iter);
@@ -273,7 +273,7 @@ done:
                                 bson_iter_key(&child7_iter);
                             if (!strcmp(child7_key, "index") &&
                                 BSON_ITER_HOLDS_INT32(&child7_iter)) {
-                                pcc_rule->qos.qci =
+                                pcc_rule->qos.index =
                                     bson_iter_int32(&child7_iter);
                             } else if (!strcmp(child7_key, "arp") &&
                                 BSON_ITER_HOLDS_DOCUMENT(&child7_iter)) {

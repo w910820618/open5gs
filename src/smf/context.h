@@ -388,7 +388,7 @@ smf_bearer_t *smf_bearer_find_by_ebi(smf_sess_t *sess, uint8_t ebi);
 smf_bearer_t *smf_bearer_find_by_pcc_rule_name(
         smf_sess_t *sess, char *pcc_rule_name);
 smf_bearer_t *smf_bearer_find_by_qci_arp(smf_sess_t *sess, 
-                                uint8_t qci,
+                                uint8_t qos_index,
                                 uint8_t priority_level,
                                 uint8_t pre_emption_capability,
                                 uint8_t pre_emption_vulnerability);

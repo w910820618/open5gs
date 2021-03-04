@@ -268,20 +268,10 @@ typedef struct ogs_bitrate_s {
 /**********************************
  * QoS Structure                 */
 typedef struct ogs_qos_s {
-#define OGS_PDN_QCI_1                                       1
-#define OGS_PDN_QCI_2                                       2
-#define OGS_PDN_QCI_3                                       3
-#define OGS_PDN_QCI_4                                       4
-#define OGS_PDN_QCI_5                                       5
-#define OGS_PDN_QCI_6                                       6
-#define OGS_PDN_QCI_7                                       7
-#define OGS_PDN_QCI_8                                       8
-#define OGS_PDN_QCI_9                                       9
-#define OGS_PDN_QCI_65                                      65
-#define OGS_PDN_QCI_66                                      66
-#define OGS_PDN_QCI_69                                      69
-#define OGS_PDN_QCI_70                                      70
-    uint8_t         qci;
+#define OGS_QOS_INDEX_1                                       1
+#define OGS_QOS_INDEX_2                                       2
+#define OGS_QOS_INDEX_5                                       5
+    uint8_t         index;
 
     struct {
     /* Values 1 to 8 should only be assigned for services that are

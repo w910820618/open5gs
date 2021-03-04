@@ -236,8 +236,8 @@ bool pcf_nudr_dr_handle_query_sm_data(
 
         pdn = &session_data.pdn;
 
-        if (!pdn->qos.qci) {
-            strerror = ogs_msprintf("[%s:%d] No QCI", pcf_ue->supi, sess->psi);
+        if (!pdn->qos.index) {
+            strerror = ogs_msprintf("[%s:%d] No 5QI", pcf_ue->supi, sess->psi);
             status = OGS_SBI_HTTP_STATUS_BAD_REQUEST;
             goto cleanup;
         }
@@ -306,7 +306,7 @@ bool pcf_nudr_dr_handle_query_sm_data(
             AuthDefQos.arp = ogs_calloc(1, sizeof(OpenAPI_arp_t));
             ogs_assert(AuthDefQos.arp);
 
-            AuthDefQos._5qi = pdn->qos.qci;
+            AuthDefQos._5qi = pdn->qos.index;
             AuthDefQos.priority_level = pdn->qos.arp.priority_level;
 
             if (pdn->qos.arp.pre_emption_capability ==
@@ -436,7 +436,7 @@ bool pcf_nudr_dr_handle_query_sm_data(
 
             OpenAPI_list_add(PccRuleList, PccRuleMap);
 
-            QosData->_5qi = pcc_rule->qos.qci;
+            QosData->_5qi = pcc_rule->qos.index;
             QosData->priority_level = pcc_rule->qos.arp.priority_level;
 
             QosData->arp = ogs_calloc(1, sizeof(OpenAPI_arp_t));

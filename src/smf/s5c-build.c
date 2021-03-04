@@ -127,7 +127,7 @@ ogs_pkbuf_t *smf_s5c_build_create_session_response(
      * if PCRF changes Bearer QoS, this should be included. */
     if (sess->gtp.create_session_response_bearer_qos == true) {
         memset(&bearer_qos, 0, sizeof(bearer_qos));
-        bearer_qos.qci = sess->pdn.qos.qci;
+        bearer_qos.qci = sess->pdn.qos.index;
         bearer_qos.priority_level = sess->pdn.qos.arp.priority_level;
         bearer_qos.pre_emption_capability =
             sess->pdn.qos.arp.pre_emption_capability;
@@ -249,7 +249,7 @@ ogs_pkbuf_t *smf_s5c_build_create_bearer_request(
 
     /* Bearer QoS */
     memset(&bearer_qos, 0, sizeof(bearer_qos));
-    bearer_qos.qci = bearer->qos.qci;
+    bearer_qos.qci = bearer->qos.index;
     bearer_qos.priority_level = bearer->qos.arp.priority_level;
     bearer_qos.pre_emption_capability = 
         bearer->qos.arp.pre_emption_capability;
@@ -329,7 +329,7 @@ ogs_pkbuf_t *smf_s5c_build_update_bearer_request(
     /* Bearer QoS */
     if (qos_presence == 1) {
         memset(&bearer_qos, 0, sizeof(bearer_qos));
-        bearer_qos.qci = bearer->qos.qci;
+        bearer_qos.qci = bearer->qos.index;
         bearer_qos.priority_level = bearer->qos.arp.priority_level;
         bearer_qos.pre_emption_capability = 
             bearer->qos.arp.pre_emption_capability;

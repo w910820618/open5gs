@@ -411,10 +411,10 @@ ogs_pkbuf_t *s1ap_build_initial_context_setup_request(
             e_rab = &item->value.choice.E_RABToBeSetupItemCtxtSUReq;
 
             e_rab->e_RAB_ID = bearer->ebi;
-            e_rab->e_RABlevelQoSParameters.qCI = bearer->qos.qci;
+            e_rab->e_RABlevelQoSParameters.qCI = bearer->qos.index;
 
             ogs_debug("    EBI[%d] QCI[%d] SGW-S1U-TEID[%d]",
-                    bearer->ebi, bearer->qos.qci, bearer->sgw_s1u_teid);
+                    bearer->ebi, bearer->qos.index, bearer->sgw_s1u_teid);
 
             e_rab->e_RABlevelQoSParameters.allocationRetentionPriority.
                 priorityLevel = bearer->qos.arp.priority_level;
@@ -928,9 +928,9 @@ ogs_pkbuf_t *s1ap_build_e_rab_setup_request(
     e_rab = &item->value.choice.E_RABToBeSetupItemBearerSUReq;
 
     e_rab->e_RAB_ID = bearer->ebi;
-    e_rab->e_RABlevelQoSParameters.qCI = bearer->qos.qci;
+    e_rab->e_RABlevelQoSParameters.qCI = bearer->qos.index;
 
-    ogs_debug("    EBI[%d] QCI[%d]", bearer->ebi, bearer->qos.qci);
+    ogs_debug("    EBI[%d] QCI[%d]", bearer->ebi, bearer->qos.index);
 
     e_rab->e_RABlevelQoSParameters.allocationRetentionPriority.
         priorityLevel = bearer->qos.arp.priority_level;
@@ -1061,9 +1061,9 @@ ogs_pkbuf_t *s1ap_build_e_rab_modify_request(
     e_rab = &item->value.choice.E_RABToBeModifiedItemBearerModReq;
 
     e_rab->e_RAB_ID = bearer->ebi;
-    e_rab->e_RABLevelQoSParameters.qCI = bearer->qos.qci;
+    e_rab->e_RABLevelQoSParameters.qCI = bearer->qos.index;
 
-    ogs_debug("    EBI[%d] QCI[%d]", bearer->ebi, bearer->qos.qci);
+    ogs_debug("    EBI[%d] QCI[%d]", bearer->ebi, bearer->qos.index);
 
     e_rab->e_RABLevelQoSParameters.allocationRetentionPriority.
         priorityLevel = bearer->qos.arp.priority_level;
@@ -1949,7 +1949,7 @@ ogs_pkbuf_t *s1ap_build_handover_request(
             e_rab = &item->value.choice.E_RABToBeSetupItemHOReq;
 
             e_rab->e_RAB_ID = bearer->ebi;
-            e_rab->e_RABlevelQosParameters.qCI = bearer->qos.qci;
+            e_rab->e_RABlevelQosParameters.qCI = bearer->qos.index;
 
             e_rab->e_RABlevelQosParameters.allocationRetentionPriority.
                 priorityLevel = bearer->qos.arp.priority_level;

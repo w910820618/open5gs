@@ -737,7 +737,7 @@ typedef struct ogs_nas_qos_flow_parameter_s {
     uint8_t identifier;
     uint8_t len;
     union {
-        uint8_t qci;
+        uint8_t qos_index;
         ogs_nas_bitrate_t br;
     };
 } ogs_nas_qos_flow_parameter_t;

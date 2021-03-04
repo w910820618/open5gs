@@ -29,7 +29,7 @@ ogs_sbi_request_t *amf_npcf_am_policy_control_build_create(
 
     OpenAPI_policy_association_request_t PolicyAssociationRequest;
 
-    int i, j;
+    int i;
     OpenAPI_lnode_t *node = NULL;
 
     OpenAPI_list_t *AllowedSnssais = NULL;

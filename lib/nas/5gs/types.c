@@ -404,7 +404,7 @@ void ogs_nas_build_qos_flow_descriptions(
                 ogs_assert(target.param[j].len == 1);
                 ogs_assert(length + target.param[j].len <=
                         OGS_NAS_MAX_QOS_FLOW_DESCRIPTIONS_LEN);
-                memcpy(buffer + length, &target.param[j].qci,
+                memcpy(buffer + length, &target.param[j].qos_index,
                         target.param[j].len);
                 length += target.param[j].len;
                 break;

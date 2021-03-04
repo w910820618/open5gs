@@ -142,7 +142,7 @@ ogs_pkbuf_t *esm_build_activate_default_bearer_context_request(
 
     memcpy(&bearer->qos, &pdn->qos, sizeof(ogs_qos_t));
 
-    eps_qos_build(eps_qos, bearer->qos.qci,
+    eps_qos_build(eps_qos, bearer->qos.index,
             bearer->qos.mbr.downlink, bearer->qos.mbr.uplink,
             bearer->qos.gbr.downlink, bearer->qos.gbr.uplink);
 
@@ -286,7 +286,7 @@ ogs_pkbuf_t *esm_build_activate_dedicated_bearer_context_request(
         OGS_NAS_EPS_ACTIVATE_DEDICATED_EPS_BEARER_CONTEXT_REQUEST;
 
     linked_ebi->eps_bearer_identity = linked_bearer->ebi;
-    eps_qos_build(eps_qos, bearer->qos.qci,
+    eps_qos_build(eps_qos, bearer->qos.index,
             bearer->qos.mbr.downlink, bearer->qos.mbr.uplink,
             bearer->qos.gbr.downlink, bearer->qos.gbr.uplink);
 
@@ -335,7 +335,7 @@ ogs_pkbuf_t *esm_build_modify_bearer_context_request(
     if (qos_presence == 1) {
         modify_eps_bearer_context_request->presencemask |=
             OGS_NAS_EPS_MODIFY_EPS_BEARER_CONTEXT_REQUEST_NEW_EPS_QOS_PRESENT;
-        eps_qos_build(new_eps_qos, bearer->qos.qci,
+        eps_qos_build(new_eps_qos, bearer->qos.index,
                 bearer->qos.mbr.downlink, bearer->qos.mbr.uplink,
                 bearer->qos.gbr.downlink, bearer->qos.gbr.uplink);
     }

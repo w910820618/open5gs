@@ -202,7 +202,7 @@ void mme_s11_handle_create_session_response(
             &rsp->bearer_contexts_created.bearer_level_qos);
         ogs_assert(rsp->bearer_contexts_created.bearer_level_qos.len ==
                 decoded);
-        pdn->qos.qci = bearer_qos.qci;
+        pdn->qos.index = bearer_qos.qci;
         pdn->qos.arp.priority_level = bearer_qos.priority_level;
         pdn->qos.arp.pre_emption_capability =
                         bearer_qos.pre_emption_capability;
@@ -475,7 +475,7 @@ void mme_s11_handle_create_bearer_request(
     ogs_expect_or_return(ogs_gtp_parse_bearer_qos(&bearer_qos,
         &req->bearer_contexts.bearer_level_qos) ==
         req->bearer_contexts.bearer_level_qos.len);
-    bearer->qos.qci = bearer_qos.qci;
+    bearer->qos.index = bearer_qos.qci;
     bearer->qos.arp.priority_level = bearer_qos.priority_level;
     bearer->qos.arp.pre_emption_capability =
                     bearer_qos.pre_emption_capability;
@@ -597,7 +597,7 @@ void mme_s11_handle_update_bearer_request(
         ogs_expect_or_return(ogs_gtp_parse_bearer_qos(&bearer_qos,
             &req->bearer_contexts.bearer_level_qos) ==
             req->bearer_contexts.bearer_level_qos.len);
-        bearer->qos.qci = bearer_qos.qci;
+        bearer->qos.index = bearer_qos.qci;
         bearer->qos.arp.priority_level = bearer_qos.priority_level;
         bearer->qos.arp.pre_emption_capability =
                         bearer_qos.pre_emption_capability;

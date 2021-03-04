@@ -192,8 +192,8 @@ ogs_pkbuf_t *gsm_build_pdu_session_establishment_accept(smf_sess_t *sess)
     qos_flow_description[0].param[num_of_param].identifier =
         OGS_NAX_QOS_FLOW_PARAMETER_ID_5QI;
     qos_flow_description[0].param[num_of_param].len =
-        sizeof(qos_flow_description[0].param[num_of_param].qci);
-    qos_flow_description[0].param[num_of_param].qci = qos_flow->qos.qci;
+        sizeof(qos_flow_description[0].param[num_of_param].qos_index);
+    qos_flow_description[0].param[num_of_param].qos_index = qos_flow->qos.index;
     num_of_param++;
 
     qos_flow_description[0].num_of_parameter = num_of_param;
@@ -341,8 +341,8 @@ ogs_pkbuf_t *gsm_build_qos_flow_modification_command(
     qos_flow_description[0].param[num_of_param].identifier =
         OGS_NAX_QOS_FLOW_PARAMETER_ID_5QI;
     qos_flow_description[0].param[num_of_param].len =
-        sizeof(qos_flow_description[0].param[num_of_param].qci);
-    qos_flow_description[0].param[num_of_param].qci = qos_flow->qos.qci;
+        sizeof(qos_flow_description[0].param[num_of_param].qos_index);
+    qos_flow_description[0].param[num_of_param].qos_index = qos_flow->qos.index;
     num_of_param++;
 
     if (qos_flow->qos.gbr.uplink) {
