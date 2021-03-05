@@ -545,6 +545,14 @@ typedef struct amf_sess_s {
         } \
     } while(0);
 
+    struct {
+        char *nsi_id;
+        struct {
+            char *id;
+            ogs_sbi_client_t *client;
+        } nrf;
+    } nssf;
+
     /* last payload for sending back to the UE */
     uint8_t         payload_container_type;
     ogs_pkbuf_t     *payload_container;

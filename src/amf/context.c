@@ -1526,6 +1526,13 @@ void amf_sess_remove(amf_sess_t *sess)
     if (sess->paging.client)
         ogs_sbi_client_remove(sess->paging.client);
 
+    if (sess->nssf.nsi_id)
+        ogs_free(sess->nssf.nsi_id);
+    if (sess->nssf.nrf.id)
+        ogs_free(sess->nssf.nrf.id);
+    if (sess->nssf.nrf.client)
+        ogs_sbi_client_remove(sess->nssf.nrf.client);
+
     OGS_NAS_CLEAR_DATA(&sess->ue_pco);
     OGS_TLV_CLEAR_DATA(&sess->pgw_pco);
 

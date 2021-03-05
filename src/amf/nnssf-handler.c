@@ -26,6 +26,9 @@ int amf_nnssf_nsselection_handle_get(
 {
     amf_ue_t *amf_ue = NULL;
 
+    ogs_sbi_client_t *client = NULL;
+    ogs_sockaddr_t *addr = NULL;
+
     OpenAPI_authorized_network_slice_info_t *AuthorizedNetworkSliceInfo = NULL;
     OpenAPI_nsi_information_t *NsiInformation = NULL;
 
@@ -64,6 +67,39 @@ int amf_nnssf_nsselection_handle_get(
         nas_5gs_send_gmm_reject_from_sbi(
                 amf_ue, OGS_SBI_HTTP_STATUS_INTERNAL_SERVER_ERROR);
         return OGS_ERROR;
+    }
+
+    if (sess->nssf.nrf.id)
+        ogs_free(sess->nssf.nrf.id);
+    sess->nssf.nrf.id = ogs_strdup(NsiInformation->nrf_id);
+
+    addr = ogs_sbi_getaddr_from_uri(NsiInformation->nrf_id);
+    if (!addr) {
+        ogs_error("[%s:%d] Invalid URI [%s]",
+                amf_ue->supi, sess->psi, NsiInformation->nrf_id);
+        nas_5gs_send_gmm_reject_from_sbi(
+                amf_ue, OGS_SBI_HTTP_STATUS_INTERNAL_SERVER_ERROR);
+        return OGS_ERROR;;
+    }
+
+    client = ogs_sbi_client_find(addr);
+    if (!client) {
+        client = ogs_sbi_client_add(addr);
+        ogs_assert(client);
+    }
+
+    if (sess->nssf.nrf.client && sess->nssf.nrf.client != client) {
+        ogs_warn("NSSF NRF URI Updated [%s]", sess->nssf.nrf.id);
+        ogs_sbi_client_remove(sess->nssf.nrf.client);
+    }
+    OGS_SETUP_SBI_CLIENT(&sess->nssf.nrf, client);
+
+    ogs_freeaddrinfo(addr);
+
+    if (NsiInformation->nsi_id) {
+        if (sess->nssf.nsi_id)
+            ogs_free(sess->nssf.nsi_id);
+        sess->nssf.nsi_id = ogs_strdup(NsiInformation->nsi_id);
     }
 
     amf_sess_sbi_discover_and_send(OpenAPI_nf_type_SMF,
