@@ -65,7 +65,7 @@ typedef struct amf_context_s {
     struct {
         ogs_plmn_id_t plmn_id;
         int num_of_s_nssai;
-        ogs_nas_s_nssai_ie_t s_nssai[OGS_MAX_NUM_OF_SLICE];
+        ogs_s_nssai_t s_nssai[OGS_MAX_NUM_OF_SLICE];
     } plmn_support[OGS_MAX_NUM_OF_PLMN];
 
     /* defined in 'nas_ies.h'
