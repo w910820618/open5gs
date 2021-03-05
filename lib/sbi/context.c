@@ -893,12 +893,15 @@ static void nf_service_associate_client_all(ogs_sbi_nf_instance_t *nf_instance)
         nf_service_associate_client(nf_service);
 }
 
-bool ogs_sbi_nf_instance_associate(
+ogs_sbi_nf_instance_t *ogs_sbi_nf_instance_associate(
         ogs_sbi_object_t *sbi_object, OpenAPI_nf_type_e nf_type, void *state)
 {
     ogs_sbi_nf_instance_t *nf_instance = NULL;
 
     ogs_assert(sbi_object);
+
+    nf_instance = OGS_SBI_NF_INSTANCE_GET(sbi_object, nf_type);
+    if (nf_instance) return nf_instance;
 
     if (nf_type == OpenAPI_nf_type_NRF) {
         nf_instance = ogs_sbi_nf_instance_find(ogs_sbi_self()->nf_instance_id);
@@ -915,7 +918,7 @@ bool ogs_sbi_nf_instance_associate(
                 OGS_SETUP_SBI_NF_INSTANCE(
                     OGS_SBI_NF_INSTANCE_GET(sbi_object, OpenAPI_nf_type_NRF),
                     nf_instance);
-                return true;
+                return nf_instance;
             }
         }
     }
@@ -933,12 +936,12 @@ bool ogs_sbi_nf_instance_associate(
                 OGS_SETUP_SBI_NF_INSTANCE(
                     OGS_SBI_NF_INSTANCE_GET(sbi_object, nf_type),
                     nf_instance);
-                return true;
+                return nf_instance;
             }
         }
     }
 
-    return false;
+    return NULL;
 }
 
 bool ogs_sbi_client_associate(ogs_sbi_nf_instance_t *nf_instance)

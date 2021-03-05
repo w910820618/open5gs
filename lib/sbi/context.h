@@ -226,7 +226,7 @@ ogs_sbi_client_t *ogs_sbi_client_find_by_service_name(
         ogs_sbi_nf_instance_t *nf_instance, char *name, char *version);
 
 bool ogs_sbi_client_associate(ogs_sbi_nf_instance_t *nf_instance);
-bool ogs_sbi_nf_instance_associate(
+ogs_sbi_nf_instance_t *ogs_sbi_nf_instance_associate(
         ogs_sbi_object_t *sbi_object, OpenAPI_nf_type_e nf_type, void *state);
 
 void ogs_sbi_object_free(ogs_sbi_object_t *sbi_object);

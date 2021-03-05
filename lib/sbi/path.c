@@ -73,8 +73,7 @@ void ogs_sbi_send(ogs_sbi_nf_instance_t *nf_instance,
 bool ogs_sbi_discover_and_send(ogs_sbi_xact_t *xact,
         ogs_fsm_handler_t nf_state_registered, ogs_sbi_client_cb_f client_cb)
 {
-    ogs_sbi_nf_instance_t *nrf_nf_instance = NULL;
-    ogs_sbi_nf_instance_t *target_nf_instance = NULL;
+    ogs_sbi_nf_instance_t *nf_instance = NULL;
 
     ogs_assert(xact);
     ogs_assert(xact->sbi_object);
@@ -82,29 +81,22 @@ bool ogs_sbi_discover_and_send(ogs_sbi_xact_t *xact,
     ogs_assert(nf_state_registered);
     ogs_assert(client_cb);
 
-    if (!OGS_SBI_NF_INSTANCE_GET(xact->sbi_object, OpenAPI_nf_type_NRF))
-        ogs_sbi_nf_instance_associate(xact->sbi_object,
-                OpenAPI_nf_type_NRF, nf_state_registered);
-    nrf_nf_instance = OGS_SBI_NF_INSTANCE_GET(
-                        xact->sbi_object, OpenAPI_nf_type_NRF);
-
-    if (!OGS_SBI_NF_INSTANCE_GET(xact->sbi_object, xact->target_nf_type))
-        ogs_sbi_nf_instance_associate(xact->sbi_object,
-                xact->target_nf_type, nf_state_registered);
-    target_nf_instance = OGS_SBI_NF_INSTANCE_GET(
-                            xact->sbi_object, xact->target_nf_type);
-
-    if (target_nf_instance) {
-        ogs_sbi_send(target_nf_instance, client_cb, xact);
+    /* Target NF-Instance */
+    nf_instance = ogs_sbi_nf_instance_associate(
+            xact->sbi_object, xact->target_nf_type, nf_state_registered);
+    if (nf_instance) {
+        ogs_sbi_send(nf_instance, client_cb, xact);
 
         return true;
     }
 
-    if (nrf_nf_instance) {
+    /* NRF NF-Instance */
+    nf_instance = ogs_sbi_nf_instance_associate(
+            xact->sbi_object, OpenAPI_nf_type_NRF, nf_state_registered);
+    if (nf_instance) {
         ogs_warn("Try to discover [%s]",
                     OpenAPI_nf_type_ToString(xact->target_nf_type));
-        ogs_nnrf_disc_send_nf_discover(
-            nrf_nf_instance, xact->target_nf_type, xact);
+        ogs_nnrf_disc_send_nf_discover(nf_instance, xact->target_nf_type, xact);
 
         return true;
     }

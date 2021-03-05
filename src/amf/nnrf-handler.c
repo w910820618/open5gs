@@ -306,9 +306,8 @@ void amf_nnrf_handle_nf_discover(
                 continue;
             }
 
-            if (!OGS_SBI_NF_INSTANCE_GET(sbi_object, nf_instance->nf_type))
-                ogs_sbi_nf_instance_associate(sbi_object,
-                        nf_instance->nf_type, amf_nf_state_registered);
+            ogs_sbi_nf_instance_associate(sbi_object,
+                    nf_instance->nf_type, amf_nf_state_registered);
 
             /* TIME : Update validity from NRF */
             if (SearchResult->validity_period) {
