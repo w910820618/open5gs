@@ -31,6 +31,8 @@ int amf_nnssf_nsselection_handle_get(
     ogs_assert(amf_ue);
     ogs_assert(recvmsg);
 
+    ogs_assert(!SESSION_CONTEXT_IN_SMF(sess));
+
     if (recvmsg->res_status != OGS_SBI_HTTP_STATUS_OK) {
         ogs_error("[%s] HTTP response error [%d]",
                 amf_ue->supi, recvmsg->res_status);
@@ -39,21 +41,9 @@ int amf_nnssf_nsselection_handle_get(
         return OGS_ERROR;
     }
 
-    if (!SESSION_CONTEXT_IN_SMF(sess)) {
-        amf_sess_sbi_discover_and_send(OpenAPI_nf_type_SMF,
-                sess, AMF_CREATE_SM_CONTEXT_NO_STATE, NULL,
-                amf_nsmf_pdusession_build_create_sm_context);
-    } else {
-        amf_nsmf_pdusession_update_sm_context_param_t param;
-
-        memset(&param, 0, sizeof(param));
-        param.release = 1;
-        param.cause = OpenAPI_cause_REL_DUE_TO_DUPLICATE_SESSION_ID;
-
-        amf_sess_sbi_discover_and_send(OpenAPI_nf_type_SMF,
-                sess, AMF_UPDATE_SM_CONTEXT_DUPLICATED_PDU_SESSION_ID,
-                &param, amf_nsmf_pdusession_build_update_sm_context);
-    }
+    amf_sess_sbi_discover_and_send(OpenAPI_nf_type_SMF,
+            sess, AMF_CREATE_SM_CONTEXT_NO_STATE, NULL,
+            amf_nsmf_pdusession_build_create_sm_context);
 
     return OGS_OK;
 }
