@@ -10,6 +10,7 @@ parameter:
 #    no_ausf: true
 #    no_udm: true
 #    no_pcf: true
+#    no_nssf: true
 #    no_udr: true
 #    no_mme: true
 #    no_sgwc: true
@@ -203,6 +204,11 @@ udm:
 pcf:
     sbi:
       - addr: 127.0.0.13
+        port: 7777
+
+nssf:
+    sbi:
+      - addr: 127.0.0.14
         port: 7777
 
 udr:
