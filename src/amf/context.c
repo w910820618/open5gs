@@ -872,7 +872,7 @@ amf_gnb_t *amf_gnb_add(ogs_sock_t *sock, ogs_sockaddr_t *addr)
     return gnb;
 }
 
-int amf_gnb_remove(amf_gnb_t *gnb)
+void amf_gnb_remove(amf_gnb_t *gnb)
 {
     amf_event_t e;
 
@@ -896,18 +896,14 @@ int amf_gnb_remove(amf_gnb_t *gnb)
 
     ogs_info("[Removed] Number of gNBs is now %d",
             ogs_list_count(&self.gnb_list));
-
-    return OGS_OK;
 }
 
-int amf_gnb_remove_all()
+void amf_gnb_remove_all()
 {
     amf_gnb_t *gnb = NULL, *next_gnb = NULL;
 
     ogs_list_for_each_safe(&self.gnb_list, next_gnb, gnb)
         amf_gnb_remove(gnb);
-
-    return OGS_OK;
 }
 
 amf_gnb_t *amf_gnb_find_by_addr(ogs_sockaddr_t *addr)

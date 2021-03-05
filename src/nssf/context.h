@@ -41,6 +41,7 @@ extern int __nssf_log_domain;
 typedef struct nssf_context_s {
     OpenAPI_nf_type_e   nf_type;
 
+    ogs_list_t      nsi_list; /* NSI List */
 } nssf_context_t;
 
 #define NSSF_NF_INSTANCE_CLEAR(_cAUSE, _nFInstance) \
@@ -64,6 +65,20 @@ void nssf_context_final(void);
 nssf_context_t *nssf_self(void);
 
 int nssf_context_parse_config(void);
+
+typedef struct nssf_nsi_s {
+    ogs_lnode_t     lnode;
+
+    char *nsi_id;
+    ogs_sockaddr_t *addr;
+
+    ogs_s_nssai_t s_nssai;
+} nssf_nsi_t;
+
+nssf_nsi_t *nssf_nsi_add(ogs_sockaddr_t *addr, uint8_t sst, ogs_uint24_t sd);
+void nssf_nsi_remove(nssf_nsi_t *nsi);
+void nssf_nsi_remove_all(void);
+nssf_nsi_t *nssf_nsi_find_by_nsi_id(char *nsi_id);
 
 #ifdef __cplusplus
 }

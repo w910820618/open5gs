@@ -577,8 +577,8 @@ amf_context_t *amf_self(void);
 int amf_context_parse_config(void);
 
 amf_gnb_t *amf_gnb_add(ogs_sock_t *sock, ogs_sockaddr_t *addr);
-int amf_gnb_remove(amf_gnb_t *gnb);
-int amf_gnb_remove_all(void);
+void amf_gnb_remove(amf_gnb_t *gnb);
+void amf_gnb_remove_all(void);
 amf_gnb_t *amf_gnb_find_by_addr(ogs_sockaddr_t *addr);
 amf_gnb_t *amf_gnb_find_by_gnb_id(uint32_t gnb_id);
 int amf_gnb_set_gnb_id(amf_gnb_t *gnb, uint32_t gnb_id);
