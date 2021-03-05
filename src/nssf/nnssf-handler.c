@@ -38,6 +38,7 @@ bool nssf_nnrf_nsselection_handle_get(
     ogs_assert(stream);
     ogs_assert(recvmsg);
 
+#if 0
     if (!recvmsg->param.nf_id) {
         status = OGS_SBI_HTTP_STATUS_BAD_REQUEST;
         strerror = ogs_msprintf("No nf-id");
@@ -70,16 +71,21 @@ bool nssf_nnrf_nsselection_handle_get(
 
     memset(&AuthorizedNetworkSliceInfo, 0, sizeof(AuthorizedNetworkSliceInfo));
     AuthorizedNetworkSliceInfo.nsi_information = &NsiInformation;
+#endif
 
     memset(&sendmsg, 0, sizeof(sendmsg));
+#if 0
     sendmsg.AuthorizedNetworkSliceInfo = &AuthorizedNetworkSliceInfo;
+#endif
 
     response = ogs_sbi_build_response(&sendmsg, OGS_SBI_HTTP_STATUS_OK);
     ogs_assert(response);
     ogs_sbi_server_send_response(stream, response);
 
+#if 0
     if (NsiInformation.nrf_id)
         ogs_free(NsiInformation.nrf_id);
+#endif
 
     return true;
 
