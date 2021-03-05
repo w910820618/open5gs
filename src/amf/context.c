@@ -1664,6 +1664,7 @@ ogs_s_nssai_t *amf_find_s_nssai(
             continue;
 
         for (j = 0; j < amf_self()->plmn_support[i].num_of_s_nssai; j++) {
+            /* Compare S-NSSAI */
             if (amf_self()->plmn_support[i].s_nssai[j].sst == s_nssai->sst &&
                 amf_self()->plmn_support[i].s_nssai[j].sd.v == s_nssai->sd.v) {
                 return &amf_self()->plmn_support[i].s_nssai[j];

@@ -326,7 +326,9 @@ nssf_nsi_t *nssf_nsi_find_by_s_nssai(ogs_s_nssai_t *s_nssai)
     ogs_assert(s_nssai);
 
     ogs_list_for_each(&self.nsi_list, nsi) {
-        if (nsi->s_nssai.sst == s_nssai->sst) {
+        /* Compare S-NSSAI */
+        if (nsi->s_nssai.sst == s_nssai->sst &&
+            nsi->s_nssai.sd.v == s_nssai->sd.v) {
             return nsi;
         }
     }
