@@ -37,6 +37,10 @@ ogs_sbi_request_t *amf_nnssf_nsselection_build_get(
     message.param.nf_id = ogs_sbi_self()->nf_instance_id;
     message.param.nf_type = amf_self()->nf_type;
 
+    message.param.slice_info_request_for_pdu_session_presence = true;
+    message.param.roaming_indication = OpenAPI_roaming_indication_NON_ROAMING;
+    memcpy(&message.param.snssai, &sess->s_nssai, sizeof(message.param.snssai));
+
     request = ogs_sbi_build_request(&message);
     ogs_assert(request);
 

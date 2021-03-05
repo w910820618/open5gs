@@ -309,6 +309,64 @@ ogs_sbi_request_t *ogs_sbi_build_request(ogs_sbi_message_t *message)
         ogs_sbi_header_set(request->http.params, OGS_SBI_PARAM_SNSSAI, v);
         ogs_free(v);
     }
+    if (message->param.plmn_id_presence) {
+        OpenAPI_plmn_id_t plmn_id;
+
+        plmn_id.mnc = ogs_plmn_id_mnc_string(&message->param.plmn_id);
+        plmn_id.mcc = ogs_plmn_id_mcc_string(&message->param.plmn_id);
+
+        if (plmn_id.mnc && plmn_id.mcc) {
+            char *v = NULL;
+            cJSON *item = NULL;
+
+            item = OpenAPI_plmn_id_convertToJSON(&plmn_id);
+            ogs_assert(item);
+            if (plmn_id.mnc) ogs_free(plmn_id.mnc);
+            if (plmn_id.mcc) ogs_free(plmn_id.mcc);
+
+            v = cJSON_Print(item);
+            ogs_assert(v);
+            cJSON_Delete(item);
+
+            ogs_sbi_header_set(request->http.params, OGS_SBI_PARAM_PLMN_ID, v);
+            ogs_free(v);
+        }
+    }
+    if (message->param.slice_info_request_for_pdu_session_presence) {
+        OpenAPI_slice_info_for_pdu_session_t SliceInfoForPDUSession;
+        OpenAPI_snssai_t sNSSAI;
+
+        char *v = NULL;
+        cJSON *item = NULL;
+
+        ogs_assert(message->param.snssai.sst);
+        ogs_assert(message->param.roaming_indication);
+
+        memset(&sNSSAI, 0, sizeof(sNSSAI));
+        sNSSAI.sst = message->param.snssai.sst;
+        sNSSAI.sd = ogs_s_nssai_sd_to_string(message->param.snssai.sd);
+
+        memset(&SliceInfoForPDUSession, 0, sizeof(SliceInfoForPDUSession));
+
+        SliceInfoForPDUSession.s_nssai = &sNSSAI;
+        SliceInfoForPDUSession.roaming_indication =
+            message->param.roaming_indication;
+
+        item = OpenAPI_slice_info_for_pdu_session_convertToJSON(
+                &SliceInfoForPDUSession);
+        ogs_assert(item);
+
+        v = cJSON_Print(item);
+        ogs_assert(v);
+        cJSON_Delete(item);
+
+        ogs_sbi_header_set(request->http.params,
+                OGS_SBI_PARAM_SLICE_INFO_REQUEST_FOR_PDU_SESSION, v);
+        ogs_free(v);
+
+        if (sNSSAI.sd)
+            ogs_free(sNSSAI.sd);
+    }
 
     build_content(&request->http, message);
 
@@ -431,6 +489,38 @@ int ogs_sbi_parse_request(
                         &message->param.snssai, v);
                 if (rc == true)
                     message->param.snssai_presence = true;
+            }
+        } else if (!strcmp(ogs_hash_this_key(hi),
+                    OGS_SBI_PARAM_SLICE_INFO_REQUEST_FOR_PDU_SESSION)) {
+            char *v = NULL;
+            cJSON *item = NULL;
+            OpenAPI_slice_info_for_pdu_session_t *SliceInfoForPduSession = NULL;
+
+            v = ogs_hash_this_val(hi);
+            if (v) {
+                item = cJSON_Parse(v);
+                if (item) {
+                    SliceInfoForPduSession =
+                        OpenAPI_slice_info_for_pdu_session_parseFromJSON(item);
+                    if (SliceInfoForPduSession) {
+                        OpenAPI_snssai_t *s_nssai =
+                            SliceInfoForPduSession->s_nssai;
+                        if (s_nssai) {
+                            message->param.snssai.sst = s_nssai->sst;
+                            message->param.snssai.sd =
+                                ogs_s_nssai_sd_from_string(s_nssai->sd);
+                        }
+                        message->param.roaming_indication =
+                            SliceInfoForPduSession->roaming_indication;
+                        message->param.
+                            slice_info_request_for_pdu_session_presence = true;
+
+                        OpenAPI_slice_info_for_pdu_session_free(
+                                SliceInfoForPduSession);
+
+                    }
+                    cJSON_Delete(item);
+                }
             }
         }
     }

@@ -208,6 +208,8 @@ extern "C" {
 #define OGS_SBI_PARAM_PLMN_ID                       "plmn-id"
 #define OGS_SBI_PARAM_SINGLE_NSSAI                  "single-nssai"
 #define OGS_SBI_PARAM_SNSSAI                        "snssai"
+#define OGS_SBI_PARAM_SLICE_INFO_REQUEST_FOR_PDU_SESSION \
+        "slice-info-request-for-pdu-session"
 
 #define OGS_SBI_ACCEPT                              "Accept"
 #define OGS_SBI_ACCEPT_ENCODING                     "Accept-Encoding"
@@ -295,6 +297,8 @@ typedef struct ogs_sbi_message_s {
         ogs_s_nssai_t single_nssai;
         bool snssai_presence;
         ogs_s_nssai_t snssai;
+        bool slice_info_request_for_pdu_session_presence;
+        OpenAPI_roaming_indication_e roaming_indication;
     } param;
 
     int res_status;
