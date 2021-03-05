@@ -26,6 +26,9 @@ int amf_nnssf_nsselection_handle_get(
 {
     amf_ue_t *amf_ue = NULL;
 
+    OpenAPI_authorized_network_slice_info_t *AuthorizedNetworkSliceInfo = NULL;
+    OpenAPI_nsi_information_t *NsiInformation = NULL;
+
     ogs_assert(sess);
     amf_ue = sess->amf_ue;
     ogs_assert(amf_ue);
@@ -36,8 +39,30 @@ int amf_nnssf_nsselection_handle_get(
     if (recvmsg->res_status != OGS_SBI_HTTP_STATUS_OK) {
         ogs_error("[%s] HTTP response error [%d]",
                 amf_ue->supi, recvmsg->res_status);
-        nas_5gs_send_gmm_status(
-                amf_ue, OGS_5GMM_CAUSE_5GS_SERVICES_NOT_ALLOWED);
+        nas_5gs_send_gmm_status(amf_ue, recvmsg->res_status);
+        return OGS_ERROR;
+    }
+
+    AuthorizedNetworkSliceInfo = recvmsg->AuthorizedNetworkSliceInfo;
+    if (!AuthorizedNetworkSliceInfo) {
+        ogs_error("No AuthorizedNetworkSliceInfo");
+        nas_5gs_send_gmm_reject_from_sbi(
+                amf_ue, OGS_SBI_HTTP_STATUS_INTERNAL_SERVER_ERROR);
+        return OGS_ERROR;
+    }
+
+    NsiInformation = AuthorizedNetworkSliceInfo->nsi_information;
+    if (!NsiInformation) {
+        ogs_error("No NsiInformation");
+        nas_5gs_send_gmm_reject_from_sbi(
+                amf_ue, OGS_SBI_HTTP_STATUS_INTERNAL_SERVER_ERROR);
+        return OGS_ERROR;
+    }
+
+    if (!NsiInformation->nrf_id) {
+        ogs_error("No nrfId");
+        nas_5gs_send_gmm_reject_from_sbi(
+                amf_ue, OGS_SBI_HTTP_STATUS_INTERNAL_SERVER_ERROR);
         return OGS_ERROR;
     }
 
