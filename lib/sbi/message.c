@@ -152,9 +152,9 @@ void ogs_sbi_message_free(ogs_sbi_message_t *message)
         OpenAPI_sm_policy_decision_free(message->SmPolicyDecision);
     if (message->SmPolicyData)
         OpenAPI_sm_policy_data_free(message->SmPolicyData);
-    if (message->SliceInfoForPDUSession)
-        OpenAPI_slice_info_for_pdu_session_free(
-                message->SliceInfoForPDUSession);
+    if (message->AuthorizedNetworkSliceInfo)
+        OpenAPI_authorized_network_slice_info_free(
+                message->AuthorizedNetworkSliceInfo);
 
     for (i = 0; i < message->num_of_part; i++) {
         if (message->part[i].pkbuf)
@@ -841,9 +841,9 @@ static char *build_json(ogs_sbi_message_t *message)
     } else if (message->SmPolicyData) {
         item = OpenAPI_sm_policy_data_convertToJSON(message->SmPolicyData);
         ogs_assert(item);
-    } else if (message->SliceInfoForPDUSession) {
-        item = OpenAPI_slice_info_for_pdu_session_convertToJSON(
-                message->SliceInfoForPDUSession);
+    } else if (message->AuthorizedNetworkSliceInfo) {
+        item = OpenAPI_authorized_network_slice_info_convertToJSON(
+                message->AuthorizedNetworkSliceInfo);
         ogs_assert(item);
     }
 
@@ -1474,9 +1474,10 @@ static int parse_json(ogs_sbi_message_t *message,
             SWITCH(message->h.resource.component[0])
             CASE(OGS_SBI_RESOURCE_NAME_NETWORK_SLICE_INFORMATION)
                 if (message->res_status == OGS_SBI_HTTP_STATUS_OK) {
-                    message->SliceInfoForPDUSession =
-                        OpenAPI_slice_info_for_pdu_session_parseFromJSON(item);
-                    if (!message->SliceInfoForPDUSession) {
+                    message->AuthorizedNetworkSliceInfo =
+                        OpenAPI_authorized_network_slice_info_parseFromJSON(
+                                item);
+                    if (!message->AuthorizedNetworkSliceInfo) {
                         rv = OGS_ERROR;
                         ogs_error("JSON parse error");
                     }

@@ -344,7 +344,7 @@ typedef struct ogs_sbi_message_s {
     OpenAPI_sm_policy_context_data_t *SmPolicyContextData;
     OpenAPI_sm_policy_decision_t *SmPolicyDecision;
     OpenAPI_sm_policy_data_t *SmPolicyData;
-    OpenAPI_slice_info_for_pdu_session_t *SliceInfoForPDUSession;
+    OpenAPI_authorized_network_slice_info_t *AuthorizedNetworkSliceInfo;
 
     ogs_sbi_links_t *links;
 

@@ -319,6 +319,21 @@ void nssf_nsi_remove_all(void)
         nssf_nsi_remove(nsi);
 }
 
+nssf_nsi_t *nssf_nsi_find_by_s_nssai(ogs_s_nssai_t *s_nssai)
+{
+    nssf_nsi_t *nsi = NULL;
+
+    ogs_assert(s_nssai);
+
+    ogs_list_for_each(&self.nsi_list, nsi) {
+        if (nsi->s_nssai.sst == s_nssai->sst) {
+            return nsi;
+        }
+    }
+
+    return NULL;
+}
+
 char *nssf_nsi_nrf_uri(nssf_nsi_t *nsi)
 {
     ogs_sbi_header_t h;

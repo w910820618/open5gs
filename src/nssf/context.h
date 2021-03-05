@@ -83,6 +83,7 @@ typedef struct nssf_nsi_s {
 nssf_nsi_t *nssf_nsi_add(ogs_sockaddr_t *addr, uint8_t sst, ogs_uint24_t sd);
 void nssf_nsi_remove(nssf_nsi_t *nsi);
 void nssf_nsi_remove_all(void);
+nssf_nsi_t *nssf_nsi_find_by_s_nssai(ogs_s_nssai_t *s_nssai);
 
 char *nssf_nsi_nrf_uri(nssf_nsi_t *nsi);
 
