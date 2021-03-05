@@ -814,8 +814,13 @@ int gmm_handle_ul_nas_transport(amf_ue_t *amf_ue,
 
 
             if (!SESSION_CONTEXT_IN_SMF(sess)) {
+                ogs_sbi_nf_instance_t *nf_instance = NULL;
 
-                if (OGS_SBI_NF_INSTANCE_GET(&sess->sbi, OpenAPI_nf_type_SMF)) {
+                nf_instance = ogs_sbi_nf_instance_associate(
+                                &sess->sbi, OpenAPI_nf_type_SMF,
+                                (ogs_fsm_handler_t)amf_nf_state_registered);
+
+                if (nf_instance) {
                     amf_sess_sbi_discover_and_send(OpenAPI_nf_type_SMF,
                             sess, AMF_CREATE_SM_CONTEXT_NO_STATE, NULL,
                             amf_nsmf_pdusession_build_create_sm_context);
