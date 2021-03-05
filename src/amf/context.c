@@ -1664,18 +1664,10 @@ ogs_s_nssai_t *amf_find_s_nssai(
             continue;
 
         for (j = 0; j < amf_self()->plmn_support[i].num_of_s_nssai; j++) {
-            if (amf_self()->plmn_support[i].s_nssai[j].sst != s_nssai->sst)
-                continue;
-
-            if (amf_self()->plmn_support[i].s_nssai[j].sd.v !=
-                    OGS_S_NSSAI_NO_SD_VALUE &&
-                        s_nssai->sd.v != OGS_S_NSSAI_NO_SD_VALUE) {
-                if (amf_self()->plmn_support[i].s_nssai[j].sd.v !=
-                        s_nssai->sd.v)
-                    continue;
+            if (amf_self()->plmn_support[i].s_nssai[j].sst == s_nssai->sst &&
+                amf_self()->plmn_support[i].s_nssai[j].sd.v == s_nssai->sd.v) {
+                return &amf_self()->plmn_support[i].s_nssai[j];
             }
-
-            return &amf_self()->plmn_support[i].s_nssai[j];
         }
     }
 
