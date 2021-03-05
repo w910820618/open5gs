@@ -34,6 +34,9 @@ ogs_sbi_request_t *amf_nnssf_nsselection_build_get(
     message.h.resource.component[0] =
         (char *)OGS_SBI_RESOURCE_NAME_NETWORK_SLICE_INFORMATION;
 
+    message.param.nf_id = ogs_sbi_self()->nf_instance_id;
+    message.param.nf_type = amf_self()->nf_type;
+
     request = ogs_sbi_build_request(&message);
     ogs_assert(request);
 

@@ -199,6 +199,7 @@ extern "C" {
 #define OGS_SBI_NPCF_SMPOLICYCONTROL_DDN_EVENT_POLICY_CONTROL 37
 #define OGS_SBI_NPCF_SMPOLICYCONTROL_REALLOCATION_OF_CREDIT 38
 
+#define OGS_SBI_PARAM_NF_ID                         "nf-id"
 #define OGS_SBI_PARAM_NF_TYPE                       "nf-type"
 #define OGS_SBI_PARAM_TARGET_NF_TYPE                "target-nf-type"
 #define OGS_SBI_PARAM_REQUESTER_NF_TYPE             "requester-nf-type"
@@ -283,6 +284,7 @@ typedef struct ogs_sbi_message_s {
     struct {
         OpenAPI_nf_type_e target_nf_type;
         OpenAPI_nf_type_e requester_nf_type;
+        char *nf_id;
         OpenAPI_nf_type_e nf_type;
         int limit;
         char *dnn;

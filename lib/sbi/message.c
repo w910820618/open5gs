@@ -245,6 +245,10 @@ ogs_sbi_request_t *ogs_sbi_build_request(ogs_sbi_message_t *message)
     }
 
     /* URL Param */
+    if (message->param.nf_id) {
+        ogs_sbi_header_set(request->http.params,
+                OGS_SBI_PARAM_NF_ID, message->param.nf_id);
+    }
     if (message->param.nf_type) {
         char *v = OpenAPI_nf_type_ToString(message->param.nf_type);
         ogs_assert(v);
@@ -269,10 +273,8 @@ ogs_sbi_request_t *ogs_sbi_build_request(ogs_sbi_message_t *message)
         ogs_free(v);
     }
     if (message->param.dnn) {
-        char *v = ogs_msprintf("%s", message->param.dnn);
-        ogs_assert(v);
-        ogs_sbi_header_set(request->http.params, OGS_SBI_PARAM_DNN, v);
-        ogs_free(v);
+        ogs_sbi_header_set(request->http.params,
+                OGS_SBI_PARAM_DNN, message->param.dnn);
     }
     if (message->param.plmn_id_presence) {
         OpenAPI_plmn_id_t plmn_id;
@@ -377,7 +379,9 @@ int ogs_sbi_parse_request(
 
     for (hi = ogs_hash_first(request->http.params);
             hi; hi = ogs_hash_next(hi)) {
-        if (!strcmp(ogs_hash_this_key(hi), OGS_SBI_PARAM_NF_TYPE)) {
+        if (!strcmp(ogs_hash_this_key(hi), OGS_SBI_PARAM_NF_ID)) {
+            message->param.nf_id = ogs_hash_this_val(hi);
+        } else if (!strcmp(ogs_hash_this_key(hi), OGS_SBI_PARAM_NF_TYPE)) {
             message->param.nf_type =
                 OpenAPI_nf_type_FromString(ogs_hash_this_val(hi));
         } else if (!strcmp(ogs_hash_this_key(hi),
