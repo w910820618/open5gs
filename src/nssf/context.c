@@ -260,6 +260,9 @@ nssf_nsi_t *nssf_nsi_add(ogs_sockaddr_t *addr, uint8_t sst, ogs_uint24_t sd)
     ogs_assert(nsi);
     memset(nsi, 0, sizeof *nsi);
 
+    nsi->nsi_id = ogs_msprintf("%d", (int)ogs_pool_index(&nssf_nsi_pool, nsi));
+    ogs_assert(nsi->nsi_id);
+
     ogs_copyaddrinfo(&nsi->addr, addr);
 
     nsi->s_nssai.sst = sst;
@@ -278,6 +281,9 @@ void nssf_nsi_remove(nssf_nsi_t *nsi)
 
     ogs_assert(nsi->addr);
     ogs_freeaddrinfo(nsi->addr);
+
+    ogs_assert(nsi->nsi_id);
+    ogs_free(nsi->nsi_id);
 
     ogs_pool_free(&nssf_nsi_pool, nsi);
 }
