@@ -24,6 +24,7 @@
 #include "nudm-build.h"
 #include "nsmf-build.h"
 #include "npcf-build.h"
+#include "nnssf-build.h"
 
 #ifdef __cplusplus
 extern "C" {

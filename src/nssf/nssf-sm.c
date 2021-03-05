@@ -40,6 +40,7 @@ void nssf_state_final(ogs_fsm_t *s, nssf_event_t *e)
 void nssf_state_operational(ogs_fsm_t *s, nssf_event_t *e)
 {
     int rv;
+    const char *api_version = NULL;
 
     ogs_sbi_stream_t *stream = NULL;
     ogs_sbi_request_t *request = NULL;
@@ -81,7 +82,15 @@ void nssf_state_operational(ogs_fsm_t *s, nssf_event_t *e)
             break;
         }
 
-        if (strcmp(message.h.api.version, OGS_SBI_API_V1) != 0) {
+        SWITCH(message.h.service.name)
+        CASE(OGS_SBI_SERVICE_NAME_NNSSF_NSSELECTION)
+            api_version = OGS_SBI_API_V2;
+            break;
+        DEFAULT
+            api_version = OGS_SBI_API_V1;
+        END
+
+        if (strcmp(message.h.api.version, api_version) != 0) {
             ogs_error("Not supported version [%s]", message.h.api.version);
             ogs_sbi_server_send_error(stream, OGS_SBI_HTTP_STATUS_BAD_REQUEST,
                     &message, "Not supported version", NULL);
@@ -96,14 +105,11 @@ void nssf_state_operational(ogs_fsm_t *s, nssf_event_t *e)
             CASE(OGS_SBI_RESOURCE_NAME_NETWORK_SLICE_INFORMATION)
                 SWITCH(message.h.method)
                 CASE(OGS_SBI_HTTP_METHOD_GET)
-#if 0
-                    nssf_nnrf_handle_nf_status_notify(stream, &message);
-#endif
+                    nssf_nnrf_nsselection_handle_get(stream, &message);
                     break;
 
                 DEFAULT
-                    ogs_error("Invalid HTTP method [%s]",
-                            message.h.method);
+                    ogs_error("Invalid HTTP method [%s]", message.h.method);
                     ogs_sbi_server_send_error(stream,
                             OGS_SBI_HTTP_STATUS_FORBIDDEN,
                             &message, "Invalid HTTP method", message.h.method);

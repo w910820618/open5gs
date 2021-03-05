@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019,2020 by Sukchan Lee <acetcom@gmail.com>
+ * Copyright (C) 2019 by Sukchan Lee <acetcom@gmail.com>
  *
  * This file is part of Open5GS.
  *
@@ -17,20 +17,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef NSSF_NNSSF_HANDLER_H
-#define NSSF_NNSSF_HANDLER_H
-
-#include "context.h"
+#ifndef AMF_NNSSF_HANDLER_H
+#define AMF_NNSSF_HANDLER_H
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-bool nssf_nnrf_nsselection_handle_get(
-        ogs_sbi_stream_t *stream, ogs_sbi_message_t *message);
+#include "context.h"
+
+int amf_nnssf_nsselection_handle_get(
+        amf_sess_t *sess, ogs_sbi_message_t *message);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* NSSF_NNSSF_HANDLER_H */
+#endif /* AMF_NNSSF_HANDLER_H */

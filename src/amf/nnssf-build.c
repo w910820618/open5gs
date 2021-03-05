@@ -17,20 +17,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef NSSF_NNSSF_HANDLER_H
-#define NSSF_NNSSF_HANDLER_H
+#include "nnssf-build.h"
 
-#include "context.h"
+ogs_sbi_request_t *amf_nnssf_nsselection_build_get(
+        amf_sess_t *sess, void *data)
+{
+    ogs_sbi_message_t message;
+    ogs_sbi_request_t *request = NULL;
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+    ogs_assert(sess);
 
-bool nssf_nnrf_nsselection_handle_get(
-        ogs_sbi_stream_t *stream, ogs_sbi_message_t *message);
+    memset(&message, 0, sizeof(message));
+    message.h.method = (char *)OGS_SBI_HTTP_METHOD_GET;
+    message.h.service.name = (char *)OGS_SBI_SERVICE_NAME_NNSSF_NSSELECTION;
+    message.h.api.version = (char *)OGS_SBI_API_V2;
+    message.h.resource.component[0] =
+        (char *)OGS_SBI_RESOURCE_NAME_NETWORK_SLICE_INFORMATION;
 
-#ifdef __cplusplus
+    request = ogs_sbi_build_request(&message);
+    ogs_assert(request);
+
+    return request;
 }
-#endif
-
-#endif /* NSSF_NNSSF_HANDLER_H */
