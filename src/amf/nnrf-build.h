@@ -17,8 +17,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-#ifndef AMF_NNRF_HANDLER_H
-#define AMF_NNRF_HANDLER_H
+#ifndef AMF_NNRF_BUILD_H
+#define AMF_NNRF_BUILD_H
 
 #include "context.h"
 
@@ -26,21 +26,12 @@
 extern "C" {
 #endif
 
-void amf_nnrf_handle_nf_register(
-        ogs_sbi_nf_instance_t *nf_instance, ogs_sbi_message_t *recvmsg);
-void amf_nnrf_handle_nf_status_subscribe(
-        ogs_sbi_subscription_t *subscription, ogs_sbi_message_t *recvmsg);
-
-bool amf_nnrf_handle_nf_status_notify(
-        ogs_sbi_stream_t *stream, ogs_sbi_message_t *recvmsg);
-
-void amf_nnrf_handle_nf_discover(
-        ogs_sbi_xact_t *xact, ogs_sbi_message_t *recvmsg);
-void amf_nnrf_handle_nf_discover_search_result(
-        ogs_sbi_object_t *sbi_object, OpenAPI_search_result_t *SearchResult);
+ogs_sbi_request_t *amf_nnrf_disc_build_discover(
+        char *nrf_id,
+        OpenAPI_nf_type_e target_nf_type, OpenAPI_nf_type_e requester_nf_type);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* AMF_NNRF_HANDLER_H */
+#endif /* AMF_NNRF_BUILD_H */

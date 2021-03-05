@@ -25,6 +25,7 @@
 #include "nsmf-build.h"
 #include "npcf-build.h"
 #include "nnssf-build.h"
+#include "nnrf-build.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -62,6 +63,9 @@ void amf_ue_sbi_discover_and_send(OpenAPI_nf_type_e target_nf_type,
 void amf_sess_sbi_discover_and_send(OpenAPI_nf_type_e target_nf_type,
         amf_sess_t *sess, int state, void *data,
         ogs_sbi_request_t *(*build)(amf_sess_t *sess, void *data));
+
+void amf_sess_sbi_discover_by_nsi(
+        OpenAPI_nf_type_e target_nf_type, amf_sess_t *sess);
 
 void amf_sbi_send_activating_session(amf_sess_t *sess, int state);
 

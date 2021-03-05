@@ -245,15 +245,12 @@ bool amf_nnrf_handle_nf_status_notify(
 void amf_nnrf_handle_nf_discover(
         ogs_sbi_xact_t *xact, ogs_sbi_message_t *recvmsg)
 {
-    bool handled;
-
     ogs_sbi_object_t *sbi_object = NULL;
     amf_ue_t *amf_ue = NULL;
     amf_sess_t *sess = NULL;
     ogs_sbi_nf_instance_t *nf_instance = NULL;
 
     OpenAPI_search_result_t *SearchResult = NULL;
-    OpenAPI_lnode_t *node = NULL;
 
     ogs_assert(xact);
     sbi_object = xact->sbi_object;
@@ -265,6 +262,58 @@ void amf_nnrf_handle_nf_discover(
         ogs_error("No SearchResult");
         return;
     }
+
+    amf_nnrf_handle_nf_discover_search_result(sbi_object, SearchResult);
+
+    ogs_assert(xact->target_nf_type);
+    nf_instance = OGS_SBI_NF_INSTANCE_GET(sbi_object, xact->target_nf_type);
+    if (!nf_instance) {
+        ogs_assert(sbi_object->type > OGS_SBI_OBJ_BASE &&
+                    sbi_object->type < OGS_SBI_OBJ_TOP);
+        switch(sbi_object->type) {
+        case OGS_SBI_OBJ_UE_TYPE:
+            amf_ue = (amf_ue_t *)sbi_object;
+            ogs_assert(amf_ue);
+            ogs_error("[%s] (NF discover) No [%s]", amf_ue->suci,
+                    OpenAPI_nf_type_ToString(xact->target_nf_type));
+            nas_5gs_send_gmm_reject_from_sbi(amf_ue,
+                    OGS_SBI_HTTP_STATUS_GATEWAY_TIMEOUT);
+            break;
+        case OGS_SBI_OBJ_SESS_TYPE:
+            sess = (amf_sess_t *)sbi_object;
+            ogs_assert(sess);
+            ogs_error("[%d:%d] (NF discover) No [%s]", sess->psi, sess->pti,
+                    OpenAPI_nf_type_ToString(xact->target_nf_type));
+            if (sess->payload_container_type) {
+                nas_5gs_send_back_5gsm_message_from_sbi(sess,
+                        OGS_SBI_HTTP_STATUS_GATEWAY_TIMEOUT);
+            } else {
+                ngap_send_error_indication2(amf_ue,
+                        NGAP_Cause_PR_transport,
+                        NGAP_CauseTransport_transport_resource_unavailable);
+            }
+            break;
+        default:
+            ogs_fatal("(NF discover) Not implemented [%s:%d]",
+                OpenAPI_nf_type_ToString(xact->target_nf_type),
+                sbi_object->type);
+            ogs_assert_if_reached();
+        }
+    } else {
+        amf_sbi_send(nf_instance, xact);
+    }
+}
+
+void amf_nnrf_handle_nf_discover_search_result(
+        ogs_sbi_object_t *sbi_object, OpenAPI_search_result_t *SearchResult)
+{
+    bool handled;
+
+    OpenAPI_lnode_t *node = NULL;
+    ogs_sbi_nf_instance_t *nf_instance = NULL;
+
+    ogs_assert(sbi_object);
+    ogs_assert(SearchResult);
 
     OpenAPI_list_for_each(SearchResult->nf_instances, node) {
         OpenAPI_nf_profile_t *NFProfile = NULL;
@@ -324,43 +373,5 @@ void amf_nnrf_handle_nf_discover(
 
             ogs_info("[%s] (NF-discover) NF Profile updated", nf_instance->id);
         }
-    }
-
-    ogs_assert(xact->target_nf_type);
-    nf_instance = OGS_SBI_NF_INSTANCE_GET(sbi_object, xact->target_nf_type);
-    if (!nf_instance) {
-        ogs_assert(sbi_object->type > OGS_SBI_OBJ_BASE &&
-                    sbi_object->type < OGS_SBI_OBJ_TOP);
-        switch(sbi_object->type) {
-        case OGS_SBI_OBJ_UE_TYPE:
-            amf_ue = (amf_ue_t *)sbi_object;
-            ogs_assert(amf_ue);
-            ogs_error("[%s] (NF discover) No [%s]", amf_ue->suci,
-                    OpenAPI_nf_type_ToString(xact->target_nf_type));
-            nas_5gs_send_gmm_reject_from_sbi(amf_ue,
-                    OGS_SBI_HTTP_STATUS_GATEWAY_TIMEOUT);
-            break;
-        case OGS_SBI_OBJ_SESS_TYPE:
-            sess = (amf_sess_t *)sbi_object;
-            ogs_assert(sess);
-            ogs_error("[%d:%d] (NF discover) No [%s]", sess->psi, sess->pti,
-                    OpenAPI_nf_type_ToString(xact->target_nf_type));
-            if (sess->payload_container_type) {
-                nas_5gs_send_back_5gsm_message_from_sbi(sess,
-                        OGS_SBI_HTTP_STATUS_GATEWAY_TIMEOUT);
-            } else {
-                ngap_send_error_indication2(amf_ue,
-                        NGAP_Cause_PR_transport,
-                        NGAP_CauseTransport_transport_resource_unavailable);
-            }
-            break;
-        default:
-            ogs_fatal("(NF discover) Not implemented [%s:%d]",
-                OpenAPI_nf_type_ToString(xact->target_nf_type),
-                sbi_object->type);
-            ogs_assert_if_reached();
-        }
-    } else {
-        amf_sbi_send(nf_instance, xact);
     }
 }

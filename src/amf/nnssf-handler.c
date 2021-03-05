@@ -102,9 +102,7 @@ int amf_nnssf_nsselection_handle_get(
         sess->nssf.nsi_id = ogs_strdup(NsiInformation->nsi_id);
     }
 
-    amf_sess_sbi_discover_and_send(OpenAPI_nf_type_SMF,
-            sess, AMF_CREATE_SM_CONTEXT_NO_STATE, NULL,
-            amf_nsmf_pdusession_build_create_sm_context);
+    amf_sess_sbi_discover_by_nsi(OpenAPI_nf_type_SMF, sess);
 
     return OGS_OK;
 }

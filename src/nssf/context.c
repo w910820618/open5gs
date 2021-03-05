@@ -348,7 +348,7 @@ char *nssf_nsi_nrf_uri(nssf_nsi_t *nsi)
     if (nsi->tls.key && nsi->tls.pem)
         https = true;
 
-    h.service.name = (char *)OGS_SBI_SERVICE_NAME_NNRF_NFM;
+    h.service.name = (char *)OGS_SBI_SERVICE_NAME_NNRF_DISC;
     h.api.version = (char *)OGS_SBI_API_V1;
     h.resource.component[0] = (char *)OGS_SBI_RESOURCE_NAME_NF_INSTANCES;
 
