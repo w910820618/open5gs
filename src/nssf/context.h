@@ -70,7 +70,12 @@ typedef struct nssf_nsi_s {
     ogs_lnode_t     lnode;
 
     char *nsi_id;
+
     ogs_sockaddr_t *addr;
+    struct {
+        const char  *key;
+        const char  *pem;
+    } tls;
 
     ogs_s_nssai_t s_nssai;
 } nssf_nsi_t;
@@ -78,7 +83,8 @@ typedef struct nssf_nsi_s {
 nssf_nsi_t *nssf_nsi_add(ogs_sockaddr_t *addr, uint8_t sst, ogs_uint24_t sd);
 void nssf_nsi_remove(nssf_nsi_t *nsi);
 void nssf_nsi_remove_all(void);
-nssf_nsi_t *nssf_nsi_find_by_nsi_id(char *nsi_id);
+
+char *nssf_nsi_nrf_uri(nssf_nsi_t *nsi);
 
 #ifdef __cplusplus
 }

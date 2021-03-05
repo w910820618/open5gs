@@ -107,6 +107,7 @@ int nssf_context_parse_config(void)
                         uint16_t port = ogs_sbi_self()->http_port;
                         const char *dev = NULL;
                         ogs_sockaddr_t *addr = NULL;
+                        const char *key = NULL, *pem = NULL;
                         const char *sst = NULL, *sd = NULL;
 
                         if (ogs_yaml_iter_type(&nsi_array) ==
@@ -168,6 +169,22 @@ int nssf_context_parse_config(void)
                                 }
                             } else if (!strcmp(nsi_key, "dev")) {
                                 dev = ogs_yaml_iter_value(&nsi_iter);
+                            } else if (!strcmp(nsi_key, "tls")) {
+                                ogs_yaml_iter_t tls_iter;
+                                ogs_yaml_iter_recurse(&nsi_iter, &tls_iter);
+
+                                while (ogs_yaml_iter_next(&tls_iter)) {
+                                    const char *tls_key =
+                                        ogs_yaml_iter_key(&tls_iter);
+                                    ogs_assert(tls_key);
+
+                                    if (!strcmp(tls_key, "key")) {
+                                        key = ogs_yaml_iter_value(&tls_iter);
+                                    } else if (!strcmp(tls_key, "pem")) {
+                                        pem = ogs_yaml_iter_value(&tls_iter);
+                                    } else
+                                        ogs_warn("unknown key `%s`", tls_key);
+                                }
                             } else if (!strcmp(nsi_key, "s_nssai")) {
                                 ogs_yaml_iter_t s_nssai_iter;
                                 ogs_yaml_iter_recurse(&nsi_iter, &s_nssai_iter);
@@ -223,6 +240,9 @@ int nssf_context_parse_config(void)
                             nssf_nsi_t *nsi = nssf_nsi_add(node->addr,
                                     atoi(sst), ogs_s_nssai_sd_from_string(sd));
                             ogs_assert(nsi);
+
+                            if (key) nsi->tls.key = key;
+                            if (pem) nsi->tls.pem = pem;
                         }
                         node6 = ogs_list_first(&list6);
                         if (node6) {
@@ -231,6 +251,9 @@ int nssf_context_parse_config(void)
                             nssf_nsi_t *nsi = nssf_nsi_add(node6->addr,
                                     atoi(sst), ogs_s_nssai_sd_from_string(sd));
                             ogs_assert(nsi);
+
+                            if (key) nsi->tls.key = key;
+                            if (pem) nsi->tls.pem = pem;
                         }
 
                         ogs_socknode_remove_all(&list);
@@ -294,4 +317,23 @@ void nssf_nsi_remove_all(void)
 
     ogs_list_for_each_safe(&self.nsi_list, next_nsi, nsi)
         nssf_nsi_remove(nsi);
+}
+
+char *nssf_nsi_nrf_uri(nssf_nsi_t *nsi)
+{
+    ogs_sbi_header_t h;
+    bool https = false;
+
+    ogs_assert(nsi);
+
+    memset(&h, 0, sizeof(h));
+
+    if (nsi->tls.key && nsi->tls.pem)
+        https = true;
+
+    h.service.name = (char *)OGS_SBI_SERVICE_NAME_NNRF_NFM;
+    h.api.version = (char *)OGS_SBI_API_V1;
+    h.resource.component[0] = (char *)OGS_SBI_RESOURCE_NAME_NF_INSTANCES;
+
+    return ogs_uridup(https, nsi->addr, &h);
 }
