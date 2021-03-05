@@ -597,13 +597,13 @@ bool udr_nudr_dr_handle_subscription_provisioned(
 
         slice_data = ogs_slice_find_by_s_nssai(
                 subscription_data.slice, subscription_data.num_of_slice,
-                &recvmsg->param.single_nssai);
+                &recvmsg->param.s_nssai);
 
         if (!slice_data) {
             strerror = ogs_msprintf("[%s] Cannot find S_NSSAI[SST:%d SD:0x%x]",
                     supi,
-                    recvmsg->param.single_nssai.sst,
-                    recvmsg->param.single_nssai.sd.v);
+                    recvmsg->param.s_nssai.sst,
+                    recvmsg->param.s_nssai.sd.v);
             status = OGS_SBI_HTTP_STATUS_BAD_REQUEST;
             goto cleanup;
         }
@@ -940,14 +940,14 @@ bool udr_nudr_dr_handle_policy_data(
 
                 slice_data = ogs_slice_find_by_s_nssai(
                         subscription_data.slice, subscription_data.num_of_slice,
-                        &recvmsg->param.snssai);
+                        &recvmsg->param.s_nssai);
 
                 if (!slice_data) {
                     strerror = ogs_msprintf(
                             "[%s] Cannot find S_NSSAI[SST:%d SD:0x%x]",
                             supi,
-                            recvmsg->param.single_nssai.sst,
-                            recvmsg->param.single_nssai.sd.v);
+                            recvmsg->param.s_nssai.sst,
+                            recvmsg->param.s_nssai.sd.v);
                     status = OGS_SBI_HTTP_STATUS_BAD_REQUEST;
                     goto cleanup;
                 }
@@ -994,7 +994,7 @@ bool udr_nudr_dr_handle_policy_data(
                     OpenAPI_list_free(SmPolicyDnnDataList);
 
                 SmPolicySnssaiDataMap = OpenAPI_map_create(
-                        ogs_sbi_s_nssai_to_string(&recvmsg->param.snssai),
+                        ogs_sbi_s_nssai_to_string(&recvmsg->param.s_nssai),
                         SmPolicySnssaiData);
                 ogs_assert(SmPolicySnssaiDataMap);
 

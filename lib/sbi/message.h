@@ -290,13 +290,14 @@ typedef struct ogs_sbi_message_s {
         OpenAPI_nf_type_e nf_type;
         int limit;
         char *dnn;
-        bool plmn_id_presence;
-        ogs_plmn_id_t plmn_id;
 
+        /* Shared memory */
+        ogs_plmn_id_t plmn_id;
+        ogs_s_nssai_t s_nssai;
+
+        bool plmn_id_presence;
         bool single_nssai_presence;
-        ogs_s_nssai_t single_nssai;
         bool snssai_presence;
-        ogs_s_nssai_t snssai;
         bool slice_info_request_for_pdu_session_presence;
         OpenAPI_roaming_indication_e roaming_indication;
     } param;

@@ -300,12 +300,12 @@ ogs_sbi_request_t *ogs_sbi_build_request(ogs_sbi_message_t *message)
         }
     }
     if (message->param.single_nssai_presence) {
-        char *v = ogs_sbi_s_nssai_to_string(&message->param.single_nssai);
+        char *v = ogs_sbi_s_nssai_to_string(&message->param.s_nssai);
         ogs_sbi_header_set(request->http.params, OGS_SBI_PARAM_SINGLE_NSSAI, v);
         ogs_free(v);
     }
     if (message->param.snssai_presence) {
-        char *v = ogs_sbi_s_nssai_to_string(&message->param.snssai);
+        char *v = ogs_sbi_s_nssai_to_string(&message->param.s_nssai);
         ogs_sbi_header_set(request->http.params, OGS_SBI_PARAM_SNSSAI, v);
         ogs_free(v);
     }
@@ -339,12 +339,12 @@ ogs_sbi_request_t *ogs_sbi_build_request(ogs_sbi_message_t *message)
         char *v = NULL;
         cJSON *item = NULL;
 
-        ogs_assert(message->param.snssai.sst);
+        ogs_assert(message->param.s_nssai.sst);
         ogs_assert(message->param.roaming_indication);
 
         memset(&sNSSAI, 0, sizeof(sNSSAI));
-        sNSSAI.sst = message->param.snssai.sst;
-        sNSSAI.sd = ogs_s_nssai_sd_to_string(message->param.snssai.sd);
+        sNSSAI.sst = message->param.s_nssai.sst;
+        sNSSAI.sd = ogs_s_nssai_sd_to_string(message->param.s_nssai.sd);
 
         memset(&SliceInfoForPDUSession, 0, sizeof(SliceInfoForPDUSession));
 
@@ -478,7 +478,7 @@ int ogs_sbi_parse_request(
             char *v = ogs_hash_this_val(hi);
             if (v) {
                 bool rc = ogs_sbi_s_nssai_from_string(
-                        &message->param.single_nssai, v);
+                        &message->param.s_nssai, v);
                 if (rc == true)
                     message->param.single_nssai_presence = true;
             }
@@ -486,7 +486,7 @@ int ogs_sbi_parse_request(
             char *v = ogs_hash_this_val(hi);
             if (v) {
                 bool rc = ogs_sbi_s_nssai_from_string(
-                        &message->param.snssai, v);
+                        &message->param.s_nssai, v);
                 if (rc == true)
                     message->param.snssai_presence = true;
             }
@@ -506,8 +506,8 @@ int ogs_sbi_parse_request(
                         OpenAPI_snssai_t *s_nssai =
                             SliceInfoForPduSession->s_nssai;
                         if (s_nssai) {
-                            message->param.snssai.sst = s_nssai->sst;
-                            message->param.snssai.sd =
+                            message->param.s_nssai.sst = s_nssai->sst;
+                            message->param.s_nssai.sd =
                                 ogs_s_nssai_sd_from_string(s_nssai->sd);
                         }
                         message->param.roaming_indication =
