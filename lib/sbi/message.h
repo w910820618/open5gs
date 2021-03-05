@@ -144,6 +144,10 @@ extern "C" {
 #define OGS_SBI_SERVICE_NAME_NPCF_SMPOLICYCONTROL   "npcf-smpolicycontrol"
 #define OGS_SBI_RESOURCE_NAME_SM_POLICIES           "sm-policies"
 
+#define OGS_SBI_SERVICE_NAME_NNSSF_NSSELECTION      "nnssf-nsselection"
+#define OGS_SBI_RESOURCE_NAME_NETWORK_SLICE_INFORMATION \
+                                                    "network-slice-information"
+
 #define OGS_SBI_FEATURES_IS_SET(__fEATURES, __n) \
     (__fEATURES & (1 << ((__n)-1)))
 #define OGS_SBI_FEATURES_SET(__fEATURES, __n) \
@@ -334,6 +338,7 @@ typedef struct ogs_sbi_message_s {
     OpenAPI_sm_policy_context_data_t *SmPolicyContextData;
     OpenAPI_sm_policy_decision_t *SmPolicyDecision;
     OpenAPI_sm_policy_data_t *SmPolicyData;
+    OpenAPI_slice_info_for_pdu_session_t *SliceInfoForPDUSession;
 
     ogs_sbi_links_t *links;
 

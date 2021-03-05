@@ -152,6 +152,9 @@ void ogs_sbi_message_free(ogs_sbi_message_t *message)
         OpenAPI_sm_policy_decision_free(message->SmPolicyDecision);
     if (message->SmPolicyData)
         OpenAPI_sm_policy_data_free(message->SmPolicyData);
+    if (message->SliceInfoForPDUSession)
+        OpenAPI_slice_info_for_pdu_session_free(
+                message->SliceInfoForPDUSession);
 
     for (i = 0; i < message->num_of_part; i++) {
         if (message->part[i].pkbuf)
@@ -743,6 +746,10 @@ static char *build_json(ogs_sbi_message_t *message)
         ogs_assert(item);
     } else if (message->SmPolicyData) {
         item = OpenAPI_sm_policy_data_convertToJSON(message->SmPolicyData);
+        ogs_assert(item);
+    } else if (message->SliceInfoForPDUSession) {
+        item = OpenAPI_slice_info_for_pdu_session_convertToJSON(
+                message->SliceInfoForPDUSession);
         ogs_assert(item);
     }
 
@@ -1356,6 +1363,26 @@ static int parse_json(ogs_sbi_message_t *message,
                     message->SmPolicyDecision =
                         OpenAPI_sm_policy_decision_parseFromJSON(item);
                     if (!message->SmPolicyDecision) {
+                        rv = OGS_ERROR;
+                        ogs_error("JSON parse error");
+                    }
+                }
+                break;
+
+            DEFAULT
+                rv = OGS_ERROR;
+                ogs_error("Unknown resource name [%s]",
+                        message->h.resource.component[0]);
+            END
+            break;
+
+        CASE(OGS_SBI_SERVICE_NAME_NNSSF_NSSELECTION)
+            SWITCH(message->h.resource.component[0])
+            CASE(OGS_SBI_RESOURCE_NAME_NETWORK_SLICE_INFORMATION)
+                if (message->res_status == OGS_SBI_HTTP_STATUS_OK) {
+                    message->SliceInfoForPDUSession =
+                        OpenAPI_slice_info_for_pdu_session_parseFromJSON(item);
+                    if (!message->SliceInfoForPDUSession) {
                         rv = OGS_ERROR;
                         ogs_error("JSON parse error");
                     }
