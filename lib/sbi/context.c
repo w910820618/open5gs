@@ -990,19 +990,6 @@ ogs_sbi_client_t *ogs_sbi_client_find_by_service_name(
     return nf_instance->client;
 }
 
-ogs_sbi_nf_instance_t *ogs_sbi_nf_instance_find_by_nf_type(
-        OpenAPI_nf_type_e nf_type)
-{
-    ogs_sbi_nf_instance_t *nf_instance = NULL;
-
-    ogs_list_for_each(&ogs_sbi_self()->nf_instance_list, nf_instance) {
-        if (nf_instance->nf_type == nf_type)
-            break;
-    }
-
-    return nf_instance;
-}
-
 void ogs_sbi_object_free(ogs_sbi_object_t *sbi_object)
 {
     int i;

@@ -814,15 +814,8 @@ int gmm_handle_ul_nas_transport(amf_ue_t *amf_ue,
 
 
             if (!SESSION_CONTEXT_IN_SMF(sess)) {
-#if 0
-                int nf = true;
 
-                if (!OGS_SBI_NF_INSTANCE_GET(&sess->sbi, OpenAPI_nf_type_SMF))
-                    nf = ogs_sbi_nf_instance_associate(
-                            sess->sbi.nf_type_array, OpenAPI_nf_type_SMF,
-                            amf_nf_state_registered);
-
-                if (nf == true) {
+                if (OGS_SBI_NF_INSTANCE_GET(&sess->sbi, OpenAPI_nf_type_SMF)) {
                     amf_sess_sbi_discover_and_send(OpenAPI_nf_type_SMF,
                             sess, AMF_CREATE_SM_CONTEXT_NO_STATE, NULL,
                             amf_nsmf_pdusession_build_create_sm_context);
@@ -830,12 +823,9 @@ int gmm_handle_ul_nas_transport(amf_ue_t *amf_ue,
                     amf_sess_sbi_discover_and_send(OpenAPI_nf_type_NSSF,
                             sess, 0, NULL, amf_nnssf_nsselection_build_get);
                 }
-#else
-                amf_sess_sbi_discover_and_send(OpenAPI_nf_type_NSSF,
-                        sess, 0, NULL, amf_nnssf_nsselection_build_get);
-#endif
 
             } else {
+
                 memset(&param, 0, sizeof(param));
                 param.release = 1;
                 param.cause = OpenAPI_cause_REL_DUE_TO_DUPLICATE_SESSION_ID;
