@@ -306,9 +306,8 @@ void amf_nnrf_handle_nf_discover(
                 continue;
             }
 
-            if (!OGS_SBI_NF_INSTANCE_GET(
-                        sbi_object->nf_type_array, nf_instance->nf_type))
-                ogs_sbi_nf_instance_associate(sbi_object->nf_type_array,
+            if (!OGS_SBI_NF_INSTANCE_GET(sbi_object, nf_instance->nf_type))
+                ogs_sbi_nf_instance_associate(sbi_object,
                         nf_instance->nf_type, amf_nf_state_registered);
 
             /* TIME : Update validity from NRF */
@@ -329,8 +328,7 @@ void amf_nnrf_handle_nf_discover(
     }
 
     ogs_assert(xact->target_nf_type);
-    nf_instance = OGS_SBI_NF_INSTANCE_GET(
-            sbi_object->nf_type_array, xact->target_nf_type);
+    nf_instance = OGS_SBI_NF_INSTANCE_GET(sbi_object, xact->target_nf_type);
     if (!nf_instance) {
         ogs_assert(sbi_object->type > OGS_SBI_OBJ_BASE &&
                     sbi_object->type < OGS_SBI_OBJ_TOP);

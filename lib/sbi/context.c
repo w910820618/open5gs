@@ -893,25 +893,28 @@ static void nf_service_associate_client_all(ogs_sbi_nf_instance_t *nf_instance)
         nf_service_associate_client(nf_service);
 }
 
-bool ogs_sbi_nf_instance_associate(ogs_sbi_nf_type_array_t nf_type_array,
-        OpenAPI_nf_type_e nf_type, void *state)
+bool ogs_sbi_nf_instance_associate(
+        ogs_sbi_object_t *sbi_object, OpenAPI_nf_type_e nf_type, void *state)
 {
     ogs_sbi_nf_instance_t *nf_instance = NULL;
+
+    ogs_assert(sbi_object);
 
     if (nf_type == OpenAPI_nf_type_NRF) {
         nf_instance = ogs_sbi_nf_instance_find(ogs_sbi_self()->nf_instance_id);
         if (nf_instance) {
             if (OGS_FSM_CHECK(&nf_instance->sm, state)) {
-                if (OGS_SBI_NF_INSTANCE_GET(
-                            nf_type_array, OpenAPI_nf_type_NRF)) {
+                if (OGS_SBI_NF_INSTANCE_GET(sbi_object, OpenAPI_nf_type_NRF)) {
                     ogs_warn("UE %s-EndPoint updated [%s]",
                             OpenAPI_nf_type_ToString(OpenAPI_nf_type_NRF),
                             nf_instance->id);
                     ogs_sbi_nf_instance_remove(
-                            nf_type_array[OpenAPI_nf_type_NRF].nf_instance);
+                            OGS_SBI_NF_INSTANCE_GET(
+                                sbi_object, OpenAPI_nf_type_NRF));
                 }
                 OGS_SETUP_SBI_NF_INSTANCE(
-                        &nf_type_array[OpenAPI_nf_type_NRF], nf_instance);
+                    OGS_SBI_NF_INSTANCE_GET(sbi_object, OpenAPI_nf_type_NRF),
+                    nf_instance);
                 return true;
             }
         }
@@ -920,15 +923,16 @@ bool ogs_sbi_nf_instance_associate(ogs_sbi_nf_type_array_t nf_type_array,
     ogs_list_for_each(&ogs_sbi_self()->nf_instance_list, nf_instance) {
         if (nf_instance->nf_type == nf_type) {
             if (OGS_FSM_CHECK(&nf_instance->sm, state)) {
-                if (OGS_SBI_NF_INSTANCE_GET(nf_type_array, nf_type)) {
+                if (OGS_SBI_NF_INSTANCE_GET(sbi_object, nf_type)) {
                     ogs_warn("%s-EndPoint updated [%s]",
                             OpenAPI_nf_type_ToString(nf_type),
                             nf_instance->id);
                     ogs_sbi_nf_instance_remove(
-                            nf_type_array[nf_type].nf_instance);
+                            OGS_SBI_NF_INSTANCE_GET(sbi_object, nf_type));
                 }
                 OGS_SETUP_SBI_NF_INSTANCE(
-                    &nf_type_array[nf_type], nf_instance);
+                    OGS_SBI_NF_INSTANCE_GET(sbi_object, nf_type),
+                    nf_instance);
                 return true;
             }
         }
@@ -1006,9 +1010,9 @@ void ogs_sbi_object_free(ogs_sbi_object_t *sbi_object)
         ogs_error("SBI running [%d]", ogs_list_count(&sbi_object->xact_list));
 
     for (i = 0; i < OGS_SBI_MAX_NF_TYPE; i++) {
-        if (sbi_object->nf_type_array[i].nf_instance)
+        if (OGS_SBI_NF_INSTANCE_GET(sbi_object, i))
             ogs_sbi_nf_instance_remove(
-                    sbi_object->nf_type_array[i].nf_instance);
+                    OGS_SBI_NF_INSTANCE_GET(sbi_object, i));
     }
 }
 

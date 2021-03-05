@@ -113,7 +113,7 @@ ogs_sbi_request_t *amf_nsmf_pdusession_build_create_sm_context(
     SmContextCreateData.ue_time_zone = ogs_sbi_timezone_string(ogs_timezone());
 
     pcf_nf_instance = OGS_SBI_NF_INSTANCE_GET(
-            amf_ue->sbi.nf_type_array, OpenAPI_nf_type_PCF);
+                            &amf_ue->sbi, OpenAPI_nf_type_PCF);
     ogs_assert(pcf_nf_instance);
     SmContextCreateData.pcf_id = pcf_nf_instance->id;
 

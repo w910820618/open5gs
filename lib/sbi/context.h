@@ -49,11 +49,10 @@ typedef struct ogs_sbi_context_s {
 
 #define OGS_SETUP_SBI_NF_INSTANCE(__cTX, __pNF_INSTANCE) \
     do { \
-        ogs_assert((__cTX)); \
         ogs_assert((__pNF_INSTANCE)); \
-        if ((__cTX)->nf_instance != __pNF_INSTANCE) \
+        if ((__cTX) != __pNF_INSTANCE) \
             __pNF_INSTANCE->reference_count++; \
-        (__cTX)->nf_instance = __pNF_INSTANCE; \
+        (__cTX) = __pNF_INSTANCE; \
         ogs_trace("nf_instance->reference_count = %d", \
                 __pNF_INSTANCE->reference_count); \
     } while(0)
@@ -98,8 +97,8 @@ typedef struct ogs_sbi_nf_instance_s {
     OpenAPI_nf_profile_t *nf_profile;   /* stored NF Profile */
 } ogs_sbi_nf_instance_t;
 
-#define OGS_SBI_NF_INSTANCE_GET(__aRRAY, __nFType) \
-    ((__aRRAY)[__nFType].nf_instance) 
+#define OGS_SBI_NF_INSTANCE_GET(__sBIObject, __nFType) \
+    (((__sBIObject)->nf_type_array)[__nFType].nf_instance) 
 typedef struct ogs_sbi_nf_type_array_s {
     ogs_sbi_nf_instance_t *nf_instance;
 } ogs_sbi_nf_type_array_t[OGS_SBI_MAX_NF_TYPE];
@@ -227,8 +226,8 @@ ogs_sbi_client_t *ogs_sbi_client_find_by_service_name(
         ogs_sbi_nf_instance_t *nf_instance, char *name, char *version);
 
 bool ogs_sbi_client_associate(ogs_sbi_nf_instance_t *nf_instance);
-bool ogs_sbi_nf_instance_associate(ogs_sbi_nf_type_array_t nf_type_array,
-        OpenAPI_nf_type_e nf_type, void *state);
+bool ogs_sbi_nf_instance_associate(
+        ogs_sbi_object_t *sbi_object, OpenAPI_nf_type_e nf_type, void *state);
 
 void ogs_sbi_object_free(ogs_sbi_object_t *sbi_object);
 
