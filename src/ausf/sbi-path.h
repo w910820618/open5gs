@@ -20,6 +20,7 @@
 #ifndef AUSF_SBI_PATH_H
 #define AUSF_SBI_PATH_H
 
+#include "nnrf-build.h"
 #include "nudm-build.h"
 
 #ifdef __cplusplus

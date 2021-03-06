@@ -122,7 +122,7 @@ void amf_nnrf_nfm_send_nf_register(ogs_sbi_nf_instance_t *nf_instance)
     client = nf_instance->client;
     ogs_assert(client);
 
-    request = ogs_nnrf_nfm_build_register(nf_instance);
+    request = amf_nnrf_nfm_build_register(nf_instance);
     if (!request) {
         ogs_error("ogs_nnrf_nfm_send_nf_register() failed");
         return;

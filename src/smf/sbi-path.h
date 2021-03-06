@@ -20,6 +20,7 @@
 #ifndef SMF_SBI_PATH_H
 #define SMF_SBI_PATH_H
 
+#include "nnrf-build.h"
 #include "nudm-build.h"
 #include "namf-build.h"
 #include "gsm-build.h"

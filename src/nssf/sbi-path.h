@@ -20,7 +20,7 @@
 #ifndef NSSF_SBI_PATH_H
 #define NSSF_SBI_PATH_H
 
-#include "context.h"
+#include "nnrf-build.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -20,6 +20,7 @@
 #ifndef PCF_SBI_PATH_H
 #define PCF_SBI_PATH_H
 
+#include "nnrf-build.h"
 #include "nudr-build.h"
 
 #ifdef __cplusplus

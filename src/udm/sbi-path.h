@@ -20,6 +20,7 @@
 #ifndef UDM_SBI_PATH_H
 #define UDM_SBI_PATH_H
 
+#include "nnrf-build.h"
 #include "nudr-build.h"
 
 #ifdef __cplusplus

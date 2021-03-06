@@ -26,6 +26,9 @@
 extern "C" {
 #endif
 
+ogs_sbi_request_t *amf_nnrf_nfm_build_register(
+        ogs_sbi_nf_instance_t *nf_instance);
+
 ogs_sbi_request_t *amf_nnrf_disc_build_discover(
         char *nrf_id,
         OpenAPI_nf_type_e target_nf_type, OpenAPI_nf_type_e requester_nf_type);
