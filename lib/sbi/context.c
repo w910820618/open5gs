@@ -730,6 +730,9 @@ void ogs_sbi_nf_instance_build_default(
 
     if (hostname)
         strcpy(nf_instance->fqdn, hostname);
+
+    nf_instance->time.heartbeat_interval =
+            ogs_app()->time.nf_instance.heartbeat_interval;
 }
 
 ogs_sbi_nf_service_t *ogs_sbi_nf_service_build_default(

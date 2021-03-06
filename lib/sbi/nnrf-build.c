@@ -50,6 +50,9 @@ OpenAPI_nf_profile_t *ogs_nnrf_nfm_build_nf_profile(
                 OpenAPI_nf_status_ToString(nf_instance->nf_status),
                 nf_instance->num_of_ipv4, nf_instance->num_of_ipv6);
 
+    NFProfile->heart_beat_timer = nf_instance->time.heartbeat_interval;
+    NFProfile->nf_profile_changes_support_ind = true;
+
     if (strlen(nf_instance->fqdn)) {
         memset(fqdn, 0, sizeof(fqdn));
         fqdn_len = ogs_fqdn_build(fqdn,
@@ -259,10 +262,6 @@ ogs_sbi_request_t *ogs_nnrf_nfm_build_register(
 
     NFProfile = ogs_nnrf_nfm_build_nf_profile(nf_instance);
     ogs_assert(NFProfile);
-
-    NFProfile->nf_profile_changes_support_ind = true;
-    nf_instance->time.heartbeat_interval = NFProfile->heart_beat_timer =
-            ogs_app()->time.nf_instance.heartbeat_interval;
 
     message.NFProfile = NFProfile;
 
